@@ -164,9 +164,11 @@ WAGTAIL_SITE_NAME = "ards_site"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
 
+# go to directory in git bash C:\Users\joel0\PycharmProjects\ArdsProject\websites\ards_site
 # $ git config --global user.name "Your Name"
 # $ git config --global user.email "you@youraddress.com"
 # $ git config --global push.default matching
 # $ git config --global alias.co checkout
 # $ git init
-
+# git add .
+# git commit -m "First initial"

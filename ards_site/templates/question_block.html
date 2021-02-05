@@ -1,0 +1,21 @@
+<div class="qna">
+    <h2><b>{{ self.title }}</b></h2>
+
+    {% for card in self.cards %}
+        <div class="qna-each">
+            <h3 class="faq-question" data-toggle="collapse"
+                data-target="#pdf-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">{{ card.question }}</h3>
+        </div>
+        {% comment %}<div class="bodymovinanim" id="filter-{{ forloop.counter }}" type="button" data-toggle="collapse"
+             data-target="#pdf-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+        </div>{% endcomment %}
+
+        <div class="collapse" id="pdf-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+            {{ card.answer }}
+        </div>
+
+        {% comment %}{{ card.answer }}{% endcomment %}
+    {% endfor %}
+
+</div>
+<hr>

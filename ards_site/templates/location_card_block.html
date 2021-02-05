@@ -1,0 +1,20 @@
+<div class="document">
+    <div class="w3-card-4 w3-margin w3-white" data-aos="fade-down">
+        <div class="w3-container">
+            {{ self.city }}
+        </div>
+        <hr>
+        <div class="addressLines">
+            {% for card in self.addressLines %}
+                {{ card.addressLine }}<br/>
+            {% endfor %}
+        </div>
+        <div class="contact-details">
+            {{ self.daysOpen }}<br/>
+            {{ self.timeOpen }}<br/>
+            {{ self.telephoneNumber }}<br/>
+            {{ self.websiteLink }}
+
+        </div>
+    </div>
+</div>

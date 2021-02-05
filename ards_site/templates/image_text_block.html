@@ -1,0 +1,9 @@
+{% load wagtailimages_tags %}
+
+<div class="slider__contents">
+    {% image self.image width-250 as img %}
+    <img src="{{ img.url }}" class="item" alt="{{ img.alt }}">
+
+    <h2 class="slider__caption">{{ self.title }}</h2>
+    <p class="slider__txt">{{ self.text }}</p>
+</div>

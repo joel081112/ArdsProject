@@ -127,6 +127,9 @@ class ButtonLinksBlock(blocks.StructBlock):
         label = "New link"
 
 
+# youtube channel
+# fortresssefa@gmail.com
+# copy shareable link into wagtail block
 class InlineVideoBlock(blocks.StructBlock):
     video = EmbedBlock()
     caption = CharBlock(required=False, label="Caption")
@@ -138,10 +141,12 @@ class InlineVideoBlock(blocks.StructBlock):
     )
     size = blocks.ChoiceBlock(
         required=False,
-        choices=[('small', "Small"), ('medium', "Medium"), ('large', "Large")],
+        choices=[('small', "Small"), ('medium', "Medium"), ('large', "Large"), ('half', "Half")],
         default='medium',
         label="Size",
     )
 
     class Meta:
+        template = "video_block.html"
         icon = 'media'
+        label = "New video"

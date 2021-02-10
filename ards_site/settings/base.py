@@ -102,6 +102,33 @@ DATABASES = {
     }
 }
 
+
+# _______for another machine take these steps_______ #
+# delete all migrations
+# delete local postgres table
+
+# might have to manage.py makemigrations DEMOAPP
+
+# might have to comment out models.py in demoapp
+# python manage.py migrate --run-syncdb
+
+# might have to recomment back in the models.py
+# python manage.py makemigrations
+# python mange.py migrate
+# python manage.py migrate --run-syncdb
+
+# python manage.py loaddata db.json
+
+
+# python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e
+#       auth.permission -e wagtailcore.groupcollectionpermission --indent 4 > db.json
+# python manage.py loaddata db.json
+
+
+# if on pgadmin follow the tutorial to backup as sql file and then as tar file
+# then restore tar file into other machine's pgadmin
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -213,3 +240,6 @@ BASE_URL = 'http://example.com'
 # $ git init
 # git add .
 # git commit -m "First initial"
+
+# py -m pip freeze > requirements.txt
+# py -m pip install -r requirements.txt

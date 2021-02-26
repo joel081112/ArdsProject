@@ -34,10 +34,10 @@ function displayWindowSize() {
     var menu = document.getElementById('menuPanel');
 
     //affects menu appearance on screen size
-    if (w > 640) {
+    if (w > 576) {
         toggle.checked = false;
         menu.style.cssText = ';display:block;'
-    } else if (w < 640) {
+    } else if (w < 576) {
         toggle.checked = false;
         menu.style.cssText = ';display:none;'
     }
@@ -150,16 +150,26 @@ $(function () {
         var w = document.documentElement.clientWidth;
 
         //we dont want menu to show when not at top of
-        if ((w < 640) && (block.offset().top > 350)) {
+        if ((w < 576) && (block.offset().top > 350)) {
             menu.style.cssText = ';display:none;'
             text.hide();
             toggle.checked = false;
         }
-        if( (w < 640) && (block.offset().top > 350) && (this.checked == true) && ((x.top > y.top)) ){
+        if( (w < 576) && (block.offset().top > 350) && (this.checked == true) && ((x.top > y.top)) ){
             addClass(panel, 'cd-panel--is-visible');
         }
     });
 });
+
+if (localStorage.getItem('cookieSeen') != 'shown') {
+  $('.cookie-banner').delay(2000).fadeIn();
+  localStorage.setItem('cookieSeen','shown')
+}
+
+$('.close').click(function() {
+  $('.cookie-banner').fadeOut();
+});
+
 
 
 

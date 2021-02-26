@@ -50,6 +50,22 @@ class HomePage(Page):
         verbose_name_plural = "Home Pages"
 
 
+class Scorecard(Page):
+    """Scorecard page model"""
+
+    template = "club/scorecard.html"
+    max_count = 1
+
+    banner_title = models.CharField(max_length=100, blank=True)
+    content_panels = Page.content_panels + [
+        FieldPanel("banner_title"),
+    ]
+
+    class Meta:
+        verbose_name = "Scorecard Page"
+        verbose_name_plural = "Scorecard Pages"
+
+
 # Start of Club database
 
 class Team(models.Model):

@@ -47,53 +47,81 @@
                 {# header #}
                 <div class="header">
 
-                    <div class="desktop_header">
-                        <a href="/" class="menuLogo">
-                            <img src="/media/ards cc.png" id="smallLogo" alt="logo"
-                                 style="height:150px; width: auto">
-                        </a>
-                        <span>Ards Cricket Club</span>
-                        <a href="/django-admin">
-                            <i class="fas fa-cog" style="height: 50px; width:auto"></i>
-                        </a>
+                    <div class="desktop_header d-none d-sm-block">
+                        <div class="box col d-flex justify-content-start align-items-center">
+                            <a href="/" class="menuLogo">
+                                <img src="/media/ards cc.png" id="smallLogo" alt="logo"
+                                     style="height:150px; width: auto">
+                            </a>
+                            <span>Ards Cricket Club</span>
+                            <a href="/django-admin">
+                                <i class="fas fa-cog" style="height: 50px; width:auto"></i>
+                            </a>
+                            <a href="/admin">
+                                <i class="px-4 fas fa-dove" style="height: 50px; width:auto"></i>
+                            </a>
+                        </div>
                     </div>
 
+                    <div class="mobile-header d-sm-none">
+                        <div class="box col d-flex justify-content-start align-items-center">
 
-                    <div class="hamburger">
-                        <label class="toggle cd-btn js-cd-panel-trigger" id="menuDisplay" data-panel="main">
-                            <input type="checkbox" id="myCheck">
-                            <div>
-                                <div>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                <svg>
-                                    <use xlink:href="#path">
+                            <div class="hamburger">
+                                <label class="toggle cd-btn js-cd-panel-trigger" id="menuDisplay" data-panel="main">
+                                    <input type="checkbox" id="myCheck">
+                                    <div>
+                                        <div>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <svg>
+                                            <use xlink:href="#path">
+                                        </svg>
+                                        <svg>
+                                            <use xlink:href="#path">
+                                        </svg>
+                                    </div>
+                                </label>
+
+
+                                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" id="path">
+                                        <path d="M22,22 L2,22 C2,11 11,2 22,2 C33,2 42,11 42,22"></path>
+                                    </symbol>
                                 </svg>
-                                <svg>
-                                    <use xlink:href="#path">
-                                </svg>
+
                             </div>
-                        </label>
+                            <a href="/" class="menuLogo">
+                                <img src="/media/ards cc.png" id="largeLogo" alt="largeLogo"
+                                     style="height:150px; width: auto">
+                            </a>
+
+                            <a href="/" class="menuLogo">
+                                <img src="/media/ards cc.png" id="smallLogo" alt="logo"
+                                     style="height:150px; width: auto">
+                            </a>
+
+                            <span>
+                                Ards Cricket Club
+                            </span>
+
+                            <a href="/django-admin">
+                                <i class="fas fa-cog" style="height: 50px; width:auto"></i>
+                            </a>
+                            <a href="/admin">
+                                <i class="px-4 fas fa-dove" style="height: 50px; width:auto"></i>
+                            </a>
 
 
-                        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" id="path">
-                                <path d="M22,22 L2,22 C2,11 11,2 22,2 C33,2 42,11 42,22"></path>
-                            </symbol>
-                        </svg>
-
+                        </div>
                     </div>
-                    <a href="/" class="menuLogo">
-                        <img src="/media/ards cc.png" id="largeLogo" alt="largeLogo"
-                             style="height:150px; width: auto">
-                    </a>
                 </div>
 
                 <header class="masthead mb-auto" id="menuPanel">
 
                     {# This the menu for the desktop panel. It is seperate to the mobile #}
                     {% include 'nav_menu.html' %}
+
                 </header>
                 <p id="fixedpoint">
                     46546487978

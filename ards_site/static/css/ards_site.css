@@ -50,7 +50,6 @@ html {
 
 html,
 body {
-    height: 100%;
     background: #ecf6f9;
 }
 
@@ -62,7 +61,6 @@ body {
     -webkit-box-pack: center;
     justify-content: center;
     color: #fff;
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
 
 /* Cover */
@@ -104,7 +102,27 @@ body {
 
 .desktop_header span {
     font-weight: bold;
-    font-size: 45px;
+    font-size: 3vw;
+}
+
+.mobile-header {
+
+}
+
+@media only screen and (max-width: 576px) {
+    .desktop_header {
+
+    }
+
+    .mobile-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .mobile-header span {
+        font-weight: bold;
+        font-size: 4vw;
+    }
 }
 
 .masthead {
@@ -137,7 +155,7 @@ body {
     border-bottom-color: #fff;
 }
 
-@media only screen and (min-width: 775px) {
+@media only screen and (min-width: 768px) {
     .masthead-brand {
         float: left;
     }
@@ -221,7 +239,7 @@ footer .column {
     stroke: #fff;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 992px) {
     .middle {
         font-size: 0.8rem;
     }
@@ -250,7 +268,7 @@ footer .row:after {
     display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 576px) {
     .block {
         margin: 0 0 15px 0;
         padding: 18% 0 0 0;
@@ -316,6 +334,8 @@ footer .row:after {
         position: fixed;
         background: #ecf6f9;
         z-index: 10;
+
+        width: 100%;
     }
 }
 
@@ -330,7 +350,7 @@ footer .row:after {
     display: inline;
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 576px) {
     .footer-contents .middle {
         margin-top: 30px;
     }
@@ -630,7 +650,6 @@ body {
     font-family: Open Sans, "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
-    text-transform: capitalize;
 }
 
 .menu {
@@ -662,7 +681,7 @@ body {
 .menu > ol > li:nth-child(3),
 .menu > ol > li:nth-child(4),
 .menu > ol > li:nth-child(5) {
-    --accent-color: green;
+    --accent-color: #008000;
     --gradient-color: black;
 }
 
@@ -781,7 +800,7 @@ ol > .column a {
     font-size: 13px;
 }
 
-@media only screen and  (min-width: 400px)  and (max-width: 640px) {
+@media only screen and  (min-width: 400px)  and (max-width: 576px) {
     /* Create three equal columns that floats next to each other */
     .column {
         float: left;
@@ -807,7 +826,7 @@ ol > .column a {
     }
 }
 
-@media only screen and (min-width: 640px) {
+@media only screen and (min-width: 576px) {
     /*Create line under main pages heading*/
     .menu a:focus,
     .menu a:hover {
@@ -905,7 +924,7 @@ ol > .column a {
     }
 }
 
-@media only screen and (min-width: 775px) {
+@media only screen and (min-width: 768px) {
     .menu > ol > li {
         width: 18%;
         font-size: 18px;
@@ -938,19 +957,19 @@ ol > .column a {
     }
 }
 
-@media screen and (max-width: 639.98px) {
+@media screen and (max-width: 576px) {
     #menuPanel {
         display: none !important;
     }
 }
 
-@media screen and  (min-width: 639.98px) {
+@media screen and  (min-width: 576px) {
     .hamburger {
         display: none !important;
     }
 }
 
-@media screen and (max-width: 639.98px) {
+@media screen and (max-width: 576px) {
     /*This changes the colour of the background for the drop down menu that appears*/
     .menu > ol > li:nth-child(1),
     .menu > ol > li:nth-child(2),
@@ -968,7 +987,7 @@ Slide In Panel - by CodyHouse.co
 -------------------------------- *//* --------------------------------
 Primary style .css
 -------------------------------- */
-@media screen and (max-width: 639.98px) {
+@media screen and (max-width: 576px) {
     *,
     *::after,
     *::before {
@@ -1240,7 +1259,7 @@ Primary style .css
         border: 1px solid #d5d5d5;
     }
 
-    @media only screen and (max-height: 820px) {
+    @media only screen and (max-height: 768px) {
         .cd-panel__content {
             overflow-y: auto;
             width: 100%;
@@ -1268,7 +1287,7 @@ Primary style .css
     }
 }
 
-@media only screen and (min-width: 640px) {
+@media only screen and (min-width: 576px) {
     .mobilePanel {
         display: none;
     }
@@ -1355,7 +1374,292 @@ Primary style .css
 }
 
 
+/*scorecard .css */
+.overview {
 
+}
+
+.match-mini-facts {
+    border-bottom-left-radius: 25%;
+    border-bottom-right-radius: 25%;
+    border-bottom-style: solid;
+    border-bottom-color: #00FF33;
+    border-bottom-width: medium;
+}
+
+.bg-gradient-mini-two {
+    --accent-color: white;
+    --gradient-color: WhiteSmoke;
+    background: linear-gradient(to bottom, white 50%, #F8F8F8 50%);
+}
+
+.bg-gradient-mini-three {
+    --accent-color: white;
+    --gradient-color: WhiteSmoke;
+    background: linear-gradient(to bottom, white, #F0F0F0, yellow);
+}
+
+.bg-gradient-mini-alt {
+    color: white;
+    background: linear-gradient(to bottom, green, #004225, green);
+}
+
+
+/* Trintech stuff*/
+.bg-f6 {
+    background: #f6f6f6;
+}
+
+.text-light-green {
+    color: #008578;
+}
+
+.text-lighter-green {
+    color: #1e9388;
+}
+
+.border-purple {
+    border-left: 5px solid #910048;
+}
+
+.bg-purple {
+    background: #910048;
+}
+
+.custom-toggler.navbar-toggler {
+    padding: 0;
+}
+.custom-toggler .navbar-toggler-icon {
+    width: 20px;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='1' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+.custom-nav-link.nav-link{
+    color: #006eb0;
+    background-color: #f6f6f6;
+}
+.custom-nav-tabs.nav-tabs .nav-link.active{
+    background: #f6f6f6;
+    border-top: 3px solid #008578;
+    border-left: 1px solid #008578;
+    border-right: 1px solid #008578;
+    border-bottom: 0;
+}
+.custom-nav-tabs.nav-tabs .nav-link{
+    border-bottom: 1px solid #008578;
+}
+.custom-nav-tabs.nav-tabs{
+    border-bottom: 1px solid #008578;
+}
+.match-rules{
+    margin-right: 20px;
+}
+.shadow-top{
+    box-shadow: inset 0px 10px 10px -10px  #000000;
+}
+.w-15{
+    width:15%;
+    height:auto;
+}
+.main-drop {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+.h-500 {
+    height: 1000px;
+}
+
+
+/* end Trintech stuff*/
+
+.bg-gradient-mini-alt-second {
+    background: linear-gradient(to bottom, #FFFF33, yellow, #FFFF99);
+}
+
+.match-img {
+    height: 106px;
+    width: auto;
+}
+
+#match-result {
+
+}
+
+
+.match-team {
+    letter-spacing: 3px;
+    font-weight: bolder;
+}
+
+.team-batting-overview {
+    border-radius: 5px;
+}
+
+.team-batting-overview p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.team-batting-overview h2 {
+    margin-top: 0;
+}
+
+.team-batting {
+    font-weight: bold;
+}
+
+.overview .row {
+    --bs-gutter-x: 0;
+}
+
+.team-batting-name {
+    font-weight: bold;
+}
+
+.team-batting-score {
+    color: #998;
+}
+
+.game-stats {
+    margin: auto;
+    max-width: 1000px;
+}
+
+.team-heading {
+    font-weight: 600;
+    font-size: 18px;
+    padding: 15px 10px;
+}
+
+.accordion-button::after {
+
+}
+
+.match-score {
+    font-weight: 500;
+}
+
+
+.match-details {
+    border-radius: 5px;
+}
+
+
+.bat-name {
+    font-weight: bold;
+}
+
+.bowl-name {
+    font-weight: bold;
+}
+
+.span-result, .bat-runs span {
+    color: white;
+    background: linear-gradient(to bottom, #004225, green);
+}
+
+@media only screen and (max-width: 576px) {
+    #match-format h5 {
+        margin-bottom: 0;
+    }
+
+    .team-news {
+        max-height: 75px;
+        background: linear-gradient(to bottom, white 50%, #004225 25%, green);
+    }
+
+    .team-news img {
+        height: 42px;
+        width: auto;
+    }
+
+    .team-news h2 {
+        font-size: large;
+    }
+
+    .team-news h3 {
+        font-size: medium;
+    }
+
+    .match-team {
+
+    }
+
+    .match-score {
+        color: white;
+    }
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+    .team-news img {
+        height: 76px;
+        width: auto;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .span-result {
+
+    }
+
+    .match-mini-facts {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-bottom-style: none;
+    }
+}
+
+.bat-runs span {
+    padding: 10px;
+}
+
+.scorecards-container {
+
+}
+
+.batting-card {
+    min-width: 66%;
+}
+
+.match-report {
+
+}
+
+
+/*cookie .css */
+.cookie-banner {
+    position: fixed;
+    bottom: 40px;
+    left: 10%;
+    right: 10%;
+    width: 80%;
+    padding: 5px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.close:hover {
+    background-color: #777;
+    border: none;
+    color: black;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+button.close {
+    border-radius: 4px;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+}
 
 
 

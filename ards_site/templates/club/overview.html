@@ -1,0 +1,178 @@
+{% extends "../base.html" %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-5 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Overview{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Scorecard page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="mx-5">
+        <div class="">
+            <nav class="">
+                <div class="nav nav-tabs custom-nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active custom-nav-link" id="nav-home-tab"
+                            data-bs-toggle="tab" `
+
+                            data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                            aria-selected="true">
+                        <strong>
+                            Player List
+                        </strong>
+                    </button>
+                    <button class="nav-link custom-nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-profile"
+                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+                        <strong>
+                            Previous Matches
+                        </strong>
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                     aria-labelledby="nav-home-tab">
+                    <div class="">
+
+                        <div class="text-center">
+                            <h2>PLAYER LIST</h2>
+                        </div>
+                        <div class="row justify-content-md-center">
+
+                            {% for member in member_list %}
+                                <div class="col-lg-3 border m-3">
+                                    <div class="row">
+                                        <div class="player-info col">
+
+                                            <p>{{ member.name }}</p>
+                                            {% for team in member.role.all %}
+                                                <p>{{ team.name }}</p>
+                                            {% endfor %}
+                                            {% for team in member.teamsPlayedFor.all %}
+                                                <p>{{ team.name }}</p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col">
+                                            <img src="{{ member.profile_pic.url }}" class="profile-main" alt="">
+                                        </div>
+                                    </div>
+
+                                    <div class="player-buttons">
+                        <span class="btn btn-primary">
+                            <a href="{% url 'viewmember' member.id %}">
+                            View
+                            </a>
+                        </span>
+                                        <span class="btn btn-primary">
+                        <a href="{% url 'memberform' member.id %}">
+                        Update
+                        </a>
+                    </span>
+
+                                        {% comment %}<a href="{% url 'deletemember' member.id %}">{% endcomment %}
+                                        <span class="btn btn-primary">
+                        Delete
+                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col py-4">
+                            <button class="btn btn-primary">
+                                <a href="{% url 'viewmemberteam' 'firstXI' %}">
+                                    FirstXI</a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'viewmemberteam' 'secondXI' %}">
+                                SecondXI</a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Player' %}">
+                                Player</a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Captain' %}">
+                                Captain</a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Board officer' %}">
+                                Board Officer</a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Coach' %}">
+                                Coach </a>
+                            </button>
+                            <button class="btn btn-primary"><a href="{% url 'create' %}">
+                                Add New Member</a>
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                     aria-labelledby="nav-profile-tab">
+                    <div class="h-500">
+                        {% for match in match_list|slice:":4" %}
+                            {% if match.team|stringformat:"s" == "firstXI" %}
+                                {{ match.team }}
+                                {{ match.match_format }}
+                                {{ match.opponent }}
+                                {{ match.opponent.home_venue }}
+                                <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
+                                {{ match.date }}
+                                {{ match.venue }}
+                                {{ match.decision }}
+                                <br>
+                                {{ match.ards_overs_batted }}
+                                {{ match.ards_runs }}
+                                {{ match.ards_wickets }}
+                                {{ match.opponent_overs_batted }}
+                                {{ match.opponent_runs }}
+                                {{ match.opponent_wickets }}
+                                {{ match.ards_score }}
+                                {{ match.opponents_score }}
+                                <br>
+                                {{ match }}
+                                <hr>
+                                {% else %}
+                                {{ match.team }}
+                                {{ match.match_format }}
+                                {{ match.opponent }}
+                                {{ match.opponent.home_venue }}
+                                <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
+                                {{ match.date }}
+                                {{ match.venue }}
+                                {{ match.decision }}
+                                <br>
+                                {{ match.ards_overs_batted }}
+                                {{ match.ards_runs }}
+                                {{ match.ards_wickets }}
+                                {{ match.opponent_overs_batted }}
+                                {{ match.opponent_runs }}
+                                {{ match.opponent_wickets }}
+                                {{ match }}
+                                {{ match.banter }}
+                                <hr>
+                                <hr>
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}

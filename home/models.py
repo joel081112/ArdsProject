@@ -56,7 +56,7 @@ class Scorecard(Page):
     template = "club/scorecard.html"
     max_count = 1
 
-    banner_title = models.CharField(max_length=100, blank=True)
+    banner_title = models.CharField(max_length=100, blank=True, default='')
     content_panels = Page.content_panels + [
         FieldPanel("banner_title"),
     ]
@@ -125,7 +125,7 @@ class Award(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, default='')
 
     def __str__(self):
-        return str('{0} {1} {2},'.format(self.member, self.type, self.year))
+        return str('{0} {1} {2}'.format(self.member, self.type, self.year))
 
 
 class MatchFormat(models.Model):
@@ -135,6 +135,13 @@ class MatchFormat(models.Model):
         return self.name
 
 
+class CoinToss(models.Model):
+    decision = models.CharField(blank=True, default='', max_length=40)
+
+    def __str__(self):
+        return str('{0}'.format(self.decision))
+
+
 class Wicket(models.Model):
     name = models.CharField(max_length=20, default='')
 
@@ -142,10 +149,10 @@ class Wicket(models.Model):
         return str(self.name)
 
 
-class Opponent(models.Model):
+class Club(models.Model):
     name = models.CharField(max_length=30, default='')
     badge = models.ImageField(default="default profile pic1.png", null=True, blank=True)
-    home = models.CharField(max_length=40, default='', null=True, blank=True)
+    home_venue = models.CharField(max_length=40, default='', null=True, blank=True)
 
     def __str__(self):
         return str(self.name)
@@ -154,35 +161,72 @@ class Opponent(models.Model):
 class Match(models.Model):
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, default='')
     match_format = models.ForeignKey(MatchFormat, on_delete=models.SET_NULL, null=True, default='')
-    opponent = models.ForeignKey(Opponent, on_delete=models.SET_NULL, null=True, default='')
+    opponent = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, default='')
     date = models.DateField(blank=True, null=True)
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True, default='')
+    decision = models.ForeignKey(CoinToss, on_delete=models.SET_NULL, null=True, default='')
+    ards_overs_batted = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=4)
+    ards_runs = models.IntegerField(blank=True, null=True)
+    ards_wickets = models.IntegerField(blank=True, null=True)
+    opponent_overs_batted = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=4)
+    opponent_runs = models.IntegerField(blank=True, null=True)
+    opponent_wickets = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return str('Match={0}'.format(self.team))
+        if self.ards_runs > self.opponent_runs:
+            runs_diff = self.ards_runs - self.opponent_runs
+            result = "Ards won"
+            return str('{0} on {1} {2} by {3}'.format(self.team, self.date.strftime("%d %B %Y"), result, runs_diff))
+        elif self.ards_runs == self.opponent_runs:
+            result = "Match drawn"
+            return str('{0} on {1} {2}'.format(self.team, self.date.strftime("%d %B %Y"), result))
+        else:
+            runs_diff = self.opponent_runs - self.ards_runs
+            result = "Ards lost"
+            return str('{0} on {1} {2} by {3} '.format(self.team, self.date.strftime("%d %B %Y"), result, runs_diff))
+
+    def banter(self):
+        runs_diff = self.ards_runs - self.opponent_runs
+        return str('{0}').format(runs_diff)
+
+    def ards_score(self):
+        return str('{0}-{1}').format(self.ards_runs, self.ards_wickets)
+
+    def opponents_score(self):
+        return str('{0}-{1}').format(self.opponent_runs, self.opponent_wickets)
 
 
 class Batting(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
+    batter_number = models.IntegerField(blank=True, null=True)
     fours = models.IntegerField(blank=True, null=True)
     sixes = models.IntegerField(blank=True, null=True)
     runs = models.IntegerField(blank=True, null=True)
-    out = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
+    mode_of_dismissal = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     def __str__(self):
-        return str('Member={0}, Date={1}'.format(self.member, self.date))
+        return str('{0} {1} scored {2} runs'.format(self.member, self.match.date, self.runs))
 
 
 class Bowling(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
+    bowler_number = models.IntegerField(blank=True, null=True)
     overs = models.IntegerField(blank=True, null=True)
     runs = models.IntegerField(blank=True, null=True)
     wickets = models.IntegerField(blank=True, null=True)
-    extras = models.CharField(max_length=20, default='')
+    wides = models.IntegerField(blank=True, null=True)
+    no_balls = models.IntegerField(blank=True, null=True)
+    byes = models.IntegerField(blank=True, null=True)
+    leg_byes = models.IntegerField(blank=True, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     def __str__(self):
-        return str('Member={0}'.format(self.member))
+        return str('{0} {1}, figures of {2}-{3}-{4}'.format(self.member, self.match.date, self.overs,
+                                                            self.runs, self.wickets))
+
+    def bowler_extras(self):
+        extras = self.wides + self.no_balls
+        return str('{0}'.format(extras))
 
 # End of Club database

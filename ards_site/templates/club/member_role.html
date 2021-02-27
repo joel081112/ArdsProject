@@ -1,0 +1,42 @@
+{% extends "../base.html" %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Member Role{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Scorecard page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+<div class="container-fluid" id="wrapper">
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4" id="content">
+            <h2>PLAYER LIST</h2>
+            <ul class="list-group t20">
+                {% for member in role_list %}
+                    <a href="{% url 'viewmember' member.id %}">
+                        <li class="list-group-item">
+                            <p>{{ member.name }}</p>
+                            {% for team in member.role.all %}
+                                 <p>{{ team.name }}</p>
+                            {% endfor %}
+
+                            {% for team in member.teamsPlayedFor.all %}
+                                 <p>{{ team.name }}</p>
+                            {% endfor %}
+                        </li>
+                    </a>
+                {%  endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
+    <div class="h-500">
     <h1>Search</h1>
 
     <form action="{% url 'search' %}" method="get">
@@ -35,4 +36,5 @@
     {% elif search_query %}
         No results found
     {% endif %}
+    </div>
 {% endblock %}

@@ -174,7 +174,7 @@ footer {
     font-family: "Varela Round", Nunito, Montserrat, sans-serif;
     bottom: 0;
     box-sizing: border-box;
-    background-color: #093145;
+    background-color: black;
     width: 100%;
     margin: 0 auto;
     text-align: left;
@@ -1660,6 +1660,13 @@ button.close {
     border: 0;
     -webkit-appearance: none;
 }
+
+/* members .css */
+.profile-main{
+    max-width: 90%;
+}
+
+/*end members*/
 
 
 

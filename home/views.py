@@ -1,15 +1,39 @@
+from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
-from .models import Member, Match
+from .models import Member, Match, Batting, Bowling
 from .forms import MemberForm, MatchForm
 
 
 def member_view(request):
-    member_list = Member.objects.order_by('teamsPlayedFor')
+    member_list = Member.objects.order_by('teamsPlayedFor').annotate(
+        max_runs=Max('batting__runs'),
+        min_runs=Min('batting__runs'),
+        count_runs=Count('batting__runs'),
+        count_runs_past_2019=Count(
+            'batting__runs',
+            filter=Q(batting__match__date__year__range=[2019, 2020])
+        ),
+        sum_runs=Sum('batting__runs'),
+        average_runs=Avg('batting__runs'),
+        average_runs_pt2=Sum('batting__runs') / Count('batting__runs')
+    )
     match_list = Match.objects.order_by('-date')
+    batting_list_bn = Batting.objects.order_by('batter_number')
+    bowling_list_bn = Bowling.objects.order_by('bowler_number')
+    batting_list = Batting.objects.order_by('-match__date')
+    bowling_list = Bowling.objects.order_by('-match__date')
+    date_list = Member.objects.order_by('batting__match__date__year').values('batting__match__date__year').distinct()
 
-    context = {'member_list': member_list, 'match_list': match_list}
+    context = {'member_list': member_list,
+               'match_list': match_list,
+               'batting_list_bn': batting_list_bn,
+               'bowling_list_bn': bowling_list_bn,
+               'batting_list': batting_list,
+               'bowling_list': bowling_list,
+               'date_list': date_list
+               }
     return render(request, 'club/overview.html', context)
 
 
@@ -49,7 +73,6 @@ def create_member(request):
 
 @require_POST
 def add_new_member(request):
-
     if request.method == 'POST':
         print("Printing POST")
         form = MemberForm(request.POST, request.FILES)
@@ -75,5 +98,3 @@ def member_form(request, member_id):
     context = {'form': form}
 
     return render(request, 'club/member_update.html', context)
-
-

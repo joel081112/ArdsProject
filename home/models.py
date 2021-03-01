@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Max, Min
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel
 
 from wagtail.core.models import Page
@@ -66,6 +67,22 @@ class Scorecard(Page):
         verbose_name_plural = "Scorecard Pages"
 
 
+class Overview(Page):
+    """Overview page model"""
+
+    template = "club/overview.html"
+    max_count = 1
+
+    banner_title = models.CharField(max_length=100, blank=True, default='')
+    content_panels = Page.content_panels + [
+        FieldPanel("banner_title"),
+    ]
+
+    class Meta:
+        verbose_name = "Overview Page"
+        verbose_name_plural = "Overview Pages"
+
+
 # Start of Club database
 
 class Team(models.Model):
@@ -104,7 +121,7 @@ class Member(models.Model):
     teamsPlayedFor = models.ManyToManyField(Team)
     dateJoined = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=15, default='')
-    profile_pic = models.ImageField(default="default profile pic1.png", null=True, blank=True)
+    profile_pic = models.ImageField(default="default profile pic1.png", null =True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
@@ -171,6 +188,7 @@ class Match(models.Model):
     opponent_overs_batted = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=4)
     opponent_runs = models.IntegerField(blank=True, null=True)
     opponent_wickets = models.IntegerField(blank=True, null=True)
+    report = models.CharField(max_length=600, default='', null=True, blank=True)
 
     def __str__(self):
         if self.ards_runs > self.opponent_runs:
@@ -203,6 +221,7 @@ class Batting(models.Model):
     sixes = models.IntegerField(blank=True, null=True)
     runs = models.IntegerField(blank=True, null=True)
     mode_of_dismissal = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
+    out_by = models.CharField(max_length=40, null=True, blank=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     def __str__(self):

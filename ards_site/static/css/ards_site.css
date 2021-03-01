@@ -1666,6 +1666,9 @@ button.close {
     max-width: 90%;
 }
 
+.tab-content.no-overflow{
+}
+
 /*end members*/
 
 

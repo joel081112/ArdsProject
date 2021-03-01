@@ -35,6 +35,7 @@
                             Previous Matches
                         </strong>
                     </button>
+
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -44,13 +45,28 @@
 
                         <div class="text-center">
                             <h2>PLAYER LIST</h2>
+                            <hr>
+                            <Select id="yearselector">
+                                {% for date in date_list %}
+                                    <option value="{{ date.batting__match__date__year }}">
+                                        {{ date.batting__match__date__year }}
+                                    </option>
+                                {% endfor %}
+                            </Select>
+
+
                         </div>
+
+
                         <div class="row justify-content-md-center">
+
 
                             {% for member in member_list %}
                                 <div class="col-lg-3 border m-3">
                                     <div class="row">
                                         <div class="player-info col">
+
+                                            {{ member.id }}
 
                                             <p>{{ member.name }}</p>
                                             {% for team in member.role.all %}
@@ -59,6 +75,55 @@
                                             {% for team in member.teamsPlayedFor.all %}
                                                 <p>{{ team.name }}</p>
                                             {% endfor %}
+
+                                            <hr>
+                                            Batting Figures<br>
+                                            Max: {{ member.max_runs }}<br>
+                                            Min: {{ member.min_runs }}<br>
+                                            Count: {{ member.count_runs }}<br>
+                                            Count past 2019: {{ member.count_runs_past_2019 }}<br>
+                                            Average: {{ member.average_runs }}<br>
+                                            Sum: {{ member.sum_runs }}
+                                            Second average: {{ member.average_runs_pt2 }}
+                                            <hr>
+
+
+                                            {% for batting in batting_list %}
+                                                {% if member.id == batting.member.id %}
+
+                                                    {# test #}
+                                                    {% if member.id == batting.member.id and batting.match.date.year == 2018 %}
+                                                        oof
+                                                    {% endif %}
+                                                    {# endtest #}
+
+                                                    {{ batting }}
+                                                    <br>
+                                                    {{ batting.match.id }}
+                                                    <br>
+                                                    {{ batting.runs }}
+                                                    <br>
+                                                    {{ batting.match.date.year }}
+                                                    <br>
+                                                    {% if batting.mode_of_dismissal|stringformat:"s" == "Not Out" %}
+                                                        {{ batting.mode_of_dismissal }}
+                                                    {% endif %}
+                                                    <br>
+                                                    <hr>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            Bowling Figures
+                                            <hr>
+                                            {% for bowling in bowling_list %}
+                                                {% if member.id == bowling.member.id %}
+                                                    {{ bowling }}
+                                                    <br>
+                                                    {{ bowling.match.id }}
+                                                    <hr>
+                                                {% endif %}
+                                            {% endfor %}
+
                                         </div>
                                         <div class="col">
                                             <img src="{{ member.profile_pic.url }}" class="profile-main" alt="">
@@ -117,52 +182,58 @@
                 </div>
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                      aria-labelledby="nav-profile-tab">
-                    <div class="h-500">
+                    <div class="">
                         {% for match in match_list|slice:":4" %}
-                            {% if match.team|stringformat:"s" == "firstXI" %}
-                                {{ match.team }}
-                                {{ match.match_format }}
-                                {{ match.opponent }}
-                                {{ match.opponent.home_venue }}
-                                <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
-                                {{ match.date }}
-                                {{ match.venue }}
-                                {{ match.decision }}
-                                <br>
-                                {{ match.ards_overs_batted }}
-                                {{ match.ards_runs }}
-                                {{ match.ards_wickets }}
-                                {{ match.opponent_overs_batted }}
-                                {{ match.opponent_runs }}
-                                {{ match.opponent_wickets }}
-                                {{ match.ards_score }}
-                                {{ match.opponents_score }}
-                                <br>
-                                {{ match }}
-                                <hr>
-                                {% else %}
-                                {{ match.team }}
-                                {{ match.match_format }}
-                                {{ match.opponent }}
-                                {{ match.opponent.home_venue }}
-                                <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
-                                {{ match.date }}
-                                {{ match.venue }}
-                                {{ match.decision }}
-                                <br>
-                                {{ match.ards_overs_batted }}
-                                {{ match.ards_runs }}
-                                {{ match.ards_wickets }}
-                                {{ match.opponent_overs_batted }}
-                                {{ match.opponent_runs }}
-                                {{ match.opponent_wickets }}
-                                {{ match }}
-                                {{ match.banter }}
-                                <hr>
-                                <hr>
-                            {% endif %}
+                            {#                            {% if match.team|stringformat:"s" == "firstXI" %}#}
+                            {{ match.id }}
+                            {{ match.team }}
+                            {{ match.match_format }}
+                            {{ match.opponent }}
+                            {{ match.opponent.home_venue }}
+                            <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
+                            {{ match.date }}
+                            {{ match.venue }}
+                            {{ match.decision }}
+                            <br>
+                            {{ match.ards_overs_batted }}
+                            {{ match.ards_runs }}
+                            {{ match.ards_wickets }}
+                            {{ match.opponent_overs_batted }}
+                            {{ match.opponent_runs }}
+                            {{ match.opponent_wickets }}
+                            {{ match.ards_score }}
+                            {{ match.opponents_score }}
+                            <br>
+                            {{ match }}
+                            <br>
+                            <br>
+                            {% for batting in batting_list_bn %}
+                                {% if match.id == batting.match.id %}
+                                    {{ batting }}
+                                    <br>
+                                    {{ batting.match.id }}
+                                    <br>
+                                    {{ batting.batter_number }}<br>
+                                    {{ batting.runs }}
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <br>
+                            {% for bowling in bowling_list_bn %}
+                                {% if match.id == bowling.match.id %}
+                                    {{ bowling }}
+                                    <br>
+                                    {{ bowling.match.id }}
+                                    <br>
+                                    {{ bowling.bowler_number }}
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
 
+                            <hr>
                         {% endfor %}
+                        <br>
 
 
                     </div>

@@ -1478,6 +1478,9 @@ Primary style .css
 .bg-gradient-mini-alt-second {
     background: linear-gradient(to bottom, #FFFF33, yellow, #FFFF99);
 }
+.bg-white{
+    background-color: #fff;
+}
 
 .match-img {
     height: 106px;
@@ -1487,11 +1490,19 @@ Primary style .css
 #match-result {
 
 }
+#match-format{
+    text-transform: lowercase;
+}
 
 
 .match-team {
     letter-spacing: 3px;
     font-weight: bolder;
+    text-transform: uppercase;
+}
+
+.bat-out-by{
+    font-size: small;
 }
 
 .team-batting-overview {
@@ -1529,6 +1540,7 @@ Primary style .css
 }
 
 .team-heading {
+    text-transform: uppercase;
     font-weight: 600;
     font-size: 18px;
     padding: 15px 10px;
@@ -1592,6 +1604,14 @@ Primary style .css
         color: white;
     }
 
+}
+
+.to-bat p{
+    display: inline;
+    text-align: left;
+}
+.to-bat{
+    text-align: left;
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {

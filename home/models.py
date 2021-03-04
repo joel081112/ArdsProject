@@ -1,6 +1,6 @@
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db import models
-from django.db.models import Count, Max, Min
+from django.db.models import Count, Max, Min, Sum
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
 
@@ -169,6 +169,7 @@ class BlogPageGalleryImage(Orderable):
 
 class Team(models.Model):
     name = models.CharField(max_length=20, default='')
+    abr = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -285,15 +286,53 @@ class Match(models.Model):
             result = "Ards lost"
             return str('{0} on {1} {2} by {3} '.format(self.team, self.date.strftime("%d %B %Y"), result, runs_diff))
 
+    def result(self):
+        if self.ards_runs > self.opponent_runs:
+            runs_diff = self.ards_runs - self.opponent_runs
+            result = "Ards won"
+            return str('{0} by {1} runs'.format(result, runs_diff))
+        elif self.ards_runs == self.opponent_runs:
+            result = "Match drawn"
+            return str('{0}'.format(result))
+        else:
+            runs_diff = self.opponent_runs - self.ards_runs
+            result = "Ards lost"
+            return str('{0} by {1} runs'.format(result, runs_diff))
+
     def banter(self):
         runs_diff = self.ards_runs - self.opponent_runs
         return str('{0}').format(runs_diff)
 
     def ards_score(self):
-        return str('{0}-{1}').format(self.ards_runs, self.ards_wickets)
+        if self.ards_wickets == 10:
+            var1 = "All Out"
+        else:
+            var1 = self.ards_wickets
+        return str('{0}-{1}').format(self.ards_runs, var1)
 
     def opponents_score(self):
-        return str('{0}-{1}').format(self.opponent_runs, self.opponent_wickets)
+        if self.opponent_wickets == 10:
+            var1 = " All Out"
+            return str('{0} {1}').format(self.opponent_runs, var1)
+        else:
+            var1 = self.ards_wickets
+            return str('{0}-{1}').format(self.opponent_runs, var1)
+
+
+class Extras(models.Model):
+    ards = models.BooleanField(blank=True, null=True)
+    wides = models.IntegerField(blank=True, null=True)
+    no_balls = models.IntegerField(blank=True, null=True)
+    byes = models.IntegerField(blank=True, null=True)
+    leg_byes = models.IntegerField(blank=True, null=True)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
+
+    def __str__(self):
+        return str('{0}w, {1}b, {2}lb, {3}nb'.format(self.wides, self.byes, self.leg_byes, self.leg_byes))
+
+    def extras_total(self):
+        total = self.wides + self.no_balls + self.byes + self.leg_byes
+        return total
 
 
 class Batting(models.Model):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Member, Award, Wicket, Role, Club, Batting, Bowling, Team, Type, Cup, MatchFormat, Match, Venue, \
-    CoinToss
+    CoinToss, Extras
 # Register your models here.
 
 admin.site.register(Member)
@@ -18,3 +18,4 @@ admin.site.register(CoinToss)
 admin.site.register(MatchFormat)
 admin.site.register(Match)
 admin.site.register(Venue)
+admin.site.register(Extras)

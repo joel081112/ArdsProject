@@ -11,5 +11,6 @@ urlpatterns = [
     path('team/<team>', views.view_selected_member_team, name='viewmemberteam'),
     path('create/member', views.create_member, name='create'),
     path('member/add', views.add_new_member, name='createadd'),
+    path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
 
 ]

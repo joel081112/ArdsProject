@@ -46,13 +46,14 @@
                         <div class="text-center">
                             <h2>PLAYER LIST</h2>
                             <hr>
-                            <Select id="yearselector">
+
+                            <select id="yearselector" name="dropdown">
                                 {% for date in date_list %}
                                     <option value="{{ date.batting__match__date__year }}">
                                         {{ date.batting__match__date__year }}
                                     </option>
                                 {% endfor %}
-                            </Select>
+                            </select>
 
 
                         </div>
@@ -204,6 +205,20 @@
                             <br>
                             {{ match }}
                             <br>
+                            <hr>
+                            oof
+
+                            {% for extras in extras_list %}
+                                {% if match.id == extras.match.id %}
+                                    {% if extras.ards == True %}
+                                        Ards :
+                                    {% endif %}
+                                    {{ extras }}<br>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            <hr>
                             <br>
                             {% for batting in batting_list_bn %}
                                 {% if match.id == batting.match.id %}
@@ -228,8 +243,13 @@
                                     <hr>
                                 {% endif %}
                             {% endfor %}
-
+                            <span class="btn btn-primary">
+                                <a href="{% url 'viewmatch' match.id %}">
+                                View
+                                </a>
+                            </span>
                             <hr>
+
                         {% endfor %}
                         <br>
 

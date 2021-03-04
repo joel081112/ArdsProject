@@ -1,0 +1,202 @@
+{% extends "../base.html" %}
+{% load wagtailcore_tags %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-5 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load mathfilters %}
+{% block body_class %}template-blogindexpage{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Ards Cricket - welcome to our blog page. Find all up to date recent news on this page.
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+
+    <div class="blog-index-page responsive">
+        <h1><b>{{ page.title }} </b></h1>
+        <div class="row">
+
+            {# left side #}
+            <div class="col-lg-8 order-1">{# blog entry #}
+
+
+                <div class="intro">{{ page.intro|richtext }}</div>
+
+                {# Start blog cards #}
+                {% for post in posts %}
+
+                    <div class="w3-card-4 w3-margin w3-white" data-aos="fade-down">
+
+                        <div class="blogIndexImg">
+                            {% for item in post.specific.blogpage_images.all|slice:"1" %}
+                                {% image item.image fill-400x400-c100 %}
+                                <p>{{ item.caption }}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="w3-container">
+                            <h3 class="blogLink">{{ post.title }}</h3>
+                            <h5>{{ post.specific.intro }} <span
+                                    class="w3-opacity">{{ post.specific.date }}</span></h5>
+                        </div>
+                        <div class="w3-container">
+                            <div class="rich-text">
+                                <p class="block-with-text rich-text">
+                                    {{ post.specific.body|richtext }}
+                                </p>
+                            </div>
+
+                            <div class="w3-row">
+                                <div class="w3-col m8 s12">
+                                    <div id="container">
+                                        <div class="new-body">
+                                            <button class="learn-more">
+                                                <a href="{% pageurl post %}">
+                                                    <div class="circle">
+                                                        <span class="icon arrow"></span>
+                                                    </div>
+                                                    <p class="button-text">See More</p></a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <hr>
+                {% endfor %}
+                {# end blog cards #}
+
+                {# start paginator #}
+                {% if posts.paginator.num_pages > 1 %}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="pagination">
+                                    {% if posts.has_previous %}
+                                        <li class="page-item">
+                                            <a href="?page={{ posts.previous_page_number }}" class="page-link">
+                                                <span>&laquo;</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for page_num in posts.paginator.page_range %}
+                                        <li class="page-item {% if page_num == posts.number %} active{% endif %}">
+                                            <a href="?page={{ page_num }}" class="page-link">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+
+                                    {% if posts.has_next %}
+                                        <li class="page-item">
+                                            <a href="?page={{ posts.next_page_number }}" class="page-link">
+                                                <span>&raquo;</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {# end paginator #}
+
+            </div>
+            {# end blog entry #}
+
+
+            {#  right side #}
+            <div class="col-lg-4 order-md-1">
+                {# start paginator #}
+                {% if posts.paginator.num_pages > 1 %}
+                    <div id="paginatorTop">
+                        {% if posts.paginator.num_pages > 1 %}
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="pagination">
+                                            {% if posts.has_previous %}
+                                                <li class="page-item">
+                                                    <a href="?page={{ posts.previous_page_number }}" class="page-link">
+                                                        <span>&laquo;</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% for page_num in posts.paginator.page_range %}
+                                                <li class="page-item {% if page_num == posts.number %} active{% endif %}">
+                                                    <a href="?page={{ page_num }}" class="page-link">
+                                                        {{ page_num }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+
+                                            {% if posts.has_next %}
+                                                <li class="page-item">
+                                                    <a href="?page={{ posts.next_page_number }}" class="page-link">
+                                                        <span>&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {# end paginator #}
+
+
+                <div data-aos="fade-down">
+                    {# quick launch #}
+                    <div class="w3-card w3-margin">
+                        <div class="w3-container w3-padding">
+                            <h4>Quick Launch</h4>
+                        </div>
+
+                        <ul class="w3-ul w3-hoverable w3-white">
+                            {% for post in posts %}
+
+                                <a class="" href="{% pageurl post %}">
+                                    <li class="w3-padding-16 zoom">
+
+                                        <div class="w3-left w3-margin-right">
+                                            {% for item in post.specific.blogpage_images.all|slice:"1" %}
+                                                {% image item.image fill-50x50-c100 %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="w3-large">{{ post.title }}</span><br>
+                                        <span>{{ post.specific.intro }}</span>
+
+                                    </li>
+                                </a>
+
+
+
+                            {% endfor %}
+                        </ul>
+
+                    </div>
+                    {# end quick launch #}
+
+
+                </div>
+            </div>
+            {# end right side #}
+
+        </div>
+        <br>
+    </div>
+
+{% endblock %}

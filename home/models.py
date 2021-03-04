@@ -1,10 +1,14 @@
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db import models
 from django.db.models import Count, Max, Min
-from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
 
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
+
 from .blocks import *
 
 
@@ -83,6 +87,84 @@ class Overview(Page):
         verbose_name_plural = "Overview Pages"
 
 
+class BlogIndexPage(Page):
+    """Main page that holds the blog on"""
+    intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro', classname="full")
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        """Adding custom stuff to our context."""
+        context = super().get_context(request, *args, **kwargs)
+        # Get all posts
+        all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
+        date_sorted_posts = sorted(all_posts, key=lambda p: p.specific.date, reverse=True)
+        # Paginate all posts by 5 per page
+        paginator = Paginator(date_sorted_posts, 5)
+        # Try to get the ?page=x value
+        page = request.GET.get("page")
+        try:
+            # If the page exists and the ?page=x is an int
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            # If the ?page=x is not an int; show the first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            # If the ?page=x is out of range (too high most likely)
+            # Then return the last page
+            posts = paginator.page(paginator.num_pages)
+
+        # "posts" will have child pages; you'll need to use .specific in the template
+        # in order to access child properties, such as youtube_video_id and subtitle
+        context["posts"] = posts
+        return context
+
+
+class BlogPage(Page):
+    """Individual blog page creation through adding child page"""
+
+    date = models.DateField("Post date")
+    intro = models.CharField(max_length=250)
+    body = RichTextField(blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+        index.SearchField('body'),
+    ]
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([FieldPanel('date'),
+                         FieldPanel('intro'),
+                         FieldPanel('body', classname="full")],
+                        heading="blogpage Options"
+                        ),
+
+        MultiFieldPanel(
+            [InlinePanel('blogpage_images', max_num=30, min_num=0, label="blogpage images")],
+            heading="blogpage Images"
+        ),
+    ]
+
+
+class BlogPageGalleryImage(Orderable):
+    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='blogpage_images')
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+    caption = models.CharField(blank=True, max_length=250)
+
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('caption'),
+    ]
+
+
 # Start of Club database
 
 class Team(models.Model):
@@ -121,7 +203,7 @@ class Member(models.Model):
     teamsPlayedFor = models.ManyToManyField(Team)
     dateJoined = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=15, default='')
-    profile_pic = models.ImageField(default="default profile pic1.png", null =True, blank=True)
+    profile_pic = models.ImageField(default="default profile pic1.png", null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

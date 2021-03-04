@@ -1673,7 +1673,41 @@ button.close {
 
 
 
+/* blog .css */
 
+/* ellipsis for multiline */
+.w3-container .rich-text p {
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2em;
+    max-height: 2.4em;
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+}
+
+.w3-container .rich-text p:before {
+    content: "...";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.w3-container .rich-text p:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
+}
+
+.w3-container .rich-text p {
+    text-transform: none;
+}
+
+/*end blog .css*/
 
 
 

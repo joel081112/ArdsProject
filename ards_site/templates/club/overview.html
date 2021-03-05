@@ -179,70 +179,17 @@
 
                     </div>
                 </div>
+
+                {# Start of previous matches tab #}
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                      aria-labelledby="nav-profile-tab">
                     <div class="">
-                        {% for match in match_list|slice:":4" %}
-                            {#                            {% if match.team|stringformat:"s" == "firstXI" %}#}
-                            {{ match.id }}
-                            {{ match.team }}
-                            {{ match.match_format }}
-                            {{ match.opponent }}
-                            {{ match.opponent.home_venue }}
-                            <img src="{{ match.opponent.badge.url }}" class="w-15" alt="opponent badge">
-                            {{ match.date }}
-                            {{ match.venue }}
-                            {{ match.decision }}
-                            <br>
-                            {{ match.ards_overs_batted }}
-                            {{ match.ards_runs }}
-                            {{ match.ards_wickets }}
-                            {{ match.opponent_overs_batted }}
-                            {{ match.opponent_runs }}
-                            {{ match.opponent_wickets }}
-                            {{ match.ards_score }}
-                            {{ match.opponents_score }}
-                            <br>
+                        {% for match in match_list %}
+                            {#                            {% if match.team|stringformat:"s" == "firstXI" %} {% for match in match_list|slice:":4" %} #}
                             {{ match }}
                             <br>
-                            <hr>
-                            oof
-
-                            {% for extras in extras_list %}
-                                {% if match.id == extras.match.id %}
-                                    {% if extras.ards == True %}
-                                        Ards :
-                                    {% endif %}
-                                    {{ extras }}<br>
-                                {% endif %}
-
-                            {% endfor %}
 
                             <hr>
-                            <br>
-                            {% for batting in batting_list_bn %}
-                                {% if match.id == batting.match.id %}
-                                    {{ batting }}
-                                    <br>
-                                    {{ batting.match.id }}
-                                    <br>
-                                    {{ batting.batter_number }}<br>
-                                    {{ batting.runs }}
-                                    <hr>
-                                {% endif %}
-                            {% endfor %}
-                            <br>
-                            <br>
-                            {% for bowling in bowling_list_bn %}
-                                {% if match.id == bowling.match.id %}
-                                    {{ bowling }}
-                                    <br>
-                                    {{ bowling.match.id }}
-                                    <br>
-                                    {{ bowling.bowler_number }}
-                                    <hr>
-                                {% endif %}
-                            {% endfor %}
                             <span class="btn btn-primary">
                                 <a href="{% url 'viewmatch' match.id %}">
                                 View

@@ -120,7 +120,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for batting in batting_list_bn %}
+                            {% for batting in batting_list_bn_t %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
                                     <tr class="batting-player">
                                         <td class="bat-name">
@@ -162,17 +162,13 @@
 
                                 </td>
                                 <td class="bat-out">
-                                    {% for extras in extras_list %}
-                                        {% if extras.ards == True %}
-                                            {{ extras }}
-                                        {% endif %}
+                                    {% for extras in extras_list_t %}
+                                        {{ extras }}
                                     {% endfor %}
                                 </td>
                                 <td class="bat-runs">
-                                    {% for extras in extras_list %}
-                                        {% if extras.ards == True %}
-                                            {{ extras.extras_total }}
-                                        {% endif %}
+                                    {% for extras in extras_list_t %}
+                                        {{ extras.extras_total }}
                                     {% endfor %}
                                 </td>
                                 <td class="bat-faced">
@@ -219,7 +215,7 @@
 
                         <div class="to-bat mb-5">
                             <p>To Bat:</p>
-                            {% for batting in batting_list_bn %}
+                            {% for batting in batting_list_bn_t %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
                                     <p class="text-primary">{{ batting.member }},</p>
                                 {% endif %}
@@ -253,10 +249,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% include 'bowling_player.html' %}
-                            {% include 'bowling_player.html' %}
-                            {% include 'bowling_player.html' %}
 
+                            {% for bowling in bowling_list_bn_f %}
+                                <tr class="bowling-player">
+                                    <td class="bowl-name -text-left">
+                                        {{ bowling.bowler_name }}
+                                    </td>
+                                    <td class="bowl-overs">
+                                        {{ bowling.overs }}
+                                    </td>
+                                    <td class="bowl-maidens">
+
+                                    </td>
+                                    <td class="bowl-runs">
+                                        {{ bowling.runs }}
+                                    </td>
+                                    <td class="bowl-wickets">
+                                        {{ bowling.wickets }}
+                                    </td>
+                                    <td class="bowl-econ">
+                                        {{ bowling.economy }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
 
@@ -317,19 +332,55 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% include 'batting_player.html' %}
-                            {% include 'batting_player.html' %}
-                            {% include 'batting_player.html' %}
-                            {% include 'batting_player.html' %}
+                            {% for batting in batting_list_bn_f %}
+                                {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
+                                    <tr class="batting-player">
+                                        <td class="bat-name">
+                                            {{ batting.batter_name }}
+                                        </td>
+                                        <td class="bat-out-by">
+                                            {% if batting.mode_of_dismissal|stringformat:"s" != "Not Out" %}
+                                                {{ batting.out_by }}
+                                            {% else %}
+                                            {% endif %}
+                                        </td>
+                                        <td class="bat-out">
+                                            {{ batting.mode_of_dismissal }}
+                                        </td>
+                                        <td class="bat-runs">
+                                            {{ batting.runs }}
+                                        </td>
+                                        <td class="bat-faced">
+
+                                        </td>
+                                        <td class="bat-fours">
+
+                                        </td>
+                                        <td class="bat-sixes">
+
+                                        </td>
+                                        <td class="bat-strike-rate">
+
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
                             <tr class="batting-player">
                                 <td class="bat-name">
                                     Extras
                                 </td>
+                                <td class="bat-out-by">
+
+                                </td>
                                 <td class="bat-out">
-                                    2b, 4b, 1lb, 1nb
+                                    {% for extras in extras_list_f %}
+                                        {{ extras }}
+                                    {% endfor %}
                                 </td>
                                 <td class="bat-runs">
-                                    6
+                                    {% for extras in extras_list_f %}
+                                        {{ extras.extras_total }}
+                                    {% endfor %}
                                 </td>
                                 <td class="bat-faced">
 
@@ -348,11 +399,14 @@
                                 <td class="bat-name">
                                     Total
                                 </td>
+                                <td class="bat-out-by">
+
+                                </td>
                                 <td class="bat-out">
-                                    20.0 overs, 3 wkts
+                                    {{ object.opponent_overs_batted }} overs, {{ object.opponent_wickets }} wkts
                                 </td>
                                 <td class="bat-runs">
-                                    <span>115</span>
+                                    <span>{{ object.opponent_runs }}</span>
                                 </td>
                                 <td class="bat-faced">
 
@@ -369,6 +423,14 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div class="to-bat mb-5">
+                            <p>To Bat:</p>
+                            {% for batting in batting_list_bn_f %}
+                                {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
+                                    <p class="text-primary">{{ batting.batter_name }},</p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
 
                         <div class="team-heading bg-gradient-mini-alt">
                             ARDS BOWLING
@@ -397,9 +459,28 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% include 'bowling_player.html' %}
-                            {% include 'bowling_player.html' %}
-                            {% include 'bowling_player.html' %}
+                            {% for bowling in bowling_list_bn_t %}
+                                <tr class="bowling-player">
+                                    <td class="bowl-name -text-left">
+                                        {{ bowling.member }}
+                                    </td>
+                                    <td class="bowl-overs">
+                                        {{ bowling.overs }}
+                                    </td>
+                                    <td class="bowl-maidens">
+                                        {{ bowling.maidens }}
+                                    </td>
+                                    <td class="bowl-runs">
+                                        {{ bowling.runs }}
+                                    </td>
+                                    <td class="bowl-wickets">
+                                        {{ bowling.wickets }}
+                                    </td>
+                                    <td class="bowl-econ">
+                                        {{ bowling.economy }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
 
                             </tbody>
                         </table>
@@ -420,8 +501,10 @@
 
                             {% if object.venue|stringformat:"s" == "Home" %}
                                 Londonderry Park, Newtownards
-                            {% else %}
+                            {% elif object.venue|stringformat:"s" == "Away" %}
                                 {{ object.opponent.home_venue }}
+                            {% else %}
+                                Neutral
                             {% endif %}
 
                         </dd>
@@ -436,7 +519,7 @@
                     Match Report
                     <hr class="w-50 mx-auto">
                 </div>
-                {{ object.report }}
+                {{ object.report|richtext }}
             </div>
 
         </div>

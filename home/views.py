@@ -2,7 +2,7 @@ from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
-from .models import Member, Match, Batting, Bowling, Team, Extras
+from .models import Member, Match, Batting, Bowling, Team, Extras, BattingOpponents, BowlingOpponents
 from .forms import MemberForm, MatchForm
 
 
@@ -50,15 +50,21 @@ def view_selected_member(request, member_id):
 
 def view_selected_match(request, match_id):
     obj = Match.objects.get(pk=match_id)
-    extras_list = Extras.objects.order_by('match_id').filter(match_id=match_id)
-    batting_list_bn = Batting.objects.order_by('batter_number').filter(match_id=match_id)
-    bowling_list_bn = Bowling.objects.order_by('bowler_number').filter(match_id=match_id)
+    extras_list_t = Extras.objects.order_by('match_id').filter(match_id=match_id, ards=True)
+    extras_list_f = Extras.objects.order_by('match_id').filter(match_id=match_id, ards=False)
+    batting_list_bn_t = Batting.objects.order_by('batter_number').filter(match_id=match_id)
+    bowling_list_bn_t = Bowling.objects.order_by('bowler_number').filter(match_id=match_id)
+    batting_list_bn_f = BattingOpponents.objects.order_by('batter_number').filter(match_id=match_id)
+    bowling_list_bn_f = BowlingOpponents.objects.order_by('bowler_number').filter(match_id=match_id)
 
     context = {
         'object': obj,
-        'extras_list': extras_list,
-        'batting_list_bn': batting_list_bn,
-        'bowling_list_bn': bowling_list_bn
+        'extras_list_t': extras_list_t,
+        'extras_list_f': extras_list_f,
+        'batting_list_bn_t': batting_list_bn_t,
+        'bowling_list_bn_t': bowling_list_bn_t,
+        'batting_list_bn_f': batting_list_bn_f,
+        'bowling_list_bn_f': bowling_list_bn_f
     }
     return render(request, 'club/match_selected.html', context)
 

@@ -1,8 +1,12 @@
 from django.db.models import Max, Min, Count, Sum, Avg, Q
+# skipcq: PYL-W0622
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
-from .models import Member, Match, Batting, Bowling, Team, Extras, BattingOpponents, BowlingOpponents
+# skipcq: PYL-W0622
+from .models import Member, Match, Batting, \
+    Bowling, Team, Extras, BattingOpponents, BowlingOpponents
+# skipcq: PYL-W0622
 from .forms import MemberForm, MatchForm
 
 
@@ -24,7 +28,9 @@ def member_view(request):
     bowling_list_bn = Bowling.objects.order_by('bowler_number')
     batting_list = Batting.objects.order_by('-match__date')
     bowling_list = Bowling.objects.order_by('-match__date')
-    date_list = Member.objects.order_by('batting__match__date__year').values('batting__match__date__year').distinct()
+    date_list = Member.objects.order_by('batting__match__date__year')\
+        .values('batting__match__date__year')\
+        .distinct()
     extras_list = Extras.objects.order_by('match_id')
 
     context = {'member_list': member_list,
@@ -50,12 +56,18 @@ def view_selected_member(request, member_id):
 
 def view_selected_match(request, match_id):
     obj = Match.objects.get(pk=match_id)
-    extras_list_t = Extras.objects.order_by('match_id').filter(match_id=match_id, ards=True)
-    extras_list_f = Extras.objects.order_by('match_id').filter(match_id=match_id, ards=False)
-    batting_list_bn_t = Batting.objects.order_by('batter_number').filter(match_id=match_id)
-    bowling_list_bn_t = Bowling.objects.order_by('bowler_number').filter(match_id=match_id)
-    batting_list_bn_f = BattingOpponents.objects.order_by('batter_number').filter(match_id=match_id)
-    bowling_list_bn_f = BowlingOpponents.objects.order_by('bowler_number').filter(match_id=match_id)
+    extras_list_t = Extras.objects.order_by('match_id')\
+        .filter(match_id=match_id, ards=True)
+    extras_list_f = Extras.objects.order_by('match_id')\
+        .filter(match_id=match_id, ards=False)
+    batting_list_bn_t = Batting.objects.order_by('batter_number')\
+        .filter(match_id=match_id)
+    bowling_list_bn_t = Bowling.objects.order_by('bowler_number')\
+        .filter(match_id=match_id)
+    batting_list_bn_f = BattingOpponents.objects.order_by('batter_number')\
+        .filter(match_id=match_id)
+    bowling_list_bn_f = BowlingOpponents.objects.order_by('bowler_number')\
+        .filter(match_id=match_id)
 
     context = {
         'object': obj,

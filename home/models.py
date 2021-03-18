@@ -10,16 +10,19 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
-from .blocks import *
+from .blocks import TitleAndTextBlock, LocationCardBlock, CardBlock, ArticleBlock, ImageTextsBlock, ImageTextBlock, \
+    QuestionBlock, ButtonLinksBlock, InlineVideoBlock
 
 
 class HomePage(Page):
-    """Home page model"""
+    """Home page model."""
 
     template = "home/home_page.html"
     max_count = 1
 
-    banner_title = models.CharField(max_length=100, blank=False, null=True)
+    banner_title = models.CharField(
+        max_length=100, blank=False, null=True
+    )
     banner_subtitle = RichTextField()
     intro = StreamField(
         [
@@ -52,44 +55,51 @@ class HomePage(Page):
     ]
 
     class Meta:
+        """Meta class."""
         verbose_name = "Home Page"
         verbose_name_plural = "Home Pages"
 
 
 class Scorecard(Page):
-    """Scorecard page model"""
+    """Scorecard page model."""
 
     template = "club/scorecard.html"
     max_count = 1
 
-    banner_title = models.CharField(max_length=100, blank=True, default='')
+    banner_title = models.CharField(
+        max_length=100, blank=True, default=''
+    )
     content_panels = Page.content_panels + [
         FieldPanel("banner_title"),
     ]
 
     class Meta:
+        """Meta class."""
         verbose_name = "Scorecard Page"
         verbose_name_plural = "Scorecard Pages"
 
 
 class Overview(Page):
-    """Overview page model"""
+    """Overview page model."""
 
     template = "club/overview.html"
     max_count = 1
 
-    banner_title = models.CharField(max_length=100, blank=True, default='')
+    banner_title = models.CharField(
+        max_length=100, blank=True, default=''
+    )
     content_panels = Page.content_panels + [
         FieldPanel("banner_title"),
     ]
 
     class Meta:
+        """Meta class."""
         verbose_name = "Overview Page"
         verbose_name_plural = "Overview Pages"
 
 
 class BlogIndexPage(Page):
-    """Main page that holds the blog on"""
+    """Main page that holds the blog on."""
     intro = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
@@ -100,8 +110,13 @@ class BlogIndexPage(Page):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
         # Get all posts
-        all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
-        date_sorted_posts = sorted(all_posts, key=lambda p: p.specific.date, reverse=True)
+        all_posts = BlogPage.objects.live().public()\
+            .order_by(
+            '-first_published_at'
+        )
+        date_sorted_posts = sorted(
+            all_posts, key=lambda p: p.specific.date, reverse=True
+        )
         # Paginate all posts by 5 per page
         paginator = Paginator(date_sorted_posts, 5)
         # Try to get the ?page=x value
@@ -124,7 +139,7 @@ class BlogIndexPage(Page):
 
 
 class BlogPage(Page):
-    """Individual blog page creation through adding child page"""
+    """Individual blog page creation through adding child page."""
 
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -143,14 +158,21 @@ class BlogPage(Page):
                         ),
 
         MultiFieldPanel(
-            [InlinePanel('blogpage_images', max_num=30, min_num=0, label="blogpage images")],
+            [
+                InlinePanel(
+                    'blogpage_images', max_num=30, min_num=0, label="blogpage images"
+                )
+            ],
             heading="blogpage Images"
         ),
     ]
 
 
 class BlogPageGalleryImage(Orderable):
-    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='blogpage_images')
+    """Orderable images for blog"""
+    page = ParentalKey(
+        BlogPage, on_delete=models.CASCADE, related_name='blogpage_images'
+    )
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -169,11 +191,12 @@ class BlogPageGalleryImage(Orderable):
 # Start of Club database
 
 class Team(models.Model):
-    """Range of age levels at standards of cricket clubs"""
+    """Range of age levels at standards of cricket clubs."""
     name = models.CharField(max_length=20, default='')
     abr = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -181,10 +204,11 @@ class Team(models.Model):
 
 
 class Role(models.Model):
-    """Roles available at the lub like player or captain"""
+    """Roles available at the lub like player or captain."""
     name = models.CharField(max_length=20, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -192,10 +216,11 @@ class Role(models.Model):
 
 
 class Venue(models.Model):
-    """Home away or neutral grounds are possible"""
+    """Home away or neutral grounds are possible."""
     name = models.CharField(max_length=20, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -203,10 +228,11 @@ class Venue(models.Model):
 
 
 class OppositionNames(models.Model):
-    """Opposition names Table"""
+    """Opposition names Table."""
     name = models.CharField(max_length=30, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -214,10 +240,11 @@ class OppositionNames(models.Model):
 
 
 class Type(models.Model):
-    """Type of cricket players available"""
+    """Type of cricket players available."""
     name = models.CharField(max_length=20, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -225,7 +252,7 @@ class Type(models.Model):
 
 
 class Member(models.Model):
-    """Make a member of a team"""
+    """Make a member of a team."""
     ards = models.BooleanField(null=True, blank=True)
     name = models.CharField(max_length=40, default='')
     dateOfBirth = models.DateField(blank=True, null=True)
@@ -234,7 +261,9 @@ class Member(models.Model):
     teamsPlayedFor = models.ManyToManyField(Team)
     dateJoined = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=15, default='')
-    profile_pic = models.ImageField(default="default profile pic1.png", null=True, blank=True)
+    profile_pic = models.ImageField(
+        default="default profile pic1.png", null=True, blank=True
+    )
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
@@ -242,10 +271,11 @@ class Member(models.Model):
 
 
 class Cup(models.Model):
-    """Available types of cups"""
+    """Available types of cups."""
     name = models.CharField(max_length=30, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -253,24 +283,30 @@ class Cup(models.Model):
 
 
 class Award(models.Model):
-    """Exact award given out"""
+    """Exact award given out."""
     type = models.ForeignKey(Cup, on_delete=models.CASCADE, default='')
-    year = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1950)])
+    year = models.IntegerField(
+        blank=True, null=True, validators=[MinValueValidator(1950)]
+    )
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     team = models.ForeignKey(Team, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("type", "team", "year"),)
 
     def __str__(self):
-        return str('{0} {1} {2}'.format(self.member, self.type, self.year))
+        return str('{0} {1} {2}'.format(
+            self.member, self.type, self.year)
+        )
 
 
 class MatchFormat(models.Model):
-    """Range from t20 to 35 over game"""
+    """Range from t20 to 35 over game."""
     name = models.CharField(max_length=20, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -278,10 +314,11 @@ class MatchFormat(models.Model):
 
 
 class CoinToss(models.Model):
-    """How did ards do in the toss"""
+    """How did ards do in the toss."""
     decision = models.CharField(blank=True, default='', max_length=40)
 
     class Meta:
+        """Meta class."""
         unique_together = (("decision",),)
 
     def __str__(self):
@@ -289,10 +326,11 @@ class CoinToss(models.Model):
 
 
 class Wicket(models.Model):
-    """Types of wickets that can happen"""
+    """Types of wickets that can happen."""
     name = models.CharField(max_length=20, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("name",),)
 
     def __str__(self):
@@ -300,12 +338,15 @@ class Wicket(models.Model):
 
 
 class Club(models.Model):
-    """Holds club information"""
+    """Holds club information."""
     name = models.CharField(max_length=30, default='')
-    badge = models.ImageField(default="original_images/default_logo.png", null=True, blank=True)
+    badge = models.ImageField(
+        default="original_images/default_logo.png", null=True, blank=True
+    )
     home_venue = models.CharField(max_length=40, default='', null=True, blank=True)
 
     class Meta:
+        """Meta class."""
         unique_together = (("name", "home_venue"),)
 
     def __str__(self):
@@ -313,41 +354,59 @@ class Club(models.Model):
 
 
 class Match(models.Model):
-    """Specific to match information"""
+    """Specific to match information."""
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, default='')
-    match_format = models.ForeignKey(MatchFormat, on_delete=models.SET_NULL, null=True, default='')
-    opponent = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, default='')
+    match_format = models.ForeignKey(
+        MatchFormat, on_delete=models.SET_NULL, null=True, default=''
+    )
+    opponent = models.ForeignKey(
+        Club, on_delete=models.SET_NULL, null=True, default=''
+    )
     date = models.DateField(blank=True, null=True)
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True, default='')
-    decision = models.ForeignKey(CoinToss, on_delete=models.SET_NULL, null=True, default='')
-    ards_overs_batted = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=4)
+    decision = models.ForeignKey(
+        CoinToss, on_delete=models.SET_NULL, null=True, default=''
+    )
+    ards_overs_batted = models.DecimalField(
+        blank=True, null=True, decimal_places=1, max_digits=4
+    )
     ards_runs = models.IntegerField(blank=True, null=True)
     ards_wickets = models.IntegerField(blank=True, null=True)
-    opponent_overs_batted = models.DecimalField(blank=True, null=True, decimal_places=1, max_digits=4)
+    opponent_overs_batted = models.DecimalField(
+        blank=True, null=True, decimal_places=1, max_digits=4
+    )
     opponent_runs = models.IntegerField(blank=True, null=True)
     opponent_wickets = models.IntegerField(blank=True, null=True)
-    report = models.TextField(max_length=600, default='', null=True, blank=True)
+    report = models.TextField(
+        max_length=600, default='', null=True, blank=True
+    )
 
     class Meta:
+        """Meta class."""
         unique_together = (("team", "date", "opponent"),)
 
     def __str__(self):
+        # skipcq: PYL-W0622
         if self.ards_runs > self.opponent_runs:
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
-            return str('{0} on {1} {2} by {3} against {4}'.format(self.team, self.date.strftime("%d %B %Y"), result,
-                                                                  runs_diff, self.opponent))
+            return str('{0} on {1} {2} by {3} against {4}'.format(
+                self.team, self.date.strftime("%d %B %Y"), result, runs_diff, self.opponent)
+            )
         elif self.ards_runs == self.opponent_runs:
             result = "Match drawn"
-            return str('{0} on {1} {2} against {3}'.format(self.team, self.date.strftime("%d %B %Y"), result,
-                                                           self.opponent))
+            return str('{0} on {1} {2} against {3}'.format(
+                self.team, self.date.strftime("%d %B %Y"), result, self.opponent)
+            )
         else:
             runs_diff = self.opponent_runs - self.ards_runs
             result = "Ards lost"
-            return str('{0} on {1} {2} by {3} against {4}'.format(self.team, self.date.strftime("%d %B %Y"), result,
-                                                                  runs_diff, self.opponent))
+            return str('{0} on {1} {2} by {3} against {4}'.format(
+                self.team, self.date.strftime("%d %B %Y"), result, runs_diff, self.opponent)
+            )
 
     def result(self):
+        # skipcq: PYL-W0622
         if self.ards_runs > self.opponent_runs:
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
@@ -372,6 +431,7 @@ class Match(models.Model):
         return str('{0}-{1}').format(self.ards_runs, var1)
 
     def opponents_score(self):
+        # skipcq: PYL-W0622
         if self.opponent_wickets == 10:
             var1 = " All Out"
             return str('{0} {1}').format(self.opponent_runs, var1)
@@ -381,7 +441,7 @@ class Match(models.Model):
 
 
 class Extras(models.Model):
-    """Extras that were bowled by each team in a match"""
+    """Extras that were bowled by each team in a match."""
     ards = models.BooleanField(blank=True, null=True)
     wides = models.IntegerField(blank=True, null=True)
     no_balls = models.IntegerField(blank=True, null=True)
@@ -390,6 +450,7 @@ class Extras(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("ards", "match",),)
 
     def __str__(self):
@@ -401,7 +462,7 @@ class Extras(models.Model):
 
 
 class Batting(models.Model):
-    """Batting performances within a match"""
+    """Batting performances within a match."""
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     batter_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
     fours = models.IntegerField(blank=True, null=True, default=0)
@@ -412,6 +473,7 @@ class Batting(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("batter_number", "match",),)
 
     def __str__(self):
@@ -419,7 +481,7 @@ class Batting(models.Model):
 
 
 class Bowling(models.Model):
-    """Bowling performances within a match"""
+    """Bowling performances within a match."""
     ards = models.BooleanField(blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     bowler_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
@@ -432,6 +494,7 @@ class Bowling(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("ards", "bowler_number", "match",),)
 
     def __str__(self):
@@ -448,25 +511,38 @@ class Bowling(models.Model):
 
 
 class BattingOpponents(models.Model):
-    """Batting performances within a match"""
-    batter_name = models.ForeignKey(OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True)
-    batter_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
+    """Batting performances within a match."""
+    batter_name = models.ForeignKey(
+        OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True
+    )
+    batter_number = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+    )
     runs = models.IntegerField(blank=True, null=True, default=0)
-    mode_of_dismissal = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
+    mode_of_dismissal = models.ForeignKey(
+        Wicket, on_delete=models.CASCADE, default=''
+    )
     out_by = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("batter_number", "match",),)
 
     def __str__(self):
-        return str('{0} {1} scored {2} runs'.format(self.batter_name, self.match.date, self.runs))
+        return str('{0} {1} scored {2} runs'.format(
+            self.batter_name, self.match.date, self.runs)
+        )
 
 
 class BowlingOpponents(models.Model):
-    """Bowling performances within a match"""
-    bowler_name = models.ForeignKey(OppositionNames, on_delete=models.CASCADE, default='')
-    bowler_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
+    """Bowling performances within a match."""
+    bowler_name = models.ForeignKey(
+        OppositionNames, on_delete=models.CASCADE, default=''
+    )
+    bowler_number = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+    )
     overs = models.IntegerField(blank=True, null=True, default=0)
     runs = models.IntegerField(blank=True, null=True, default=0)
     wickets = models.IntegerField(blank=True, null=True, default=0)
@@ -475,11 +551,13 @@ class BowlingOpponents(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
+        """Meta class."""
         unique_together = (("bowler_number", "match",),)
 
     def __str__(self):
-        return str('{0} {1}, figures of {2}-{3}-{4}'.format(self.bowler_name, self.match.date, self.overs,
-                                                            self.runs, self.wickets))
+        return str('{0} {1}, figures of {2}-{3}-{4}'.format(
+            self.bowler_name, self.match.date, self.overs, self.runs, self.wickets)
+        )
 
     def bowler_extras(self):
         extras = self.wides + self.no_balls

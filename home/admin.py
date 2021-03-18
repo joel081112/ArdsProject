@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Member, Award, Wicket, Role, Club, Batting, Bowling, Team, Type, Cup, MatchFormat, Match, Venue, \
+from .models import Member, Award, Wicket, Role, Club, \
+    Batting, Bowling, Team, Type, Cup, MatchFormat, Match, Venue, \
     CoinToss, Extras, OppositionNames, BattingOpponents, BowlingOpponents
 # Register your models here.
 

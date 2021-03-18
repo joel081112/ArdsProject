@@ -1,7 +1,6 @@
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Count, Max, Min, Sum, FloatField
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
 
@@ -10,8 +9,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
-from .blocks import TitleAndTextBlock, LocationCardBlock, CardBlock, ArticleBlock, ImageTextsBlock, ImageTextBlock, \
-    QuestionBlock, ButtonLinksBlock, InlineVideoBlock
+from .blocks import InlineVideoBlock
 
 
 class HomePage(Page):
@@ -56,6 +54,7 @@ class HomePage(Page):
 
     class Meta:
         """Meta class."""
+
         verbose_name = "Home Page"
         verbose_name_plural = "Home Pages"
 
@@ -75,6 +74,7 @@ class Scorecard(Page):
 
     class Meta:
         """Meta class."""
+
         verbose_name = "Scorecard Page"
         verbose_name_plural = "Scorecard Pages"
 
@@ -94,6 +94,7 @@ class Overview(Page):
 
     class Meta:
         """Meta class."""
+
         verbose_name = "Overview Page"
         verbose_name_plural = "Overview Pages"
 
@@ -169,7 +170,8 @@ class BlogPage(Page):
 
 
 class BlogPageGalleryImage(Orderable):
-    """Orderable images for blog"""
+    """Orderable images for blog."""
+
     page = ParentalKey(
         BlogPage, on_delete=models.CASCADE, related_name='blogpage_images'
     )
@@ -192,11 +194,13 @@ class BlogPageGalleryImage(Orderable):
 
 class Team(models.Model):
     """Range of age levels at standards of cricket clubs."""
+
     name = models.CharField(max_length=20, default='')
     abr = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -205,10 +209,12 @@ class Team(models.Model):
 
 class Role(models.Model):
     """Roles available at the lub like player or captain."""
+
     name = models.CharField(max_length=20, default='')
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -221,6 +227,7 @@ class Venue(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -233,6 +240,7 @@ class OppositionNames(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -245,6 +253,7 @@ class Type(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -272,10 +281,12 @@ class Member(models.Model):
 
 class Cup(models.Model):
     """Available types of cups."""
+
     name = models.CharField(max_length=30, default='')
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -293,6 +304,7 @@ class Award(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("type", "team", "year"),)
 
     def __str__(self):
@@ -303,6 +315,7 @@ class Award(models.Model):
 
 class MatchFormat(models.Model):
     """Range from t20 to 35 over game."""
+
     name = models.CharField(max_length=20, default='')
 
     class Meta:
@@ -315,10 +328,12 @@ class MatchFormat(models.Model):
 
 class CoinToss(models.Model):
     """How did ards do in the toss."""
+
     decision = models.CharField(blank=True, default='', max_length=40)
 
     class Meta:
         """Meta class."""
+
         unique_together = (("decision",),)
 
     def __str__(self):
@@ -331,6 +346,7 @@ class Wicket(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -339,6 +355,7 @@ class Wicket(models.Model):
 
 class Club(models.Model):
     """Holds club information."""
+
     name = models.CharField(max_length=30, default='')
     badge = models.ImageField(
         default="original_images/default_logo.png", null=True, blank=True
@@ -347,6 +364,7 @@ class Club(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name", "home_venue"),)
 
     def __str__(self):
@@ -355,6 +373,7 @@ class Club(models.Model):
 
 class Match(models.Model):
     """Specific to match information."""
+
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, default='')
     match_format = models.ForeignKey(
         MatchFormat, on_delete=models.SET_NULL, null=True, default=''
@@ -383,6 +402,7 @@ class Match(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("team", "date", "opponent"),)
 
     def __str__(self):
@@ -391,7 +411,8 @@ class Match(models.Model):
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
             return str('{0} on {1} {2} by {3} against {4}'.format(
-                self.team, self.date.strftime("%d %B %Y"), result, runs_diff, self.opponent)
+                self.team, self.date.strftime("%d %B %Y"), result,
+                runs_diff, self.opponent)
             )
         elif self.ards_runs == self.opponent_runs:
             result = "Match drawn"
@@ -402,7 +423,8 @@ class Match(models.Model):
             runs_diff = self.opponent_runs - self.ards_runs
             result = "Ards lost"
             return str('{0} on {1} {2} by {3} against {4}'.format(
-                self.team, self.date.strftime("%d %B %Y"), result, runs_diff, self.opponent)
+                self.team, self.date.strftime("%d %B %Y"), result,
+                runs_diff, self.opponent)
             )
 
     def result(self):
@@ -442,6 +464,7 @@ class Match(models.Model):
 
 class Extras(models.Model):
     """Extras that were bowled by each team in a match."""
+
     ards = models.BooleanField(blank=True, null=True)
     wides = models.IntegerField(blank=True, null=True)
     no_balls = models.IntegerField(blank=True, null=True)
@@ -451,6 +474,7 @@ class Extras(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("ards", "match",),)
 
     def __str__(self):
@@ -463,6 +487,7 @@ class Extras(models.Model):
 
 class Batting(models.Model):
     """Batting performances within a match."""
+
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     batter_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
     fours = models.IntegerField(blank=True, null=True, default=0)
@@ -474,6 +499,7 @@ class Batting(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("batter_number", "match",),)
 
     def __str__(self):
@@ -482,6 +508,7 @@ class Batting(models.Model):
 
 class Bowling(models.Model):
     """Bowling performances within a match."""
+
     ards = models.BooleanField(blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     bowler_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
@@ -495,6 +522,7 @@ class Bowling(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("ards", "bowler_number", "match",),)
 
     def __str__(self):
@@ -512,6 +540,7 @@ class Bowling(models.Model):
 
 class BattingOpponents(models.Model):
     """Batting performances within a match."""
+
     batter_name = models.ForeignKey(
         OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True
     )
@@ -527,6 +556,7 @@ class BattingOpponents(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("batter_number", "match",),)
 
     def __str__(self):
@@ -537,6 +567,7 @@ class BattingOpponents(models.Model):
 
 class BowlingOpponents(models.Model):
     """Bowling performances within a match."""
+
     bowler_name = models.ForeignKey(
         OppositionNames, on_delete=models.CASCADE, default=''
     )
@@ -552,6 +583,7 @@ class BowlingOpponents(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("bowler_number", "match",),)
 
     def __str__(self):

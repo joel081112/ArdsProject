@@ -1,13 +1,9 @@
 from django.db.models import Max, Min, Count, Sum, Avg, Q
-# skipcq: PYL-W0622
-from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
-# skipcq: PYL-W0622
 from .models import Member, Match, Batting, \
-    Bowling, Team, Extras, BattingOpponents, BowlingOpponents
-# skipcq: PYL-W0622
-from .forms import MemberForm, MatchForm
+    Bowling, Extras, BattingOpponents, BowlingOpponents
+from .forms import MemberForm
 
 
 def member_view(request):

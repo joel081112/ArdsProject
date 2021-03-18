@@ -2,7 +2,8 @@ from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, \
+    StreamFieldPanel, MultiFieldPanel, InlinePanel
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
@@ -101,6 +102,7 @@ class Overview(Page):
 
 class BlogIndexPage(Page):
     """Main page that holds the blog on."""
+
     intro = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
@@ -236,6 +238,7 @@ class Venue(models.Model):
 
 class OppositionNames(models.Model):
     """Opposition names Table."""
+
     name = models.CharField(max_length=30, default='')
 
     class Meta:
@@ -249,6 +252,7 @@ class OppositionNames(models.Model):
 
 class Type(models.Model):
     """Type of cricket players available."""
+
     name = models.CharField(max_length=20, default='')
 
     class Meta:
@@ -262,6 +266,7 @@ class Type(models.Model):
 
 class Member(models.Model):
     """Make a member of a team."""
+
     ards = models.BooleanField(null=True, blank=True)
     name = models.CharField(max_length=40, default='')
     dateOfBirth = models.DateField(blank=True, null=True)
@@ -295,6 +300,7 @@ class Cup(models.Model):
 
 class Award(models.Model):
     """Exact award given out."""
+
     type = models.ForeignKey(Cup, on_delete=models.CASCADE, default='')
     year = models.IntegerField(
         blank=True, null=True, validators=[MinValueValidator(1950)]
@@ -342,6 +348,7 @@ class CoinToss(models.Model):
 
 class Wicket(models.Model):
     """Types of wickets that can happen."""
+
     name = models.CharField(max_length=20, default='')
 
     class Meta:
@@ -407,7 +414,7 @@ class Match(models.Model):
 
     def __str__(self):
         # skipcq: PYL-W0622
-        if self.ards_runs > self.opponent_runs:
+        if self.ards_runs > self.opponent_runs:  # skipcq: PYL-W0622
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
             return str('{0} on {1} {2} by {3} against {4}'.format(
@@ -428,12 +435,13 @@ class Match(models.Model):
             )
 
     def result(self):
-        # skipcq: PYL-W0622
-        if self.ards_runs > self.opponent_runs:
+        """Return result string."""
+
+        if self.ards_runs > self.opponent_runs:  # skipcq: PYL-W0622
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
             return str('{0} by {1} runs'.format(result, runs_diff))
-        elif self.ards_runs == self.opponent_runs:
+        elif self.ards_runs == self.opponent_runs:  # skipcq: PYL-W0622
             result = "Match drawn"
             return str('{0}'.format(result))
         else:
@@ -442,10 +450,14 @@ class Match(models.Model):
             return str('{0} by {1} runs'.format(result, runs_diff))
 
     def banter(self):
+        """This is mostly a test."""
+
         runs_diff = self.ards_runs - self.opponent_runs
         return str('{0}').format(runs_diff)
 
     def ards_score(self):
+        """Output the ards score."""
+
         if self.ards_wickets == 10:
             var1 = "All Out"
         else:
@@ -453,13 +465,13 @@ class Match(models.Model):
         return str('{0}-{1}').format(self.ards_runs, var1)
 
     def opponents_score(self):
-        # skipcq: PYL-W0622
+        """Output the opponents score."""
+
         if self.opponent_wickets == 10:
             var1 = " All Out"
-            return str('{0} {1}').format(self.opponent_runs, var1)
         else:
             var1 = self.ards_wickets
-            return str('{0}-{1}').format(self.opponent_runs, var1)
+        return str('{0}-{1}').format(self.opponent_runs, var1)
 
 
 class Extras(models.Model):
@@ -478,9 +490,13 @@ class Extras(models.Model):
         unique_together = (("ards", "match",),)
 
     def __str__(self):
-        return str('{0}w, {1}b, {2}lb, {3}nb'.format(self.wides, self.byes, self.leg_byes, self.leg_byes))
+        return str('{0}w, {1}b, {2}lb, {3}nb'
+                   .format(self.wides, self.byes, self.leg_byes, self.leg_byes)
+                   )
 
     def extras_total(self):
+        """Output the total extras."""
+
         total = self.wides + self.no_balls + self.byes + self.leg_byes
         return total
 
@@ -489,12 +505,16 @@ class Batting(models.Model):
     """Batting performances within a match."""
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
-    batter_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
+    batter_number = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+    )
     fours = models.IntegerField(blank=True, null=True, default=0)
     sixes = models.IntegerField(blank=True, null=True, default=0)
     runs = models.IntegerField(blank=True, null=True, default=0)
     mode_of_dismissal = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
-    out_by = models.ForeignKey(OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True)
+    out_by = models.ForeignKey(
+        OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True
+    )
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
@@ -503,7 +523,9 @@ class Batting(models.Model):
         unique_together = (("batter_number", "match",),)
 
     def __str__(self):
-        return str('{0} {1} scored {2} runs'.format(self.member, self.match.date, self.runs))
+        return str('{0} {1} scored {2} runs'
+                   .format(self.member, self.match.date, self.runs)
+                   )
 
 
 class Bowling(models.Model):
@@ -511,7 +533,9 @@ class Bowling(models.Model):
 
     ards = models.BooleanField(blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
-    bowler_number = models.IntegerField(blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)])
+    bowler_number = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+    )
     overs = models.IntegerField(blank=True, null=True, default=0)
     runs = models.IntegerField(blank=True, null=True, default=0)
     maidens = models.IntegerField(blank=True, null=True, default=0)
@@ -526,14 +550,20 @@ class Bowling(models.Model):
         unique_together = (("ards", "bowler_number", "match",),)
 
     def __str__(self):
-        return str('{0} {1}, figures of {2}-{3}-{4}'.format(self.member, self.match.date, self.overs,
-                                                            self.runs, self.wickets))
+        return str('{0} {1}, figures of {2}-{3}-{4}'
+                   .format(self.member, self.match.date, self.overs,
+                           self.runs, self.wickets)
+        )
 
     def bowler_extras(self):
+        """Output the bowlers extras."""
+
         extras = self.wides + self.no_balls
         return str('{0}'.format(extras))
 
     def economy(self):
+        """Workout the economy."""
+
         econ = float(self.runs) / float(self.overs)
         return format(econ, '.2f')
 
@@ -592,11 +622,15 @@ class BowlingOpponents(models.Model):
         )
 
     def bowler_extras(self):
+        """Bowlers extras output."""
+
         extras = self.wides + self.no_balls
         return str('{0}'.format(extras))
 
     # got to add extras in with this
     def economy(self):
+        """Workout the economy."""
+
         econ = float(self.runs) / float(self.overs)
         return format(econ, '.2f')
 

@@ -271,7 +271,7 @@ class MatchFormat(models.Model):
     name = models.CharField(max_length=20, default='')
 
     class Meta:
-        unique_together = (("name", ),)
+        unique_together = (("name",),)
 
     def __str__(self):
         return self.name
@@ -282,7 +282,7 @@ class CoinToss(models.Model):
     decision = models.CharField(blank=True, default='', max_length=40)
 
     class Meta:
-        unique_together = (("decision", ),)
+        unique_together = (("decision",),)
 
     def __str__(self):
         return str('{0}'.format(self.decision))
@@ -293,7 +293,7 @@ class Wicket(models.Model):
     name = models.CharField(max_length=20, default='')
 
     class Meta:
-        unique_together = (("name", ),)
+        unique_together = (("name",),)
 
     def __str__(self):
         return str(self.name)
@@ -485,6 +485,7 @@ class BowlingOpponents(models.Model):
         extras = self.wides + self.no_balls
         return str('{0}'.format(extras))
 
+    # got to add extras in with this
     def economy(self):
         econ = float(self.runs) / float(self.overs)
         return format(econ, '.2f')

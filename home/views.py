@@ -8,7 +8,6 @@ from .forms import MemberForm
 
 def member_view(request):
     """View all members."""
-
     member_list = Member.objects.order_by('teamsPlayedFor').annotate(
         max_runs=Max('batting__runs'),
         min_runs=Min('batting__runs'),
@@ -45,7 +44,6 @@ def member_view(request):
 
 def view_selected_member(request, member_id):
     """View a selected member."""
-
     obj = Member.objects.get(pk=member_id)
 
     context = {
@@ -56,7 +54,6 @@ def view_selected_member(request, member_id):
 
 def view_selected_match(request, match_id):
     """View a selected match."""
-
     obj = Match.objects.get(pk=match_id)
     extras_list_t = Extras.objects.order_by('match_id')\
         .filter(match_id=match_id, ards=True)
@@ -85,7 +82,6 @@ def view_selected_match(request, match_id):
 
 def view_selected_member_role(request, role):
     """View a selected role."""
-
     role_list = Member.objects.filter(role__name__contains=role)
 
     context = {
@@ -96,7 +92,6 @@ def view_selected_member_role(request, role):
 
 def view_selected_member_team(request, team):
     """View a selected team."""
-
     team_list = Member.objects.filter(teamsPlayedFor__name__contains=team)
 
     context = {
@@ -116,7 +111,6 @@ def create_member(request):
 @require_POST
 def add_new_member(request):
     """Add a new member post."""
-
     if request.method == 'POST':
         print("Printing POST")
         form = MemberForm(request.POST, request.FILES)
@@ -128,6 +122,7 @@ def add_new_member(request):
 
 
 def member_form(request, member_id):
+    """Edit existing member form view."""
     obj = Member.objects.get(pk=member_id)
     form = MemberForm(instance=obj)
     if request.method == 'POST':

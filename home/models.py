@@ -225,6 +225,7 @@ class Role(models.Model):
 
 class Venue(models.Model):
     """Home away or neutral grounds are possible."""
+
     name = models.CharField(max_length=20, default='')
 
     class Meta:
@@ -326,6 +327,7 @@ class MatchFormat(models.Model):
 
     class Meta:
         """Meta class."""
+
         unique_together = (("name",),)
 
     def __str__(self):
@@ -436,7 +438,6 @@ class Match(models.Model):
 
     def result(self):
         """Return result string."""
-
         if self.ards_runs > self.opponent_runs:  # skipcq: PYL-W0622
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
@@ -450,14 +451,12 @@ class Match(models.Model):
             return str('{0} by {1} runs'.format(result, runs_diff))
 
     def banter(self):
-        """This is mostly a test."""
-
+        """Difference in runs."""
         runs_diff = self.ards_runs - self.opponent_runs
         return str('{0}').format(runs_diff)
 
     def ards_score(self):
         """Output the ards score."""
-
         if self.ards_wickets == 10:
             var1 = "All Out"
         else:
@@ -466,7 +465,6 @@ class Match(models.Model):
 
     def opponents_score(self):
         """Output the opponents score."""
-
         if self.opponent_wickets == 10:
             var1 = " All Out"
         else:
@@ -496,7 +494,6 @@ class Extras(models.Model):
 
     def extras_total(self):
         """Output the total extras."""
-
         total = self.wides + self.no_balls + self.byes + self.leg_byes
         return total
 
@@ -552,18 +549,15 @@ class Bowling(models.Model):
     def __str__(self):
         return str('{0} {1}, figures of {2}-{3}-{4}'
                    .format(self.member, self.match.date, self.overs,
-                           self.runs, self.wickets)
-        )
+                           self.runs, self.wickets))
 
     def bowler_extras(self):
         """Output the bowlers extras."""
-
         extras = self.wides + self.no_balls
         return str('{0}'.format(extras))
 
     def economy(self):
         """Workout the economy."""
-
         econ = float(self.runs) / float(self.overs)
         return format(econ, '.2f')
 
@@ -623,14 +617,12 @@ class BowlingOpponents(models.Model):
 
     def bowler_extras(self):
         """Bowlers extras output."""
-
         extras = self.wides + self.no_balls
         return str('{0}'.format(extras))
 
     # got to add extras in with this
     def economy(self):
         """Workout the economy."""
-
         econ = float(self.runs) / float(self.overs)
         return format(econ, '.2f')
 

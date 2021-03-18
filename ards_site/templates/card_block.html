@@ -1,0 +1,43 @@
+{% load wagtailimages_tags %}
+
+<div class="document product-card">
+    <div class="w3-card-4 w3-margin w3-white">
+        {% image self.image fill-300x200-c100 as img %}
+        <img src="{{ img.url }}" alt="{{ img.alt }}">
+        <div class="w3-container">
+            {{ panel.name }}
+        </div>
+        <hr>
+        <p id="caption">{{ self.title }}</p>
+
+
+        {% for card in self.cards|slice:":1" %}
+            {% with doc=card.document %}
+                <div class="download product-info">
+                    <a href="{{ doc.url }}" class="smooth-over-button noDecoration">
+                        <i class="fa fa-download"></i>
+                        <p class="btn-txt" id="limiter">{{ doc.title }}</p>
+                    </a>
+                </div>
+            {% endwith %}
+        {% endfor %}
+
+        <div class="bodymovinanim" id="filter-{{ forloop.counter }}" data-toggle="collapse"
+             data-target="#pdf-{{ forloop.counter }}">
+        </div>
+
+
+        <div class="collapse" id="pdf-{{ forloop.counter }}">
+            {% for card in self.cards|slice:"1:" %}
+                {% with doc=card.document %}
+                    <div class="download product-info">
+                        <a href="{{ doc.url }}" class="smooth-over-button noDecoration">
+                            <i class="fa fa-download"></i>
+                            <p class="btn-txt" id="limiter">{{ doc.title }}</p>
+                        </a>
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

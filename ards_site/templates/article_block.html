@@ -1,0 +1,19 @@
+<div class="legal-each">
+    <h2 class="legal-title">{{ self.title }}</h2>
+    <p class="legal-info">{{ self.info }}</p>
+    {% with doc=self.document %} {# retrieve the Document object for each one #}
+
+        {% comment %}<div class="w3-container">
+            {{ doc.title }}
+        </div>{% endcomment %}
+
+        <div class="download">
+            <a href="{{ doc.url }}" class="smooth-over-button noDecoration">
+                <i class="fa fa-download"></i>
+                <p class="btn-txt">PDF Version</p>
+            </a>
+        </div>
+    {% endwith %}
+
+</div>
+<hr>

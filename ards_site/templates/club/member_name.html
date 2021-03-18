@@ -1,0 +1,44 @@
+{% extends "../base.html" %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Member Name{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Scorecard page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+<div class="container-fluid" id="wrapper">
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4" id="content">
+            <h2>PLAYER DETAILS</h2>
+
+            <p>{{ object.name }}</p>
+            <p>{{ object.dateOfBirth }}</p>
+            {% for team in object.type.all %}
+                 <p>{{ team.name }}</p>
+            {% endfor %}
+            <p>{{ object.dateJoined }}</p>
+            <p>{{ object.mobile }}</p>
+            <p>{{ object.role.get }}</p>
+            <p>{{ object.teamsPlayedFor.get }}</p>
+            {% for team in object.role.all %}
+                 <p>{{ team.name }}</p>
+            {% endfor %}
+
+            {% for team in object.teamsPlayedFor.all %}
+                 <p>{{ team.name }}</p>
+            {% endfor %}
+            <img src="{{ object.profile_pic }}" class="" alt="">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

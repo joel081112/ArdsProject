@@ -1,0 +1,373 @@
+{% extends "../base.html" %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Scorecard{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Scorecard page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="pb-5 text-center container">
+
+        <h1 class="display-4">
+            {{ self.banner_title }}
+        </h1>
+
+        <div class="overview mt-5">
+            <div class="py-2" id="match-format">
+                <h5>20 over game</h5>
+            </div>
+            <div class="row bg-gradient-mini-three match-mini-facts">
+                <div class="box col d-flex justify-content-between team-news">
+
+                    <img class="match-img match-img-home" src="/media/ards_cc.png" alt="ards cc">
+                    <div class="align-self-center px-3">
+                        <h2 class="match-team">
+                            ARDS
+                        </h2>
+
+                        <h3 class="match-score">
+                            115-3
+                        </h3>
+                    </div>
+
+                </div>
+                <div class="box d-flex justify-content-center col-md-auto">
+                    <span class="align-items-baseline align-self-start py-2 px-2 span-result d-none d-md-block">
+                        <h3>RESULT</h3>
+                    </span>
+                </div>
+                <div class="box col d-flex justify-content-between team-news">
+
+
+                    <div class="order-1 align-self-center px-3">
+                        <h2 class="match-team">
+                            BANGOR
+                        </h2>
+                        <h3 class="match-score">
+                            95 All Out
+                        </h3>
+                    </div>
+                    <img class="match-img match-img-away order-md-1" src="/media/bangor-cricket-club-logo_YOPhuMI.png" alt="ards cc">
+
+                </div>
+            </div>
+            <div class="py-3" id="match-result">
+                <h5>Ards win by 41 runs</h5>
+            </div>
+        </div>
+
+        <div class="scorecards-container mt-5 row">
+
+
+            <div class="accordion-flush batting-card col-md-8">
+                <div class="game-stats accordion-item bg-gradient-mini-two">
+                    <div class="team-batting-overview border mb-4">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#home-score" aria-expanded="false" aria-controls="home-score">
+                                <p class="team-batting team-batting-name d-inline mx-2">
+                                    ARDS 1st XI
+                                </p>
+                                <p class="team-batting team-batting-score d-inline">
+                                    115-3
+                                </p>
+                            </button>
+                        </h2>
+                    </div>
+
+
+                    <div class="accordion-collapse collapse" id="home-score">
+
+                        <div class="team-heading bg-gradient-mini-alt">
+                            ARDS BATTING
+                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                            <tr class="batting-headings bg-gradient-mini-alt-second">
+                                <th class="bat-name">
+
+                                </th>
+                                <th class="bat-out">
+
+                                </th>
+                                <th class="bat-runs">
+                                    RUNS
+                                </th>
+                                <th class="bat-faced">
+                                    B
+                                </th>
+                                <th class="bat-fours">
+                                    4s
+                                </th>
+                                <th class="bat-sixes">
+                                    6s
+                                </th>
+                                <th class="bat-strike-rate">
+                                    SR
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            <tr class="batting-player">
+                                <td class="bat-name">
+                                    Extras
+                                </td>
+                                <td class="bat-out">
+                                    2b, 4b, 1lb, 1nb
+                                </td>
+                                <td class="bat-runs">
+                                    6
+                                </td>
+                                <td class="bat-faced">
+
+                                </td>
+                                <td class="bat-fours">
+
+                                </td>
+                                <td class="bat-sixes">
+
+                                </td>
+                                <td class="bat-strike-rate">
+
+                                </td>
+                            </tr>
+                            <tr class="batting-player">
+                                <td class="bat-name">
+                                    Total
+                                </td>
+                                <td class="bat-out">
+                                    20.0 overs, 3 wkts
+                                </td>
+                                <td class="bat-runs">
+                                    <span>115</span>
+                                </td>
+                                <td class="bat-faced">
+
+                                </td>
+                                <td class="bat-fours">
+
+                                </td>
+                                <td class="bat-sixes">
+
+                                </td>
+                                <td class="bat-strike-rate">
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="team-heading bg-gradient-mini-alt">
+                            BANGOR BOWLING
+                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                            <tr class="batting-headings bg-gradient-mini-alt-second">
+                                <th class="bowl-name">
+
+                                </th>
+                                <th class="bowl-overs">
+                                    O
+                                </th>
+                                <th class="bowl-maidens">
+                                    M
+                                </th>
+                                <th class="bowl-runs">
+                                    R
+                                </th>
+                                <th class="bowl-wickets">
+                                    W
+                                </th>
+                                <th class="bowl-econ">
+                                    ECON
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% include 'bowling_player.html' %}
+                            {% include 'bowling_player.html' %}
+                            {% include 'bowling_player.html' %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="accordion-flush  batting-card col-md-8 order-md-2">
+                <div class="game-stats accordion-item bg-gradient-mini-two ">
+                    <div class="team-batting-overview border mb-4">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#away-score" aria-expanded="false" aria-controls="away-score">
+                                <p class="team-batting team-batting-name d-inline mx-2">
+                                    BANGOR 1st XI
+                                </p>
+                                <p class="team-batting team-batting-score d-inline">
+                                    95 All Out
+                                </p>
+                            </button>
+                        </h2>
+                    </div>
+
+
+                    <div class="accordion-collapse collapse" id="away-score">
+
+                        <div class="team-heading bg-gradient-mini-alt">
+                            BANGOR BATTING
+                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                            <tr class="batting-headings bg-gradient-mini-alt-second">
+                                <th class="bat-name">
+
+                                </th>
+                                <th class="bat-out">
+
+                                </th>
+                                <th class="bat-runs">
+                                    RUNS
+                                </th>
+                                <th class="bat-faced">
+                                    B
+                                </th>
+                                <th class="bat-fours">
+                                    4s
+                                </th>
+                                <th class="bat-sixes">
+                                    6s
+                                </th>
+                                <th class="bat-strike-rate">
+                                    SR
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            {% include 'batting_player.html' %}
+                            <tr class="batting-player">
+                                <td class="bat-name">
+                                    Extras
+                                </td>
+                                <td class="bat-out">
+                                    2b, 4b, 1lb, 1nb
+                                </td>
+                                <td class="bat-runs">
+                                    6
+                                </td>
+                                <td class="bat-faced">
+
+                                </td>
+                                <td class="bat-fours">
+
+                                </td>
+                                <td class="bat-sixes">
+
+                                </td>
+                                <td class="bat-strike-rate">
+
+                                </td>
+                            </tr>
+                            <tr class="batting-player">
+                                <td class="bat-name">
+                                    Total
+                                </td>
+                                <td class="bat-out">
+                                    20.0 overs, 3 wkts
+                                </td>
+                                <td class="bat-runs">
+                                    <span>115</span>
+                                </td>
+                                <td class="bat-faced">
+
+                                </td>
+                                <td class="bat-fours">
+
+                                </td>
+                                <td class="bat-sixes">
+
+                                </td>
+                                <td class="bat-strike-rate">
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="team-heading bg-gradient-mini-alt">
+                            ARDS BOWLING
+                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                            <tr class="batting-headings bg-gradient-mini-alt-second">
+                                <th class="bowl-name">
+
+                                </th>
+                                <th class="bowl-overs">
+                                    O
+                                </th>
+                                <th class="bowl-maidens">
+                                    M
+                                </th>
+                                <th class="bowl-runs">
+                                    R
+                                </th>
+                                <th class="bowl-wickets">
+                                    W
+                                </th>
+                                <th class="bowl-econ">
+                                    ECON
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% include 'bowling_player.html' %}
+                            {% include 'bowling_player.html' %}
+                            {% include 'bowling_player.html' %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 order-md-1">
+                <div class="border match-details py-3">
+                    <dl class="row">
+                        <dt class="col-sm-3">Date</dt>
+                        <dd class="col-sm-9">11th Feb 2021</dd>
+                        <dt class="col-sm-3">Toss</dt>
+                        <dd class="col-sm-9"> Ards 1st XI won the toss and chose to bat</dd>
+                        <dt class="col-sm-3">Venue</dt>
+                        <dd class="col-sm-9">Londonderry Park, Newtownards</dd>
+                    </dl>
+                </div>
+            </div>
+
+
+            <div class="border match-report py-5 col-md-8 order-4 my-3">
+                Match Report
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

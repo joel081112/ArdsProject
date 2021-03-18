@@ -1,0 +1,13 @@
+{% load wagtailcore_tags wagtailembeds_tags %}
+
+
+<div class="block-{{ block.block_type }}-{{ block.value.float }} block-{{ block.value.size }}">
+    {% include_block block.value.video %}
+
+    {% comment %}
+        example of a youtube url
+        "https://youtu.be/myflgfd5qvk"
+    {% endcomment %}
+
+    {{ block.value.caption }}
+</div>

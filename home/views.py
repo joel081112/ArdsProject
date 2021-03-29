@@ -71,9 +71,6 @@ def player_list_view(queryset, request):
     bowling_list_bn = Bowling.objects.order_by('bowler_number')
     batting_list = Batting.objects.order_by('-match__date')
     bowling_list = Bowling.objects.order_by('-match__date')
-    date_list = Member.objects.order_by('batting__match__date__year') \
-        .values('batting__match__date__year') \
-        .distinct()
     extras_list = Extras.objects.order_by('match_id')
 
     context = {
@@ -82,7 +79,6 @@ def player_list_view(queryset, request):
         'bowling_list_bn': bowling_list_bn,
         'batting_list': batting_list,
         'bowling_list': bowling_list,
-        'date_list': date_list,
         'extras_list': extras_list
     }
 
@@ -107,7 +103,7 @@ def match_list_view(queryset, request):
     team_exact_query = request.GET.get('team_exact')
     team_or_year_query = request.GET.get('team_or_year')
     year_query = request.GET.get('year_choice')
-    date_list = Match.objects.order_by('date__year') \
+    date_list = queryset.order_by('date__year') \
         .values('date__year') \
         .distinct()
 

@@ -1,0 +1,121 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Players{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Players page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="pb-5 container">
+        <div class="">
+
+            <div class="text-center">
+                <h2>PLAYER LIST</h2>
+                <hr>
+            </div>
+
+
+            <div class="row justify-content-md-center">
+                {% for member in member_list %}
+                    <div class="col-lg-3 border m-3">
+                        <div class="row">
+                            <div class="player-info col">
+
+                                {{ member.id }}
+
+                                <p>{{ member.name }}</p>
+                                {% for team in member.role.all %}
+                                    <p>{{ team.name }}</p>
+                                {% endfor %}
+                                {% for team in member.teamsPlayedFor.all %}
+                                    <p>{{ team.name }}</p>
+                                {% endfor %}
+
+                                <hr>
+                                Batting Figures<br>
+                                Max: {{ member.max_runs }}<br>
+                                Min: {{ member.min_runs }}<br>
+                                Count: {{ member.count_runs }}<br>
+                                Count past 2019: {{ member.count_runs_past_2019 }}<br>
+                                Average: {{ member.average_runs }}<br>
+                                Sum: {{ member.sum_runs }}
+                                Second average: {{ member.average_runs_pt2 }}
+                                <hr>
+
+
+                                {% for batting in batting_list %}
+                                    {% if member.id == batting.member.id %}
+
+                                        {# test #}
+                                        {% if member.id == batting.member.id and batting.match.date.year == 2018 %}
+                                            oof
+                                        {% endif %}
+                                        {# endtest #}
+
+                                        {{ batting }}
+                                        <br>
+                                        {{ batting.match.id }}
+                                        <br>
+                                        {{ batting.runs }}
+                                        <br>
+                                        {{ batting.match.date.year }}
+                                        <br>
+                                        {% if batting.mode_of_dismissal|stringformat:"s" == "Not Out" %}
+                                            {{ batting.mode_of_dismissal }}
+                                        {% endif %}
+                                        <br>
+                                        <hr>
+                                    {% endif %}
+                                {% endfor %}
+
+                                Bowling Figures
+                                <hr>
+                                {% for bowling in bowling_list %}
+                                    {% if member.id == bowling.member.id %}
+                                        {{ bowling }}
+                                        <br>
+                                        {{ bowling.match.id }}
+                                        <hr>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            <div class="col">
+                                <img src="{{ member.profile_pic.url }}" class="profile-main" alt="">
+                            </div>
+                        </div>
+
+                        <div class="player-buttons">
+                        <span class="btn btn-primary">
+                            <a href="{% url 'viewmember' member.id %}">
+                            View
+                            </a>
+                        </span>
+                            <span class="btn btn-primary">
+                        <a href="{% url 'memberform' member.id %}">
+                        Update
+                        </a>
+                    </span>
+
+                            {% comment %}<a href="{% url 'deletemember' member.id %}">{% endcomment %}
+                            <span class="btn btn-primary">
+                        Delete
+                        </span>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

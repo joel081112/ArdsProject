@@ -25,8 +25,8 @@ def member_view(request):
     bowling_list_bn = Bowling.objects.order_by('bowler_number')
     batting_list = Batting.objects.order_by('-match__date')
     bowling_list = Bowling.objects.order_by('-match__date')
-    date_list = Member.objects.order_by('batting__match__date__year')\
-        .values('batting__match__date__year')\
+    date_list = Member.objects.order_by('batting__match__date__year') \
+        .values('batting__match__date__year') \
         .distinct()
     extras_list = Extras.objects.order_by('match_id')
 
@@ -42,6 +42,97 @@ def member_view(request):
     return render(request, 'club/overview.html', context)
 
 
+def players_view_firsts(request):
+    """View all firsts matches."""
+    queryset = Member.objects.filter(teamsPlayedFor__name='firstXI')
+    return render(request, 'club/players.html', player_list_view(queryset, request))
+
+
+def players_view_seconds(request):
+    """View all seconds matches."""
+    queryset = Member.objects.filter(teamsPlayedFor__name='secondXI')
+    return render(request, 'club/players.html', player_list_view(queryset, request))
+
+
+def player_list_view(queryset, request):
+    member_list = queryset.annotate(
+        max_runs=Max('batting__runs'),
+        min_runs=Min('batting__runs'),
+        count_runs=Count('batting__runs'),
+        count_runs_past_2019=Count(
+            'batting__runs',
+            filter=Q(batting__match__date__year__range=[2019, 2020])
+        ),
+        sum_runs=Sum('batting__runs'),
+        average_runs=Avg('batting__runs'),
+        average_runs_pt2=Sum('batting__runs') / Count('batting__runs')
+    )
+    batting_list_bn = Batting.objects.order_by('batter_number')
+    bowling_list_bn = Bowling.objects.order_by('bowler_number')
+    batting_list = Batting.objects.order_by('-match__date')
+    bowling_list = Bowling.objects.order_by('-match__date')
+    date_list = Member.objects.order_by('batting__match__date__year') \
+        .values('batting__match__date__year') \
+        .distinct()
+    extras_list = Extras.objects.order_by('match_id')
+
+    context = {
+        'member_list': member_list,
+        'batting_list_bn': batting_list_bn,
+        'bowling_list_bn': bowling_list_bn,
+        'batting_list': batting_list,
+        'bowling_list': bowling_list,
+        'date_list': date_list,
+        'extras_list': extras_list
+    }
+
+    return context
+
+
+def match_view_firsts(request):
+    """View all matches."""
+    queryset = Match.objects.filter(team__name__contains='firstXI')
+    return render(request, 'club/scorecard.html', match_list_view(queryset, request))
+
+
+def match_view_seconds(request):
+    """View all seconds matches."""
+    queryset = Match.objects.filter(team__name__contains='secondXI')
+    return render(request, 'club/scorecard.html', match_list_view(queryset, request))
+
+
+def match_list_view(queryset, request):
+    match_list = Match.objects.order_by('-date')
+    team_contains_queryo = request.GET.get('team_contains')
+    team_exact_query = request.GET.get('team_exact')
+    team_or_year_query = request.GET.get('team_or_year')
+    year_query = request.GET.get('year_choice')
+    date_list = Match.objects.order_by('date__year') \
+        .values('date__year') \
+        .distinct()
+
+    if team_contains_queryo != '' and team_contains_queryo is not None:
+        queryset = queryset.filter(date__year__icontains=team_contains_queryo)
+
+    elif team_exact_query != '' and team_exact_query is not None:
+        queryset = queryset.filter(id=team_exact_query)
+
+    elif team_or_year_query != '' and team_or_year_query is not None:
+        queryset = queryset.filter(Q(date__year__icontains=team_or_year_query)
+                                   | Q(ards_runs__icontains=team_or_year_query)) \
+            .distinct()
+
+    elif year_query != '' and year_query is not None:
+        queryset = queryset.filter(date__year__iexact=year_query)
+
+    context = {
+        'match_list': match_list,
+        'date_list': date_list,
+        'queryset': queryset
+    }
+    return context
+
+
 def view_selected_member(request, member_id):
     """View a selected member."""
     obj = Member.objects.get(pk=member_id)
@@ -55,17 +146,17 @@ def view_selected_member(request, member_id):
 def view_selected_match(request, match_id):
     """View a selected match."""
     obj = Match.objects.get(pk=match_id)
-    extras_list_t = Extras.objects.order_by('match_id')\
+    extras_list_t = Extras.objects.order_by('match_id') \
         .filter(match_id=match_id, ards=True)
-    extras_list_f = Extras.objects.order_by('match_id')\
+    extras_list_f = Extras.objects.order_by('match_id') \
         .filter(match_id=match_id, ards=False)
-    batting_list_bn_t = Batting.objects.order_by('batter_number')\
+    batting_list_bn_t = Batting.objects.order_by('batter_number') \
         .filter(match_id=match_id)
-    bowling_list_bn_t = Bowling.objects.order_by('bowler_number')\
+    bowling_list_bn_t = Bowling.objects.order_by('bowler_number') \
         .filter(match_id=match_id)
-    batting_list_bn_f = BattingOpponents.objects.order_by('batter_number')\
+    batting_list_bn_f = BattingOpponents.objects.order_by('batter_number') \
         .filter(match_id=match_id)
-    bowling_list_bn_f = BowlingOpponents.objects.order_by('bowler_number')\
+    bowling_list_bn_f = BowlingOpponents.objects.order_by('bowler_number') \
         .filter(match_id=match_id)
 
     context = {

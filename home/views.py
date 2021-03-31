@@ -4,6 +4,7 @@ from django.views.decorators.http import require_POST
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents
 from .forms import MemberForm
+from datetime import date
 
 
 def member_view(request):
@@ -55,6 +56,7 @@ def players_view_seconds(request):
 
 
 def player_list_view(queryset, request):
+    """Context creation for a list of members"""
     member_list = queryset.annotate(
         max_runs=Max('batting__runs'),
         min_runs=Min('batting__runs'),
@@ -87,13 +89,13 @@ def player_list_view(queryset, request):
 
 def match_view_firsts(request):
     """View all matches."""
-    queryset = Match.objects.filter(team__name__contains='firstXI')
+    queryset = Match.objects.filter(team__name__contains='firstXI').order_by('-date')
     return render(request, 'club/scorecard.html', match_list_view(queryset, request))
 
 
 def match_view_seconds(request):
     """View all seconds matches."""
-    queryset = Match.objects.filter(team__name__contains='secondXI')
+    queryset = Match.objects.filter(team__name__contains='secondXI').order_by('-date')
     return render(request, 'club/scorecard.html', match_list_view(queryset, request))
 
 
@@ -102,13 +104,14 @@ def match_list_view(queryset, request):
     team_contains_queryo = request.GET.get('team_contains')
     team_exact_query = request.GET.get('team_exact')
     team_or_year_query = request.GET.get('team_or_year')
+    date_search_picker = request.GET.get('date_picker')
     year_query = request.GET.get('year_choice')
     date_list = queryset.order_by('date__year') \
         .values('date__year') \
         .distinct()
 
     if team_contains_queryo != '' and team_contains_queryo is not None:
-        queryset = queryset.filter(date__year__icontains=team_contains_queryo)
+        queryset = queryset.filter(opponent__name__icontains=team_contains_queryo)
 
     elif team_exact_query != '' and team_exact_query is not None:
         queryset = queryset.filter(id=team_exact_query)
@@ -120,6 +123,9 @@ def match_list_view(queryset, request):
 
     elif year_query != '' and year_query is not None:
         queryset = queryset.filter(date__year__iexact=year_query)
+
+    elif date_search_picker != '' and date_search_picker is not None:
+        queryset = queryset.filter(Q(date__range=[date_search_picker, date_search_picker]))
 
     context = {
         'match_list': match_list,

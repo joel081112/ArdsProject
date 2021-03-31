@@ -1,0 +1,59 @@
+{% extends "../base.html" %}
+{% load static %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Fixture Preview{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Fixture preview page
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="pb-5 container">
+        Match Preview
+
+        <div class="row">
+            <img class="match-img match-img-home" src="/media/ards_cc.png" alt="ards cc"
+                 style="height: 40px; width: auto;">
+
+            <div class="align-self-center px-3">
+                <h2 class="match-team">
+                    ARDS
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <img class="match-img match-img-away order-md-1" src="/media/default_logo.png"
+                 alt="opponent badge" style="height: 40px; width: auto;">
+
+            <div class="order-1 align-self-center px-3">
+                <h2 class="match-team">
+                    OPPONENT NAME
+                </h2>
+            </div>
+        </div>
+
+        <hr>
+
+        <i class="fas fa-quidditch"></i>
+        Format Type
+
+        <i class="fas fa-calendar-alt"></i>
+        Date
+
+        <i class="fas fa-stopwatch"></i>
+        time
+
+        <i class="fas fa-search-location"></i>
+        location
+
+
+    </div>
+{% endblock %}

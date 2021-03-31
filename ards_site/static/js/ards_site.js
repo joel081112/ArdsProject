@@ -604,5 +604,13 @@ $(function () {
 });
 
 
+$('input[name=date_picker]').change(function() {
+if($(this).val() == "") {
+        $("#calendar").show();
+    } else {
+        $("#calendar").hide();
+    }
+});
+
 
 

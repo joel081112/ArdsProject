@@ -1,6 +1,6 @@
 {% extends "../base.html" %}
 {% load static %}
-{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% block page-css-class %}cover-container d-flex h-25 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
 {% block body_class %}Scorecard{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
@@ -20,7 +20,7 @@
             <div class="col">
                 <form method="GET" action="." class="form-inline">
 
-                    <div class="container">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <div class="inner-addon right-addon">
@@ -32,32 +32,35 @@
                         </div>
                     </div>
 
-                    <input type="date" id="start" name="date_picker" placeholder="-- SELECT A DATE --">
+                    <div class="mt-2 d-flex align-items-center">
 
-                    <select id="yearselector" name="year_choice" class="p-2">
-                        <option hidden disabled selected value> -- YEAR --</option>
-                        {% for date in date_list %}
-                            <option value="{{ date.date__year }}">
-                                {{ date.date__year }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <div class="inner-addon left-addon">
+                                    <a class="d-md-none" id="calendar" style="text-decoration: none" href=""><i
+                                            class="fa fa-calendar"></i></a>
+                                    <input type="date" id="start" name="date_picker" placeholder="-- SELECT A DATE --"
+                                           aria-describedby="Choose Date">
+                                </div>
+                            </div>
+                        </div>
 
+                        <select id="yearselector" name="year_choice" class="p-2 ms-2">
+                            <option hidden disabled selected value> -- YEAR --</option>
+                            {% for date in date_list %}
+                                <option value="{{ date.date__year }}">
+                                    {{ date.date__year }}
+                                </option>
+                            {% endfor %}
+                        </select>
 
-                    <button type="submit" class="border btn-light rounded text-dark py-2 px-3">
-                        <a style="text-decoration: none" href=""><i
-                                class="fa fa-filter"></i>
-                            <strong>Filter</strong></a>
-                    </button>
-
-                    <button type="button"
-                            class="border border-primary btn-light rounded text-primary py-2 px-3">
-                        <a href="{% url 'matches' %}" role="button"><i class="fa fa-sync"></i> </a>
-                    </button>
-
+                        <button type="submit" class="border btn-light rounded text-dark py-2 px-3 ms-2">
+                            <a style="text-decoration: none" href=""><i
+                                    class="fa fa-filter"></i>
+                                <strong>Filter</strong></a>
+                        </button>
+                    </div>
                 </form>
-
-
             </div>
         </div>
 
@@ -65,27 +68,32 @@
         <div class="row">
             <ul class="list-unstyled">
                 {% for match in queryset %}
-                    <li>
+                    <li class="pb-2">
                         <div class="bg-gradient-mini-alt text-center border mb-2 py-2 text-uppercase rounded fw-bold">
                             {{ match.date|date:"dS F, Y" }}
                         </div>
 
                         <div class="bg-gradient-mini-two text-center py-2 border fw-bold rounded">
                             <div class="text-uppercase">
-                                ARDS V {{ match.opponent }} {{ match.match_format }} {{ match.date.year }}
+                                {{ match.team_v_team }} {{ match.match_format }} {{ match.date.year }}
                             </div>
                         </div>
-                        <div class="text-center py-2 ws-5">
 
-                            Ards
-                            <span class="text-danger">Result</span>
-                            {{ match.opponent }}
-
+                        <div class="container">
+                            <div class="text-center py-2 ws-5">
+                                Ards
+                                <span class="text-danger">
+                                    <a class="result" href="{% url 'viewmatch' match.id %}">
+                                    Result</a></span>
+                                {{ match.opponent }}
+                            </div>
+                            <div class="text-center">
+                                {{ match.result }}
+                            </div>
                         </div>
 
-                        <div class="text-center">
-                            {{ match }}
-                            <span class="text-primary float-end">
+                        <div class="match-area">
+                            <span class="text-primary">
                                             <a href="{% url 'viewmatch' match.id %}">
                                             Match Area
                                             </a>
@@ -93,8 +101,10 @@
                         </div>
 
 
-                        <hr>
                     </li>
+                    <hr>
+                    {% empty %}
+                        Nothing to display
                 {% endfor %}
             </ul>
         </div>

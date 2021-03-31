@@ -80,6 +80,26 @@ class Scorecard(Page):
         verbose_name_plural = "Scorecard Pages"
 
 
+class FixturePreview(Page):
+    """Fixture Preview page model."""
+
+    template = "club/fixture_preview.html"
+    max_count = 1
+
+    banner_title = models.CharField(
+        max_length=100, blank=True, default=''
+    )
+    content_panels = Page.content_panels + [
+        FieldPanel("banner_title"),
+    ]
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Fixture Preview Page"
+        verbose_name_plural = "Fixture Preview Pages"
+
+
 class Overview(Page):
     """Overview page model."""
 
@@ -113,7 +133,7 @@ class BlogIndexPage(Page):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
         # Get all posts
-        all_posts = BlogPage.objects.live().public()\
+        all_posts = BlogPage.objects.live().public() \
             .order_by(
             '-first_published_at'
         )
@@ -391,9 +411,12 @@ class Match(models.Model):
         Club, on_delete=models.SET_NULL, null=True, default=''
     )
     date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True, default='')
     decision = models.ForeignKey(
-        CoinToss, on_delete=models.SET_NULL, null=True, default=''
+        CoinToss, on_delete=models.SET_NULL,
+        blank=True,
+        null=True, default=''
     )
     ards_overs_batted = models.DecimalField(
         blank=True, null=True, decimal_places=1, max_digits=4
@@ -470,6 +493,22 @@ class Match(models.Model):
         else:
             var1 = self.ards_wickets
         return str('{0}-{1}').format(self.opponent_runs, var1)
+
+    def location(self):
+        var1 = ''
+        if self.venue.name == "Home":
+            var1 = "Londonderry Park,  Newtownards"
+        elif self.venue.name == 'Away':
+            var1 = self.opponent.home_venue
+        return str('{0}').format(var1)
+
+    def team_v_team(self):
+        var1 = ''
+        if self.venue.name == "Home":
+            var1 = "Ards v " + self.opponent.name
+        elif self.venue.name == 'Away':
+            var1 = self.opponent.name + " v Ards"
+        return str('{0}').format(var1)
 
 
 class Extras(models.Model):

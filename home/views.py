@@ -88,14 +88,20 @@ def player_list_view(queryset, request):
 
 
 def match_view_firsts(request):
-    """View all matches."""
-    queryset = Match.objects.filter(team__name__contains='firstXI').order_by('-date')
+    """View all firsts matches."""
+    queryset = Match.objects.filter(
+        team__name__contains='firstXI',
+        date__range=["2000-01-01", date.today()]
+    ).order_by('-date')
     return render(request, 'club/scorecard.html', match_list_view(queryset, request))
 
 
 def match_view_seconds(request):
     """View all seconds matches."""
-    queryset = Match.objects.filter(team__name__contains='secondXI').order_by('-date')
+    queryset = Match.objects.filter(
+        team__name__contains='secondXI',
+        date__range=["2000-01-01", date.today()]
+    ).order_by('-date')
     return render(request, 'club/scorecard.html', match_list_view(queryset, request))
 
 
@@ -125,7 +131,13 @@ def match_list_view(queryset, request):
         queryset = queryset.filter(date__year__iexact=year_query)
 
     elif date_search_picker != '' and date_search_picker is not None:
-        queryset = queryset.filter(Q(date__range=[date_search_picker, date_search_picker]))
+        queryset = queryset.filter(
+            Q(date__range=[date_search_picker, date_search_picker])
+        )
+
+    elif team_contains_queryo == '' and date_search_picker == '' \
+            and year_query == '':
+        queryset = queryset
 
     context = {
         'match_list': match_list,

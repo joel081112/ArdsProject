@@ -283,7 +283,7 @@ footer .row:after {
 @media (max-width: 576px) {
     .block {
         margin: 0 0 15px 0;
-        padding: 18% 0 0 0;
+        padding: 100px 0 0 0;
     }
 
     footer .column {
@@ -1391,6 +1391,14 @@ Primary style .css
 
 }
 
+.match-area{
+    float: right;
+}
+
+.result{
+     text-decoration: none;
+}
+
 .match-mini-facts {
     border-bottom-left-radius: 25%;
     border-bottom-right-radius: 25%;
@@ -1421,15 +1429,15 @@ Primary style .css
 }
 
 /* style glyph */
-.inner-addon .fa-search {
+.inner-addon .fa {
   position: absolute;
   padding: 10px;
   pointer-events: none;
 }
 
 /* align glyph */
-.left-addon .fa-search  { left:  0px;}
-.right-addon .fa-search { right: 0px;}
+.left-addon .fa { left:  0px;}
+.right-addon .fa { right: 0px;}
 
 
 /* add padding  */

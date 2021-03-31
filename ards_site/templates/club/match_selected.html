@@ -496,17 +496,8 @@
                         <dt class="col-sm-3">Toss</dt>
                         <dd class="col-sm-9"> Ards {{ object.team.abr }} {{ object.decision }}</dd>
                         <dt class="col-sm-3">Venue</dt>
-
                         <dd class="col-sm-9">
-
-                            {% if object.venue|stringformat:"s" == "Home" %}
-                                Londonderry Park, Newtownards
-                            {% elif object.venue|stringformat:"s" == "Away" %}
-                                {{ object.opponent.home_venue }}
-                            {% else %}
-                                Neutral
-                            {% endif %}
-
+                            {{object.location}}
                         </dd>
 
                     </dl>

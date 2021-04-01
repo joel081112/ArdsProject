@@ -20,6 +20,12 @@
     width: 1px;
 }
 
+.alternative-colour{
+    background-color: darkslategrey;
+    width:100vw;
+    min-width:100vw;
+}
+
 .ws-5{
     word-spacing: 10px;
 }
@@ -1311,11 +1317,6 @@ Primary style .css
 .normal-colour {
 }
 
-.alternative-colour {
-    background-color: #e2e6ea;
-    width: 100vw;
-    min-width: 100vw;
-}
 
 /* block .css */
 
@@ -1779,6 +1780,14 @@ button.close {
 }
 
 /*end blog .css*/
+
+/* match preview .css */
+.match-preview{
+    max-width: 700px;
+    margin: auto;
+}
+
+/* end match preview .css*/
 
 
 

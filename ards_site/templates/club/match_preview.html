@@ -4,59 +4,18 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Fixture Preview{% endblock %}
+{% block body_class %}Fixture Selected{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
 
 {% block meta_descr %}
-    Fixture preview page
+    Preview a Match page
 {% endblock %}
 
 
 
 {% block content %} {#    html stuff sits in here#}
-    <div class="m-auto text-center py-5 w-50">
-        <div class="row">
-            <ul class="list-unstyled">
-                {% for match in queryset %}
-                    <li class="pb-2">
-                        <div class="bg-gradient-mini-alt text-center border mb-2 py-2 text-uppercase rounded fw-bold">
-                            {{ match.date|date:"dS F, Y" }}
-                        </div>
 
-                        <div class="bg-gradient-mini-two text-center py-2 border fw-bold rounded">
-                            <div class="text-uppercase">
-                                {{ match.team_v_team }} {{ match.match_format }} {{ match.date.year }}
-                            </div>
-                        </div>
-
-                        <div class="container">
-                            <div class="text-center py-2 row row-cols-auto justify-content-center">
-                                <p class="pe-3">Ards</p>
-                                <span class="text-danger">
-                                    <a class="result" href="{% url 'viewfixture' match.id %}">
-                                    {{ match.time }}</a></span>
-                                <p class="ps-3">{{ match.opponent }}</p>
-                            </div>
-                        </div>
-
-                        <div class="match-area">
-                            <span class="text-primary">
-                                            <a href="{% url 'viewfixture' match.id %}">
-                                            Match Preview
-                                            </a>
-                                        </span>
-                        </div>
-
-
-                    </li>
-                    <hr>
-                    {% empty %}
-                        Nothing to display
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
     <div class="pb-5 container alternative-colour">
         <div class="match-preview text-white">
             <p class="small pt-5">Match Preview</p>
@@ -77,13 +36,13 @@
 
             <div class="row  row-cols-auto align-items-center d-flex">
                 <div class="col">
-                    <img class="match-img" src="/media/default_logo_g7BzLur.png"
+                    <img class="match-img" src="{{ object.opponent.badge.url }}"
                          alt="opponent badge" style="height: 60px; width: auto; ">
                 </div>
                 <div class="col">
                     <div class="align-self-center px-3">
                         <h2 class="match-team">
-                            OPPONENT NAME
+                            {{ object.opponent }}
                         </h2>
                     </div>
                 </div>
@@ -91,36 +50,39 @@
 
             <hr>
 
-            <div class="align-items-center d-flex wrap">
+            <div class="align-items-center d-flex wrap large">
                 <div class="col-md-6">
                     <div class="pb-4">
 
                         <img class="pe-4" src="/media/cricket.png"
                              alt="cricket icon" style="filter: brightness(0) invert(1); height: 40px; width: auto;">
-                        Format Type
+                        {{ object.match_format }}
                     </div>
                     <div class="pb-4">
                         <i class="fas fa-calendar-alt pe-4" style="font-size: 40px"></i>
-                        Date
+                        {{ object.date|date:"l jS F Y" }}
                     </div>
                     <div class="pb-4">
 
                         <i class="fas fa-stopwatch pe-4" style="font-size: 40px"></i>
-                        time
+                        {{ object.time }}
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 text-decoration-none">
+
 
                     <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
-                    location
+                    <a class="result" href="https://www.google.com/maps/search/{{ object.location }}"
+                    target="_blank">
+                        {{ object.location }}
+                    </a>
+
                 </div>
             </div>
         </div>
     </div>
     <div class="m-auto text-center py-5 w-50">
         <p>Our sponsors</p>
-    <hr>
+        <hr>
     </div>
-
-
 {% endblock %}

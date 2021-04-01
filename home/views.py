@@ -87,6 +87,34 @@ def player_list_view(queryset, request):
     return context
 
 
+def fixture_view_firsts(request):
+    """View all firsts matches."""
+    queryset = Match.objects.filter(
+        team__name__contains='firstXI',
+        date__gte=date.today()
+    ).order_by('date')
+    return render(request, 'club/fixture_preview.html', fixture_list_view(queryset, request))
+
+
+def fixture_view_seconds(request):
+    """View all seconds matches."""
+    queryset = Match.objects.filter(
+        team__name__contains='secondXI',
+        date__gte=date.today()
+    ).order_by('date')
+    return render(request, 'club/fixture_preview.html', fixture_list_view(queryset, request))
+
+
+def fixture_list_view(queryset, request):
+    match_list = Match.objects.order_by('date')
+
+    context = {
+        'match_list': match_list,
+        'queryset': queryset
+    }
+    return context
+
+
 def match_view_firsts(request):
     """View all firsts matches."""
     queryset = Match.objects.filter(
@@ -183,6 +211,16 @@ def view_selected_match(request, match_id):
         'bowling_list_bn_f': bowling_list_bn_f
     }
     return render(request, 'club/match_selected.html', context)
+
+
+def view_selected_fixture(request, match_id):
+    """View a selected fixture."""
+    obj = Match.objects.get(pk=match_id)
+
+    context = {
+        'object': obj
+    }
+    return render(request, 'club/match_preview.html', context)
 
 
 def view_selected_member_role(request, role):

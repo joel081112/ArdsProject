@@ -7,6 +7,8 @@ urlpatterns = [
     path('', views.member_view, name='members'),
     path('scorecard/firstXI/', views.match_view_firsts, name='matches'),
     path('scorecard/secondXI/', views.match_view_seconds, name='matches'),
+    path('fixtures/firstXI/', views.fixture_view_firsts, name='fixtures'),
+    path('fixtures/secondXI/', views.fixture_view_seconds, name='fixtures'),
     path('players/firstXI/', views.players_view_firsts, name='players'),
     path('players/secondXI/', views.players_view_seconds, name='players'),
     path('view_member/<member_id>', views.view_selected_member, name='viewmember'),
@@ -16,5 +18,6 @@ urlpatterns = [
     path('create/member', views.create_member, name='create'),
     path('member/add', views.add_new_member, name='createadd'),
     path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
+    path('view_fixture/<match_id>', views.view_selected_fixture, name='viewfixture'),
 
 ]

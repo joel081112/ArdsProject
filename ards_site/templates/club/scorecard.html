@@ -22,7 +22,7 @@
 
                     <div class="">
                         <div class="row">
-                            <div class="col-md-4 form-group">
+                            <div class="col-sm-4 form-group">
                                 <div class="inner-addon right-addon">
                                     <a style="text-decoration: none" href=""><i class="fa fa-search"></i></a>
                                     <input class="form-control py-2 border-right-0 border" type="search"
@@ -70,7 +70,7 @@
                 {% for match in queryset %}
                     <li class="pb-2">
                         <div class="bg-gradient-mini-alt text-center border mb-2 py-2 text-uppercase rounded fw-bold">
-                            {{ match.date|date:"dS F, Y" }}
+                            {{ match.date|date:"jS F, Y" }}
                         </div>
 
                         <div class="bg-gradient-mini-two text-center py-2 border fw-bold rounded">

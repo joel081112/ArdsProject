@@ -8,14 +8,19 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+from home import views as home_views
+
 urlpatterns = [
+    path('', home_views.home_view, name='home'),
     path('django-admin/', admin.site.urls),
 
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
 
     path('search/', search_views.search, name='search'),
-    path('club/', include('home.urls'))
+    path('club/', include('home.urls')),
+
+
 
 ]
 

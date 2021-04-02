@@ -26,6 +26,9 @@
     min-width:100vw;
 }
 
+.image-white{
+    filter: brightness(0) invert(1);
+}
 .ws-5{
     word-spacing: 10px;
 }
@@ -36,6 +39,24 @@
 
 .ws-3{
     word-spacing: 6px;
+}
+
+.ls-5{
+    letter-spacing: 5px;
+}
+.ls-2{
+    letter-spacing: 2px;
+}
+
+.rtl {
+  direction: rtl;
+}
+.ltr {
+  direction: ltr;
+}
+
+.home-content{
+min-width: 250px;
 }
 
 /*work on this for effect shine for blog page*/
@@ -1449,6 +1470,15 @@ Primary style .css
 .bg-f6 {
     background: #f6f6f6;
 }
+.bg-fc {
+    background: #fcfcfc;
+}
+.bg-f8 {
+    background: #f8f8f8;
+}
+.bg-ec {
+    background: #ececec;
+}
 
 .text-light-green {
     color: #008578;
@@ -1498,6 +1528,11 @@ Primary style .css
 
 .match-rules {
     margin-right: 20px;
+}
+
+.border-thick-top {
+    border-style: solid;
+  border-top-width: thick;
 }
 
 .shadow-top {

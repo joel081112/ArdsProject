@@ -7,6 +7,26 @@ from .forms import MemberForm
 from datetime import date
 
 
+def home_view(request):
+    """View all members."""
+    prev_match_list = Match.objects.filter(
+        team__name__contains='firstXI',
+        date__lte=date.today()
+    ).order_by('-date')
+    next_match_list = Match.objects.filter(
+        team__name__contains='firstXI',
+        date__gte=date.today()
+    ).order_by('date')
+
+    template = 'home/home_page.html'
+
+    context = {
+        'prev_match_list': prev_match_list,
+        'next_match_list': next_match_list
+    }
+    return render(request, template, context)
+
+
 def member_view(request):
     """View all members."""
     member_list = Member.objects.order_by('teamsPlayedFor').annotate(

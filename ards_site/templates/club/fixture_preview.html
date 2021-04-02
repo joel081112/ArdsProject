@@ -15,13 +15,13 @@
 
 
 {% block content %} {#    html stuff sits in here#}
-    <div class="m-auto text-center py-5 w-50">
-        <div class="row">
+    <div class="pb-5 container col-md-9">
+        <div class="row  py-4">
             <ul class="list-unstyled">
                 {% for match in queryset %}
                     <li class="pb-2">
                         <div class="bg-gradient-mini-alt text-center border mb-2 py-2 text-uppercase rounded fw-bold">
-                            {{ match.date|date:"dS F, Y" }}
+                            {{ match.date|date:"jS F, Y" }}
                         </div>
 
                         <div class="bg-gradient-mini-two text-center py-2 border fw-bold rounded">
@@ -35,7 +35,7 @@
                                 <p class="pe-3">Ards</p>
                                 <span class="text-danger">
                                     <a class="result" href="{% url 'viewfixture' match.id %}">
-                                    {{ match.time }}</a></span>
+                                    {{ match.time|date:"G:i"}}</a></span>
                                 <p class="ps-3">{{ match.opponent }}</p>
                             </div>
                         </div>
@@ -56,70 +56,6 @@
                 {% endfor %}
             </ul>
         </div>
-    </div>
-    <div class="pb-5 container alternative-colour">
-        <div class="match-preview text-white">
-            <p class="small pt-5">Match Preview</p>
-
-            <div class="row row-cols-auto align-items-center d-flex">
-                <div class="col">
-                    <img class="match-img" src="/media/ards_cc.png" alt="ards cc"
-                         style="height: 60px; width: auto;">
-                </div>
-                <div class="col">
-                    <div class="align-self-center px-3">
-                        <h2 class="match-team">
-                            ARDS
-                        </h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row  row-cols-auto align-items-center d-flex">
-                <div class="col">
-                    <img class="match-img" src="/media/default_logo_g7BzLur.png"
-                         alt="opponent badge" style="height: 60px; width: auto; ">
-                </div>
-                <div class="col">
-                    <div class="align-self-center px-3">
-                        <h2 class="match-team">
-                            OPPONENT NAME
-                        </h2>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="align-items-center d-flex wrap">
-                <div class="col-md-6">
-                    <div class="pb-4">
-
-                        <img class="pe-4" src="/media/cricket.png"
-                             alt="cricket icon" style="filter: brightness(0) invert(1); height: 40px; width: auto;">
-                        Format Type
-                    </div>
-                    <div class="pb-4">
-                        <i class="fas fa-calendar-alt pe-4" style="font-size: 40px"></i>
-                        Date
-                    </div>
-                    <div class="pb-4">
-
-                        <i class="fas fa-stopwatch pe-4" style="font-size: 40px"></i>
-                        time
-                    </div>
-                </div>
-                <div class="col-md-6">
-
-                    <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
-                    location
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="m-auto text-center py-5 w-50">
-        <p>Our sponsors</p>
-    <hr>
     </div>
 
 

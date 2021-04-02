@@ -15,74 +15,79 @@
 
 
 {% block content %} {#    html stuff sits in here#}
+    <div class="py-4">
+        <div class="pb-5 container alternative-colour">
+            <div class="match-preview text-white">
+                <p class="small pt-5">Match Preview</p>
 
-    <div class="pb-5 container alternative-colour">
-        <div class="match-preview text-white">
-            <p class="small pt-5">Match Preview</p>
-
-            <div class="row row-cols-auto align-items-center d-flex">
-                <div class="col">
-                    <img class="match-img" src="/media/ards_cc.png" alt="ards cc"
-                         style="height: 60px; width: auto;">
-                </div>
-                <div class="col">
-                    <div class="align-self-center px-3">
-                        <h2 class="match-team">
-                            ARDS
-                        </h2>
+                <div class="row row-cols-auto align-items-center d-flex">
+                    <div class="col">
+                        <img class="match-img" src="/media/ards_cc.png" alt="ards cc"
+                             style="height: 60px; width: auto;">
+                    </div>
+                    <div class="col">
+                        <div class="align-self-center px-3">
+                            <h2 class="match-team">
+                                ARDS
+                            </h2>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row  row-cols-auto align-items-center d-flex">
-                <div class="col">
-                    <img class="match-img" src="{{ object.opponent.badge.url }}"
-                         alt="opponent badge" style="height: 60px; width: auto; ">
-                </div>
-                <div class="col">
-                    <div class="align-self-center px-3">
-                        <h2 class="match-team">
-                            {{ object.opponent }}
-                        </h2>
+                <div class="row  row-cols-auto align-items-center d-flex">
+                    <div class="col">
+                        <img class="match-img " src="{{ object.opponent.badge.url }}"
+                             alt="opponent badge" style="height: 60px; width: auto; ">
+                    </div>
+                    <div class="col">
+                        <div class="align-self-center px-3">
+                            <h2 class="match-team">
+                                {{ object.opponent }}
+                            </h2>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <hr>
+                <hr>
 
-            <div class="align-items-center d-flex wrap large">
-                <div class="col-md-6">
-                    <div class="pb-4">
+                <div class="align-items-center fw-bold row mx-2">
+                    <div class="col-md-6">
+                        <div class="pb-4">
 
-                        <img class="pe-4" src="/media/cricket.png"
-                             alt="cricket icon" style="filter: brightness(0) invert(1); height: 40px; width: auto;">
-                        {{ object.match_format }}
+                            <img class="pe-4 image-white" src="/media/cricket.png"
+                                 alt="cricket icon" style=" height: 40px; width: auto;">
+                            {{ object.match_format }}
+                        </div>
+                        <div class="pb-4">
+                            <i class="fas fa-calendar-alt pe-4" style="font-size: 40px"></i>
+                            {{ object.date|date:"l jS F Y" }}
+                        </div>
+                        <div class="pb-4">
+
+                            <i class="fas fa-stopwatch pe-4" style="font-size: 40px"></i>
+                            {{ object.time }}
+                        </div>
                     </div>
-                    <div class="pb-4">
-                        <i class="fas fa-calendar-alt pe-4" style="font-size: 40px"></i>
-                        {{ object.date|date:"l jS F Y" }}
+                    <div class="d-md-none">
+                        <hr>
                     </div>
-                    <div class="pb-4">
+                    <div class="col-md-6 text-decoration-none align-self-start d-flex">
 
-                        <i class="fas fa-stopwatch pe-4" style="font-size: 40px"></i>
-                        {{ object.time }}
+                                <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
+                                <a class="result" href="https://www.google.com/maps/search/{{ object.location }}"
+                                   target="_blank">
+                                    {{ object.location }}
+                                </a>
+
+
                     </div>
-                </div>
-                <div class="col-md-6 text-decoration-none">
-
-
-                    <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
-                    <a class="result" href="https://www.google.com/maps/search/{{ object.location }}"
-                    target="_blank">
-                        {{ object.location }}
-                    </a>
-
                 </div>
             </div>
         </div>
-    </div>
-    <div class="m-auto text-center py-5 w-50">
-        <p>Our sponsors</p>
-        <hr>
+
+        <div class="m-auto text-center py-5 w-50">
+            <p>Our sponsors</p>
+            <hr>
+        </div>
     </div>
 {% endblock %}

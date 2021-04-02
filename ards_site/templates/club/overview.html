@@ -6,7 +6,108 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% block body_class %}Overview{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
-{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}
+    <script>
+        var endpoint = '/club/api/chart/data/'
+        var defaultData1 = []
+        var defaultLabels2 = []
+
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function (context) {
+                defaultLabels = context.dates_array
+                defaultData = context.runs_array
+                console.log(context)
+                setChart()
+            },
+            error: function (error_data) {
+                console.log("error")
+                console.log(error_data)
+            },
+        })
+
+        function setChart() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var ctx2 = document.getElementById('myChart2').getContext('2d');
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: defaultLabels,
+                    datasets: [{
+                        label: '# of runs',
+                        data: defaultData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    }
+                }
+            })
+
+            var myChart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: defaultLabels,
+                    datasets: [{
+                        label: '# of runs',
+                        data: defaultData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            })
+        }
+
+    </script>
+{% endblock %}
 
 {% block meta_descr %}
     Scorecard page for the teams
@@ -14,9 +115,17 @@
 
 
 
+
 {% block content %} {#    html stuff sits in here#}
     <div class="mx-5">
-    <canvas id="myChart" width="400" height="400"></canvas>
+        <div class="row">
+            <div class="col-md-3">
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+            <div class="col-md-3">
+                <canvas id="myChart2" width="400" height="400"></canvas>
+            </div>
+        </div>
 
         <div class="">
             <nav class="">

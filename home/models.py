@@ -10,7 +10,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
-from .blocks import InlineVideoBlock
+from .blocks import InlineVideoBlock, ImageTextBlock, ImageTextArticleBlock
 
 
 class HomePage(Page):
@@ -44,6 +44,21 @@ class HomePage(Page):
         on_delete=models.SET_NULL,
         related_name="+",
     )
+    store_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    store_text = RichTextField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+    store_link = models.CharField(
+        max_length=100, blank=True, null=True
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("banner_title"),
@@ -51,6 +66,11 @@ class HomePage(Page):
         FieldPanel("banner_subtitle"),
         ImageChooserPanel("banner_image"),
         PageChooserPanel("banner_cta"),
+        MultiFieldPanel([ImageChooserPanel('store_image'),
+                         FieldPanel('store_text'),
+                         FieldPanel('store_link')],
+                        heading="Store Block"
+                        ),
     ]
 
     class Meta:
@@ -58,6 +78,39 @@ class HomePage(Page):
 
         verbose_name = "Home Page"
         verbose_name_plural = "Home Pages"
+
+
+class TheClub(Page):
+    """The club page model."""
+
+    template = "club/the_club.html"
+    max_count = 1
+
+    about = StreamField(
+        [
+            ("about", ImageTextArticleBlock()),
+        ],
+        null=True,
+        blank=True,
+    )
+    videos = StreamField(
+        [
+            ("video", InlineVideoBlock()),
+        ],
+        null=True,
+        blank=True,
+    )
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel("about"),
+        StreamFieldPanel("videos"),
+    ]
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "The Club Page"
+        verbose_name_plural = "The Club Pages"
 
 
 class Scorecard(Page):
@@ -482,17 +535,19 @@ class Match(models.Model):
         """Output the ards score."""
         if self.ards_wickets == 10:
             var1 = "All Out"
+            return str('{0} {1}').format(self.ards_runs, var1)
         else:
             var1 = self.ards_wickets
-        return str('{0}-{1}').format(self.ards_runs, var1)
+            return str('{0}-{1}').format(self.ards_runs, var1)
 
     def opponents_score(self):
         """Output the opponents score."""
         if self.opponent_wickets == 10:
             var1 = " All Out"
+            return str('{0} {1}').format(self.opponent_runs, var1)
         else:
             var1 = self.ards_wickets
-        return str('{0}-{1}').format(self.opponent_runs, var1)
+            return str('{0}-{1}').format(self.opponent_runs, var1)
 
     def location(self):
         var1 = ''

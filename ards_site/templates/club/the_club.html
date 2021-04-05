@@ -1,0 +1,28 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}The Club{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    The club main page for information
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="container">
+        {% for block in page.about %}
+            {% include_block block %}
+            <hr>
+        {% endfor %}
+    </div>
+    <div class="container my-5">
+        {% for block in page.videos %}
+            {% include_block block %}
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

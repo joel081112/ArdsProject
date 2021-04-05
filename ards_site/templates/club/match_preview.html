@@ -73,11 +73,11 @@
                     </div>
                     <div class="col-md-6 text-decoration-none align-self-start d-flex">
 
-                                <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
-                                <a class="result" href="https://www.google.com/maps/search/{{ object.location }}"
-                                   target="_blank">
-                                    {{ object.location }}
-                                </a>
+                        <i class="fas fa-map-marker-alt pe-4" style="font-size: 40px"></i>
+                        <a class="result" href="https://www.google.com/maps/search/{{ object.location }}"
+                           target="_blank">
+                            {{ object.location }}
+                        </a>
 
 
                     </div>
@@ -88,6 +88,20 @@
         <div class="m-auto text-center py-5 w-50">
             <p>Our sponsors</p>
             <hr>
+            <div class="text-center">
+                <div class="container">
+                    {% for item in page.client_images.all %}
+                        <div class="col-sm-2 px-4 py-3">
+                            {% image item.image fill-100x100-c100 as img %}
+                            <a href="{{ item.caption }}">
+                                <img src="{{ img.url }}" class="item" alt="{{ img.alt }}">
+
+
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

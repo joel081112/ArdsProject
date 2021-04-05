@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 {% load wagtailcore_tags %}
 {% load static %}
-{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-5 flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
@@ -17,318 +17,391 @@ Delete the line below if you're just getting started and want to remove the welc
 
 {% block content %}
     {% for home in homepage %}
-
-    {% image self.banner_image fill-900x400 as img %}
-    {{ home.banner_title }} |
-
-
-
-    <main class="container">
-        {% comment %}style="background-image: url('{{ img.url }}'); background-size: contain;"{% endcomment %}
-        <div class="text-center">
-            {% for match in prev_match_list|slice:"1" %}
-                Last Fixture:<br>
-                {{ match }}
-                <hr>
-            {% empty %}
-                n
-            {% endfor %}
-            <div class="row justify-content-around mx-1 d-flex align-items-stretch">
-                <div class="bg-f8   col-xl-3 mb-3">
-
-                </div>
-
-                <div class="col-xl-3 mb-3">
-                    {% for page in blog|slice:"1" %}
-                        <div class="d-flex justify-content-start">
-                            {% for item in page.specific.blogpage_images.all|slice:"1" %}
-                                {% image item.image fill-350x250-c100 %}
-                            {% endfor %}
+        <div class="row justify-content-center mt-3 ms-3 me-3">
+            <div class="col-md-2 bg-racing-green text-white order-xl-1 relative-container ">
+                {% for match in prev_match_list|slice:"1" %}
+                    <div class="row">
+                        <h3 class="ls-2">
+                            LAST RESULT
+                        </h3>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <img class="match-img d-block" src="{{ match.opponent.badge.url }}"
+                                 alt="opponent badge">
                         </div>
-                        <div class="row justify-content-start mt-2 px-2">{{ page.intro }}</div>
-                        <div class="text-muted row justify-content-start mt-2 px-2 align-items-end">CLUB NEWS</div>
-                    {% endfor %}
-                </div>
-
-
-                <div class="bg-f8 border-thick-top  col-xl-3 mb-3">
-                    {% for match in next_match_list|slice:"1" %}
-                        <div class="row row-cols-auto justify-content-between pt-3 px-2">
-                            <div class="col text-muted">
-                                NEXT FIXTURE
-                            </div>
-                            <div class="col small">
-                                <a class="pe-2 text-primary" href="/club/fixtures/firstXI">All fixtures</a><i
-                                    class="fas fa-arrow-right"></i>
-                            </div>
+                        <div class="col">
+                            <h3 class="">
+                                {{ match.opponent }}
+                            </h3>
+                            <h5 class="">
+                                {{ match.opponents_score }}
+                            </h5>
                         </div>
-                        <br>
-
-                        <div>
-                            {{ match.date|date:"D d M" }}
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <img class="match-img d-block " src="/media/ards_cc.png"
+                                 alt="opponent badge">
                         </div>
-                        <div class="pb-3 text-muted small">
-                            {{ match.match_format }}
+                        <div class="col">
+                            <h3 class="">
+                                Ards
+                            </h3>
+                            <h5 class="">
+                                {{ match.ards_score }}
+                            </h5>
                         </div>
-                        <div class="pt-2 pb-2 row justify-content-between m-2">
-                            <div class="col-4">
-                                <div class="row justify-content-end">
-                                    <img class="match-img" src="/media/ards_cc.png" alt="ards cc"
-                                         style="height: 60px; width: auto;">
-                                </div>
-                                <div class="row">
-                                    <p class="fw-bold rtl">ARDS</p>
-                                </div>
-                            </div>
-                            <div class="col-3 display-inline">
-                                <p class="bg-ec py-2">
-                                    {{ match.time|date:"G:i" }}
-                                </p>
-                            </div>
-                            <div class="col-4">
-                                <div class="row justify-content-start">
-                                    <img class="match-img " src="{{ match.opponent.badge.url }}"
-                                         alt="opponent badge" style="height: 60px; width: auto; ">
-                                </div>
-                                <div class="row ">
-                                    <p class="fw-bold text-left rtl">{{ match.opponent }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border text-primary p-3 mx-4 mb-3">
-                            <a class="result fw-bold" href="{% url 'viewfixture' match.id %}">
-                                PREVIEW
+                    </div>
+                    {{ match.result }}
+                    <div class="row mt-2 bottom-right">
+                        <div class="col text-end">
+                            <a class="pe-2" href="/club/scorecard/firstXI">
+                                All results <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
-                    {% empty %}
-                        Nothing To Show
-                    {% endfor %}
-                </div>
-
-            </div>
-            <div class="starter-template text-center py-5 px-3">
-                <h1>Bootstrap starter template</h1>
-                <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this
-                    text
-                    and a
-                    mostly barebones HTML document.</p>
-
-
-                <h1 class="display-4">{{ self.banner_title }}</h1>
-                <div class="lead">{{ self.banner_subtitle|richtext }}</div>
-
-                {% if self.banner_cta %}
-                    <a class="btn btn-primary btn-lg" href="@" role="button">@todo</a>
-                {% endif %}
-
-
-            </div>
-
-            <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-                <h1 class="display-4">Pricing</h1>
-                <p class="lead">Quickly build an effective pricing table for your potential customers with this
-                    Bootstrap
-                    example. It’s built with default Bootstrap components and utilities with little customization.</p>
-            </div>
-
-            <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-                <div class="col">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-header">
-                            <h4 class="my-0 fw-normal">Free</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1>
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li>10 users included</li>
-                                <li>2 GB of storage</li>
-                                <li>Email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
-                        </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-header">
-                            <h4 class="my-0 fw-normal">Pro</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li>20 users included</li>
-                                <li>10 GB of storage</li>
-                                <li>Priority email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-header">
-                            <h4 class="my-0 fw-normal">Enterprise</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li>30 users included</li>
-                                <li>15 GB of storage</li>
-                                <li>Phone and email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
-                <div class="col-md-5 p-lg-5 mx-auto my-5">
-                    <h1 class="display-4 fw-normal">Punny headline</h1>
-                    <p class="lead fw-normal">And an even wittier subheading to boot. Jumpstart your marketing efforts
-                        with
-                        this example based on Apple’s marketing pages.</p>
-                    <a class="btn btn-outline-secondary" href="#">Coming soon</a>
-                </div>
-                <div class="product-device shadow-sm d-none d-md-block"></div>
-                <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
-            </div>
-
-            <div class="all-blocks">
-                {% for block in page.intro %}
-                    {% include_block block %}
+                {% empty %}
+                    n
                 {% endfor %}
             </div>
+            <div class="col-md-6 g-0 order-1 relative-container ">
+                {% image home.banner_image fill-900x400 as main_photo %}
 
-            <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-                <div class="bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
-                    <div class="my-3 py-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-light shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 p-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-dark shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
+                <img src="{{ main_photo.url }}" width="{{ main_photo.width }}"
+                     height="" alt="recent results image"
+                     class="d-block w-100"/>
+
+                <div class="bottom-right"><p class="text-end text-white">Powered By <br>Romas</p></div>
             </div>
 
-            <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 p-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-dark shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-                <div class="bg-primary me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
-                    <div class="my-3 py-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-light shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-            </div>
+        </div>
 
 
-            <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 p-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-white shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 py-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-white shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-            </div>
+        <main class="container">
 
-            <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 p-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-white shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-                <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-                    <div class="my-3 py-3">
-                        <h2 class="display-5">Another headline</h2>
-                        <p class="lead">And an even wittier subheading.</p>
-                    </div>
-                    <div class="bg-white shadow-sm mx-auto"
-                         style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-                </div>
-            </div>
-
-
-            {% comment %}
-Start of Work on Trintech
-{% endcomment %}
-            <div class="w-100">
-                <div class="px-3 bg-body rounded">
-                    <div class="row py-4 bg-white">
-                        <div class="col">
-                            <img class="w-15" src="/media/trintech-cadency.png" alt="trintech cadency">
-
-
-                            <a class="" aria-current="page" href="#">Match</a>
-
-                            <a class="" href="#">Certification</a>
+            {% comment %}style="background-image: url('{{ img.url }}'); background-size: contain;"{% endcomment %}
+            <div class="text-center">
+                <hr>
+                <div class="row row-cols-1 row-cols-xl-3 g-4 mx-lg-5">
+                    <div class="col">
+                        <div class="card h-100 border-0">
+                            <div class="d-flex justify-content-start">
+                            {% image home.store_image max-300x200 as main_photo %}
+                                    <img src="{{ main_photo.url }}" alt="club store"
+                                         class="d-block"/>
+                            </div>
+                            <div class="">
+                                <div class="row justify-content-start mt-2">
+                                    <a class="justify-content-start text-start result"
+                                       href="{{ home.store_link }}" target="_blank">
+                                        {{ home.store_text|richtext }}
+                                    </a>
+                                </div>
+                                <div class="text-muted row justify-content-start text-start">
+                                    <a>CLUB STORE</a>
+                                </div>
+                            </div>
 
 
                         </div>
-                        <div class="col col-auto">
-                            <!-- Example single danger button -->
-                            <div class="dropdown">
-                                <button class="text-lighter-green main-drop py-2 px-3 dropdown-toggle"
-                                        type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" style="outline: none;">
-                                    <i class="far fa-question-circle px-3"></i> Art Ardizzone
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </div>
+                    <div class="d-xl-none">
+                        <hr>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 border-0">
+                            {% for page in blog|slice:"1" %}
+                                <div class="d-flex justify-content-start">
+                                    {% for item in page.specific.blogpage_images.all|slice:"1" %}
+                                        {% image item.image max-300x200 as b_photo %}
+                                        <img src="{{ b_photo.url }}" width="{{ b_photo.width }}"
+                                             height="" alt="{{ page.intro }}"
+                                             class=""/>
+                                    {% endfor %}
+                                </div>
+                                <div class="">
+                                    <div class="row justify-content-start mt-2">
+                                        <a class="justify-content-start text-start result"
+                                           href="{% pageurl page %}">
+                                            {{ page.intro|richtext }}
+                                        </a>
+                                    </div>
+                                    <div class="text-muted row justify-content-start text-start mt-2">
+                                        <a>CLUB NEWS</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-xl-none">
+                        <hr>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="bg-f8 border-thick-top">
+                                {% for match in next_match_list|slice:"1" %}
+                                    <div class="row row-cols-auto justify-content-between pt-3 px-2">
+                                        <div class="col text-muted">
+                                            NEXT FIXTURE
+                                        </div>
+                                        <div class="col small">
+                                            <a class="pe-2 text-primary" href="/club/fixtures/firstXI">
+                                                All fixtures <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        {{ match.date|date:"D d M" }}
+                                    </div>
+                                    <div class="pb-3 text-muted small">
+                                        {{ match.match_format }}
+                                    </div>
+                                    <div class="pt-2 pb-2 row justify-content-between m-2">
+                                        <div class="col-4">
+                                            <div class="row justify-content-end">
+                                                <img class="match-img" src="/media/ards_cc.png" alt="ards cc"
+                                                     style="height: 60px; width: auto;">
+                                            </div>
+                                        </div>
+                                        <div class="col-3 display-inline">
+                                            <p class="bg-ec py-2">
+                                                {{ match.time|date:"G:i" }}
+                                            </p>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="row justify-content-start">
+                                                <img class="match-img " src="{{ match.opponent.badge.url }}"
+                                                     alt="opponent badge" style="height: 60px; width: auto; ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row  justify-content-end">
+                                        <div class="col-6">
+                                            <p class="fw-bold">ARDS</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="fw-bold">{{ match.opponent }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="border text-primary p-3 mx-4 mb-3">
+                                        <a class="result fw-bold" href="{% url 'viewfixture' match.id %}">
+                                            PREVIEW
+                                        </a>
+                                    </div>
+                                {% empty %}
+                                    Nothing To Show
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="starter-template text-center py-5 px-3">
+                    <h1>Bootstrap starter template</h1>
+                    <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this
+                        text
+                        and a
+                        mostly barebones HTML document.</p>
+
+
+                    <h1 class="display-4">{{ self.banner_title }}</h1>
+                    <div class="lead">{{ self.banner_subtitle|richtext }}</div>
+
+                    {% if self.banner_cta %}
+                        <a class="btn btn-primary btn-lg" href="@" role="button">@todo</a>
+                    {% endif %}
+
+
+                </div>
+
+                <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                    <h1 class="display-4">Pricing</h1>
+                    <p class="lead">Quickly build an effective pricing table for your potential customers with this
+                        Bootstrap
+                        example. It’s built with default Bootstrap components and utilities with little
+                        customization.</p>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                    <div class="col">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h4 class="my-0 fw-normal">Free</h4>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>10 users included</li>
+                                    <li>2 GB of storage</li>
+                                    <li>Email support</li>
+                                    <li>Help center access</li>
                                 </ul>
+                                <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h4 class="my-0 fw-normal">Pro</h4>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small>
+                                </h1>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>20 users included</li>
+                                    <li>10 GB of storage</li>
+                                    <li>Priority email support</li>
+                                    <li>Help center access</li>
+                                </ul>
+                                <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                <h4 class="my-0 fw-normal">Enterprise</h4>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small>
+                                </h1>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>30 users included</li>
+                                    <li>15 GB of storage</li>
+                                    <li>Phone and email support</li>
+                                    <li>Help center access</li>
+                                </ul>
+                                <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-f6 h-500 border-purple shadow-top">
-                    <div class="row">
-                        <div class="col-auto mt-4">
-                            <div class="navbar bg-purple rounded-end py-3"
-                                 aria-label="First navbar example" style="width:25px;">
-                                <div class="">
+                <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+                    <div class="col-md-5 p-lg-5 mx-auto my-5">
+                        <h1 class="display-4 fw-normal">Punny headline</h1>
+                        <p class="lead fw-normal">And an even wittier subheading to boot. Jumpstart your marketing
+                            efforts
+                            with
+                            this example based on Apple’s marketing pages.</p>
+                        <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+                    </div>
+                    <div class="product-device shadow-sm d-none d-md-block"></div>
+                    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+                </div>
 
-                                    <button class="navbar-toggler custom-toggler" type="button" id="toggleButton"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false" aria-label="Toggle navigation">
-                                        <span class="navbar-toggler-icon"></span>
+                <div class="all-blocks">
+                    {% for block in home.intro %}
+                        {% include_block block %}
+                    {% endfor %}
+                </div>
+
+                <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+                    <div class="bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+                        <div class="my-3 py-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-light shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 p-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-dark shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                </div>
+
+                <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 p-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-dark shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                    <div class="bg-primary me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+                        <div class="my-3 py-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-light shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                </div>
+
+
+                <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 p-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-white shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 py-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-white shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                </div>
+
+                <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 p-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-white shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                    <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                        <div class="my-3 py-3">
+                            <h2 class="display-5">Another headline</h2>
+                            <p class="lead">And an even wittier subheading.</p>
+                        </div>
+                        <div class="bg-white shadow-sm mx-auto"
+                             style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
+                    </div>
+                </div>
+
+
+                {% comment %}
+Start of Work on Trintech
+{% endcomment %}
+                <div class="w-100">
+                    <div class="px-3 bg-body rounded">
+                        <div class="row py-4 bg-white">
+                            <div class="col">
+                                <img class="w-15" src="/media/trintech-cadency.png" alt="trintech cadency">
+
+
+                                <a class="" aria-current="page" href="#">Match</a>
+
+                                <a class="" href="#">Certification</a>
+
+
+                            </div>
+                            <div class="col col-auto">
+                                <!-- Example single danger button -->
+                                <div class="dropdown">
+                                    <button class="text-lighter-green main-drop py-2 px-3 dropdown-toggle"
+                                            type="button" id="dropdownMenuButton1"
+                                            data-bs-toggle="dropdown" aria-expanded="false" style="outline: none;">
+                                        <i class="far fa-question-circle px-3"></i> Art Ardizzone
                                     </button>
-
-                                    <ul class="dropdown-menu" aria-labelledby="toggleButton">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item" href="#">Action</a></li>
                                         <li><a class="dropdown-item" href="#">Another action</a></li>
                                         <li><a class="dropdown-item" href="#">Something else here</a></li>
@@ -336,174 +409,201 @@ Start of Work on Trintech
                                 </div>
                             </div>
                         </div>
-                        <div class="col match-rules">
-                            <div class="">
-                                <h2>
-                                    Match rules and sets
-                                </h2>
-                                <hr>
-                            </div>
+                    </div>
 
+                    <div class="bg-f6 h-500 border-purple shadow-top">
+                        <div class="row">
+                            <div class="col-auto mt-4">
+                                <div class="navbar bg-purple rounded-end py-3"
+                                     aria-label="First navbar example" style="width:25px;">
+                                    <div class="">
 
-                            <div class="">
-                                <nav class="">
-                                    <div class="nav nav-tabs custom-nav-tabs" id="nav-tab" role="tablist">
-                                        <button class="nav-link active custom-nav-link" id="nav-home-tab"
-                                                data-bs-toggle="tab" `
-
-                                                data-bs-target="#nav-home" type="button" role="tab"
-                                                aria-controls="nav-home"
-                                                aria-selected="true">
-                                            <strong>
-                                                Match rules
-                                            </strong>
+                                        <button class="navbar-toggler custom-toggler" type="button" id="toggleButton"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false" aria-label="Toggle navigation">
+                                            <span class="navbar-toggler-icon"></span>
                                         </button>
-                                        <button class="nav-link custom-nav-link" id="nav-profile-tab"
-                                                data-bs-toggle="tab"
-                                                data-bs-target="#nav-profile"
-                                                type="button" role="tab" aria-controls="nav-profile"
-                                                aria-selected="false">
-                                            <strong>
-                                                Match rule sets
-                                            </strong>
-                                        </button>
+
+                                        <ul class="dropdown-menu" aria-labelledby="toggleButton">
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
                                     </div>
-                                </nav>
-                                <div class="tab-content" id="nav-tabContent">
-                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                         aria-labelledby="nav-home-tab">
-                                        <div class="row py-4">
-
-                                            <div class="col">
-
-                                                <form class="form-inline ">
-                                                    <input class="border rounded py-2 px-3" type="search"
-                                                           placeholder="Search"
-                                                           aria-label="Search">
+                                </div>
+                            </div>
+                            <div class="col match-rules">
+                                <div class="">
+                                    <h2>
+                                        Match rules and sets
+                                    </h2>
+                                    <hr>
+                                </div>
 
 
-                                                    <button type="button"
-                                                            class="border border-primary btn-light rounded text-primary py-2 px-3">
-                                                        <a href="" role="button"><i class="fa fa-sync"></i> </a>
-                                                    </button>
+                                <div class="">
+                                    <nav class="">
+                                        <div class="nav nav-tabs custom-nav-tabs" id="nav-tab" role="tablist">
+                                            <button class="nav-link active custom-nav-link" id="nav-home-tab"
+                                                    data-bs-toggle="tab" `
+
+                                                    data-bs-target="#nav-home" type="button" role="tab"
+                                                    aria-controls="nav-home"
+                                                    aria-selected="true">
+                                                <strong>
+                                                    Match rules
+                                                </strong>
+                                            </button>
+                                            <button class="nav-link custom-nav-link" id="nav-profile-tab"
+                                                    data-bs-toggle="tab"
+                                                    data-bs-target="#nav-profile"
+                                                    type="button" role="tab" aria-controls="nav-profile"
+                                                    aria-selected="false">
+                                                <strong>
+                                                    Match rule sets
+                                                </strong>
+                                            </button>
+                                        </div>
+                                    </nav>
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                             aria-labelledby="nav-home-tab">
+                                            <div class="row py-4">
+
+                                                <div class="col">
+
+                                                    <form class="form-inline ">
+                                                        <input class="border rounded py-2 px-3" type="search"
+                                                               placeholder="Search"
+                                                               aria-label="Search">
 
 
-                                                    <button type="button"
-                                                            class="border btn-light rounded text-dark py-2 px-3">
-                                                        <a style="text-decoration: none" href=""><i
-                                                                class="fa fa-filter"></i>
-                                                            <strong>Filters</strong></a>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                                        <button type="button"
+                                                                class="border border-primary btn-light rounded text-primary py-2 px-3">
+                                                            <a href="" role="button"><i class="fa fa-sync"></i> </a>
+                                                        </button>
 
 
-                                            <div class="col col-auto">
-                                                <!-- Example single danger button -->
-                                                <div class="dropdown">
-                                                    <button class="border border-primary btn-light rounded text-primary py-2 px-3 dropdown-toggle"
-                                                            type="button" id="dropdownMenuButton1"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <strong>
-                                                            More
-                                                        </strong>
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a>
-                                                        </li>
-                                                    </ul>
+                                                        <button type="button"
+                                                                class="border btn-light rounded text-dark py-2 px-3">
+                                                            <a style="text-decoration: none" href=""><i
+                                                                    class="fa fa-filter"></i>
+                                                                <strong>Filters</strong></a>
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+
+                                                <div class="col col-auto">
+                                                    <!-- Example single danger button -->
+                                                    <div class="dropdown">
+                                                        <button class="border border-primary btn-light rounded text-primary py-2 px-3 dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton1"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <strong>
+                                                                More
+                                                            </strong>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                                            <li><a class="dropdown-item" href="#">Another action</a>
+                                                            </li>
+                                                            <li><a class="dropdown-item" href="#">Something else
+                                                                here</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
+
+                                            <table class="table table-bordered table-light table-striped">
+                                                <thead class="">
+                                                <tr class="">
+                                                    <th class="">
+                                                        Actions
+                                                    </th>
+                                                    <th class="">
+                                                        Name
+                                                    </th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="">
+                                                    <td class="">
+                                                        <a class="text-primary" href="">...</a>
+                                                    </td>
+                                                    <td class="">
+                                                        <a class="text-primary" href="">1 to 1 Effective DAte RENAME</a>
+                                                    </td>
+                                                </tr>
+                                                {% include 'table_sample.html' %}
+                                                {% include 'table_sample.html' %}
+                                                {% include 'table_sample.html' %}
+                                                {% include 'table_sample.html' %}
+                                                </tbody>
+                                            </table>
+
                                         </div>
+                                        <div class="tab-pane fade" id="nav-profile" role="tabpanel"
+                                             aria-labelledby="nav-profile-tab">
+                                            <div class="row py-4">
 
-                                        <table class="table table-bordered table-light table-striped">
-                                            <thead class="">
-                                            <tr class="">
-                                                <th class="">
-                                                    Actions
-                                                </th>
-                                                <th class="">
-                                                    Name
-                                                </th>
+                                                <div class="col">
 
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr class="">
-                                                <td class="">
-                                                    <a class="text-primary" href="">...</a>
-                                                </td>
-                                                <td class="">
-                                                    <a class="text-primary" href="">1 to 1 Effective DAte RENAME</a>
-                                                </td>
-                                            </tr>
-                                            {% include 'table_sample.html' %}
-                                            {% include 'table_sample.html' %}
-                                            {% include 'table_sample.html' %}
-                                            {% include 'table_sample.html' %}
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                         aria-labelledby="nav-profile-tab">
-                                        <div class="row py-4">
-
-                                            <div class="col">
-
-                                                <form class="form-inline ">
-                                                    <input class="border rounded py-2 px-3" type="search"
-                                                           placeholder="Search"
-                                                           aria-label="Search">
+                                                    <form class="form-inline ">
+                                                        <input class="border rounded py-2 px-3" type="search"
+                                                               placeholder="Search"
+                                                               aria-label="Search">
 
 
-                                                    <button type="button"
-                                                            class="border border-primary btn-light rounded text-primary py-2 px-3">
-                                                        <a href="" role="button"><i class="fa fa-sync"></i> </a>
-                                                    </button>
+                                                        <button type="button"
+                                                                class="border border-primary btn-light rounded text-primary py-2 px-3">
+                                                            <a href="" role="button"><i class="fa fa-sync"></i> </a>
+                                                        </button>
 
 
-                                                    <button type="button"
-                                                            class="border btn-light rounded text-dark py-2 px-3">
-                                                        <a style="text-decoration: none" href=""><i
-                                                                class="fa fa-filter"></i>
-                                                            <strong>Filters</strong></a>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                                        <button type="button"
+                                                                class="border btn-light rounded text-dark py-2 px-3">
+                                                            <a style="text-decoration: none" href=""><i
+                                                                    class="fa fa-filter"></i>
+                                                                <strong>Filters</strong></a>
+                                                        </button>
+                                                    </form>
+                                                </div>
 
 
-                                            <div class="col col-auto">
-                                                <!-- Example single danger button -->
-                                                <div class="dropdown">
-                                                    <button class="border border-primary btn-light rounded text-primary py-2 px-3 dropdown-toggle"
-                                                            type="button" id="dropdownMenuButton1"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                                        More
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="col col-auto">
+                                                    <!-- Example single danger button -->
+                                                    <div class="dropdown">
+                                                        <button class="border border-primary btn-light rounded text-primary py-2 px-3 dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton1"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                            More
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                                            <li><a class="dropdown-item" href="#">Another action</a>
+                                                            </li>
+                                                            <li><a class="dropdown-item" href="#">Something else
+                                                                here</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
-
-
                     </div>
                 </div>
-            </div>
 
 
-            {% comment %}
+                {% comment %}
 
 
 
@@ -513,18 +613,19 @@ Delete the line below if you're just getting started and want to remove the welc
 
 {% endcomment %}
 
-            <div class="cookie-banner" style="display: none">
-                <p>
-                    We use cookies to ensure that we give you the best experience on our website. If you continue to use
-                    this
-                    site
-                    we will assume that you are happy with it. Check out our
-                    <a href="/cookies">cookie policy</a> here
-                </p>
-                <button class="close border">&times;</button>
-            </div>
+                <div class="cookie-banner" style="display: none">
+                    <p>
+                        We use cookies to ensure that we give you the best experience on our website. If you continue to
+                        use
+                        this
+                        site
+                        we will assume that you are happy with it. Check out our
+                        <a href="/cookies">cookie policy</a> here
+                    </p>
+                    <button class="close border">&times;</button>
+                </div>
 
 
-    </main><!-- /.container -->
+        </main><!-- /.container -->
     {% endfor %}
 {% endblock content %}

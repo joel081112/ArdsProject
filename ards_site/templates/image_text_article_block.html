@@ -1,0 +1,10 @@
+{% load wagtailimages_tags %}
+
+<div class="slider__contents">
+    {% image self.image width-350 as img %}
+
+
+    <h2 class="slider__caption">{{ self.title }}</h2>
+    <img src="{{ img.url }}" class="float-start me-4" alt="{{ img.alt }}">
+    <p class="slider__txt">{{ self.text }}</p>
+</div>

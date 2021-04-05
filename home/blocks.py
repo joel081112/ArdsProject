@@ -112,14 +112,31 @@ class ImageTextBlock(blocks.StructBlock):
         required=False, help_text="Add your Image"
     )
     title = blocks.CharBlock(
-        required=True, help_text="Add your title"
+        required=False, help_text="Add your title"
     )
-    text = blocks.CharBlock(
-        required=True, help_text="Add your detail"
+    text = blocks.RichTextBlock(
+        required=False, help_text="Add your detail"
     )
 
     class Meta:
         template = "image_text_block.html"
+        icon = "edit"
+        label = "Image and Text"
+
+
+class ImageTextArticleBlock(blocks.StructBlock):
+    image = ImageChooserBlock(
+        required=False, help_text="Add your Image"
+    )
+    title = blocks.CharBlock(
+        required=False, help_text="Add your title"
+    )
+    text = blocks.RichTextBlock(
+        required=False, help_text="Add your detail"
+    )
+
+    class Meta:
+        template = "image_text_article_block.html"
         icon = "edit"
         label = "Image and Text"
 

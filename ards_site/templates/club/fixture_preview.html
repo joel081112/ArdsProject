@@ -16,6 +16,7 @@
 
 {% block content %} {#    html stuff sits in here#}
     <div class="pb-5 container col-md-9">
+
         <div class="row  py-4">
             <ul class="list-unstyled">
                 {% for match in queryset %}
@@ -35,7 +36,7 @@
                                 <p class="pe-3">Ards</p>
                                 <span class="text-danger">
                                     <a class="result" href="{% url 'viewfixture' match.id %}">
-                                    {{ match.time|date:"G:i"}}</a></span>
+                                    {{ match.time|date:"G:i" }}</a></span>
                                 <p class="ps-3">{{ match.opponent }}</p>
                             </div>
                         </div>
@@ -51,8 +52,8 @@
 
                     </li>
                     <hr>
-                    {% empty %}
-                        Nothing to display
+                {% empty %}
+                    Nothing to display
                 {% endfor %}
             </ul>
         </div>

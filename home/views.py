@@ -1,10 +1,60 @@
 from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.shortcuts import render, redirect
+from django.core import serializers
 from django.views.decorators.http import require_POST
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import Member, Match, Batting, \
-    Bowling, Extras, BattingOpponents, BowlingOpponents
+    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage
 from .forms import MemberForm
 from datetime import date
+from django.http import JsonResponse
+from rest_framework import routers, serializers, viewsets
+
+
+def get_data(request, *args, **kwargs):
+    runs = list(Match.objects.order_by('-date')
+                .values('ards_runs').filter(ards_runs__gte=1))
+    dates = list(Match.objects.order_by('-date')
+                 .values('date').filter(ards_runs__gte=1))
+
+    context = {
+        'runs': runs,
+        'dates': dates
+    }
+    return JsonResponse(context)
+
+
+class ChartData(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        runs = list(Match.objects.order_by('date')
+                    .values('ards_runs').filter(ards_runs__gte=1))
+        dates = list(Match.objects.order_by('date')
+                     .values('date').filter(ards_runs__gte=1))
+        default_labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+        default_items = [10, 12, 13, 14, 9, 3]
+        runs_array = []
+        dates_array = []
+
+        for items in runs.copy():
+            runs_array.append(items['ards_runs'])
+
+        for items in dates.copy():
+            dates_array.append(items['date'])
+
+        context = {
+            'runs': runs,
+            'dates': dates,
+            'default_items': default_items,
+            'default_labels': default_labels,
+            'runs_array': runs_array,
+            'dates_array': dates_array,
+        }
+        return Response(context)
 
 
 def home_view(request):
@@ -17,12 +67,16 @@ def home_view(request):
         team__name__contains='firstXI',
         date__gte=date.today()
     ).order_by('date')
+    blog = BlogPage.objects.order_by('-date')
+    homepage = HomePage.objects.all()
 
     template = 'home/home_page.html'
 
     context = {
         'prev_match_list': prev_match_list,
-        'next_match_list': next_match_list
+        'next_match_list': next_match_list,
+        'blog': blog,
+        'homepage': homepage
     }
     return render(request, template, context)
 
@@ -63,14 +117,72 @@ def member_view(request):
     return render(request, 'club/overview.html', context)
 
 
+def averages_view_firsts(request):
+    """View all firsts averages."""
+    queryset = Member.objects.filter(teamsPlayedFor__name='firstXI').order_by('id')
+    queryset1 = Batting.objects.order_by('-match__date')
+    queryset2 = Bowling.objects.order_by('-match__date')
+
+    return render(request, 'club/averages.html',
+                  averages_list_view(queryset, queryset1, queryset2, request))
+
+
+def averages_view_seconds(request):
+    """View all seconds averages."""
+    queryset = Member.objects.filter(teamsPlayedFor__name='secondXI').order_by('id')
+    queryset1 = Batting.objects.order_by('-match__date')
+    queryset2 = Bowling.objects.order_by('-match__date')
+
+    return render(request, 'club/averages.html',
+                  averages_list_view(queryset, queryset1, queryset2, request))
+
+
+def averages_list_view(queryset, queryset1, queryset2, request):
+    """Context creation for a list of averages."""
+    batting_list__ = queryset1
+    bowling_list__ = queryset2
+    batting_list = queryset.annotate(
+        count_runs=Count('batting__runs'),
+        max_runs=Max('batting__runs'),
+        min_runs=Min('batting__runs'),
+        sum_runs=Sum('batting__runs'),
+        average_runs=Avg('batting__runs'),
+        average_runs_pt2=Sum('batting__runs') / Count('batting__runs'),
+    )
+    bowling_list = queryset.annotate(
+        count_runs=Count('bowling__runs'),
+        max_runs=Max('bowling__runs'),
+        min_runs=Min('bowling__runs'),
+        sum_runs=Sum('bowling__runs'),
+        average_runs=Avg('bowling__runs'),
+        average_runs_pt2=Sum('bowling__runs') / Count('bowling__runs'),
+    )
+    player_list = queryset.values('name').distinct()
+    player_choice = request.GET.get('player_choice')
+
+    if player_choice != '' and player_choice is not None:
+        queryset = queryset.filter(name__iexact=player_choice)
+
+    context = {
+        'batting_list': batting_list,
+        'bowling_list': bowling_list,
+        'player_list': player_list,
+        'queryset': queryset,
+        'batting_list__': batting_list__,
+        'bowling_list__': bowling_list__
+    }
+
+    return context
+
+
 def players_view_firsts(request):
-    """View all firsts matches."""
+    """View all firsts players."""
     queryset = Member.objects.filter(teamsPlayedFor__name='firstXI')
     return render(request, 'club/players.html', player_list_view(queryset, request))
 
 
 def players_view_seconds(request):
-    """View all seconds matches."""
+    """View all seconds players."""
     queryset = Member.objects.filter(teamsPlayedFor__name='secondXI')
     return render(request, 'club/players.html', player_list_view(queryset, request))
 
@@ -163,6 +275,8 @@ def match_list_view(queryset, request):
     date_list = queryset.order_by('date__year') \
         .values('date__year') \
         .distinct()
+    print(date_list)
+    print(queryset)
 
     if team_contains_queryo != '' and team_contains_queryo is not None:
         queryset = queryset.filter(opponent__name__icontains=team_contains_queryo)

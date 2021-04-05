@@ -1,0 +1,84 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Averages{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+    Averages for Players page for the teams
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+
+    <div class="mx-5">
+
+        <div class="row py-4">
+
+            <div class="col">
+
+                <form method="GET" action="." class="form-inline">
+                    <select id="player_selector" name="player_choice" class="p-2 ms-2">
+                        <option hidden disabled selected value> -- MEMBER --</option>
+                        {% for m in player_list %}
+                            <option value="{{ m }}">
+                                {{ m.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="border btn-light rounded text-dark py-2 px-3 ms-2">
+                        <a style="text-decoration: none" href=""><i
+                                class="fa fa-filter"></i>
+                            <strong>Filter</strong></a>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <hr>
+
+
+        {% for i in queryset %}
+            {% for batting in batting_list__ %}
+                {% if batting.member_id == i.id %}
+                    {{ batting }}<br>
+                {% endif %}
+            {% empty %}
+                Nothing to show
+            {% endfor %}
+            <br>
+
+            {% for bowling in bowling_list__ %}
+                {% if bowling.member_id == i.id %}
+                    {{ bowling }}<br>
+                {% endif %}
+            {% empty %}
+                Nothing to show
+            {% endfor %}
+
+            <br>
+            {% for obj in batting_list %}
+                {% if i.id == obj.id %}
+                    {{ obj }} | Batting | {{ obj.count_runs }} | {{ obj.max_runs }} | {{ obj.min_runs }} |
+                    {{ obj.sum_runs }}
+                    | {{ obj.average_runs }} | {{ obj.average_runs_pt2 }} | {{ obj.id }}_<br>
+                    {% for mem in bowling_list %}
+                        {% if obj.id == mem.id %}
+                            {{ mem }} | Bowling | {{ mem.count_runs }} | {{ mem.max_runs }} | {{ mem.min_runs }} |
+                            {{ mem.sum_runs }}
+                            | {{ mem.average_runs }} | {{ mem.average_runs_pt2 }} | {{ mem.id }}_
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            <hr>
+        {% empty %}
+            Nothing to show
+            <hr>
+        {% endfor %}
+
+    </div>
+{% endblock %}

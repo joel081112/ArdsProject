@@ -20,43 +20,46 @@
     width: 1px;
 }
 
-.alternative-colour{
+.alternative-colour {
     background-color: darkslategrey;
-    width:100vw;
-    min-width:100vw;
+    width: 100vw;
+    min-width: 100vw;
 }
 
-.image-white{
+.image-white {
     filter: brightness(0) invert(1);
 }
-.ws-5{
+
+.ws-5 {
     word-spacing: 10px;
 }
 
-.ws-4{
+.ws-4 {
     word-spacing: 8px;
 }
 
-.ws-3{
+.ws-3 {
     word-spacing: 6px;
 }
 
-.ls-5{
+.ls-5 {
     letter-spacing: 5px;
 }
-.ls-2{
+
+.ls-2 {
     letter-spacing: 2px;
 }
 
 .rtl {
-  direction: rtl;
-}
-.ltr {
-  direction: ltr;
+    direction: rtl;
 }
 
-.home-content{
-min-width: 250px;
+.ltr {
+    direction: ltr;
+}
+
+.home-content {
+    min-width: 250px;
 }
 
 /*work on this for effect shine for blog page*/
@@ -1413,12 +1416,12 @@ Primary style .css
 
 }
 
-.match-area{
+.match-area {
     float: right;
 }
 
-.result{
-     text-decoration: none;
+.result {
+    text-decoration: none;
 }
 
 .match-mini-facts {
@@ -1447,35 +1450,48 @@ Primary style .css
 }
 
 .inner-addon {
-  position: relative;
+    position: relative;
 }
 
 /* style glyph */
 .inner-addon .fa {
-  position: absolute;
-  padding: 10px;
-  pointer-events: none;
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
 }
 
 /* align glyph */
-.left-addon .fa { left:  0px;}
-.right-addon .fa { right: 0px;}
+.left-addon .fa {
+    left: 0px;
+}
+
+.right-addon .fa {
+    right: 0px;
+}
 
 
 /* add padding  */
-.left-addon input  { padding-left:  30px; }
-.right-addon input { padding-right: 30px; }
+.left-addon input {
+    padding-left: 30px;
+}
+
+.right-addon input {
+    padding-right: 30px;
+}
 
 /* Trintech stuff*/
 .bg-f6 {
     background: #f6f6f6;
 }
+
 .bg-fc {
     background: #fcfcfc;
 }
+
 .bg-f8 {
     background: #f8f8f8;
 }
+
 .bg-ec {
     background: #ececec;
 }
@@ -1532,7 +1548,8 @@ Primary style .css
 
 .border-thick-top {
     border-style: solid;
-  border-top-width: thick;
+    border-top-width: medium;
+    border-color: #004225;
 }
 
 .shadow-top {
@@ -1817,7 +1834,7 @@ button.close {
 /*end blog .css*/
 
 /* match preview .css */
-.match-preview{
+.match-preview {
     max-width: 700px;
     margin: auto;
 }

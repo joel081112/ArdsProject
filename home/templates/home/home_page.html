@@ -16,11 +16,10 @@ Delete the line below if you're just getting started and want to remove the welc
 {% endblock extra_css %}
 
 {% block content %}
+    {% for home in homepage %}
 
     {% image self.banner_image fill-900x400 as img %}
-    {{ self.banner_title }}
-    {{ self.banner_title }}
-WAGTAIUL AND DJAGNO DONT WORK TOGETHER ATM
+    {{ home.banner_title }} |
 
 
 
@@ -34,22 +33,28 @@ WAGTAIUL AND DJAGNO DONT WORK TOGETHER ATM
             {% empty %}
                 n
             {% endfor %}
-            <div class="row justify-content-around mx-1">
+            <div class="row justify-content-around mx-1 d-flex align-items-stretch">
+                <div class="bg-f8   col-xl-3 mb-3">
 
-
-
-                <div class="bg-f8 border-thick-top  col-xl-3 mb-3">
-                    ayo
                 </div>
 
-                <div class="bg-f8 border-thick-top  col-xl-3 mb-3">
-                    ayo
+                <div class="col-xl-3 mb-3">
+                    {% for page in blog|slice:"1" %}
+                        <div class="d-flex justify-content-start">
+                            {% for item in page.specific.blogpage_images.all|slice:"1" %}
+                                {% image item.image fill-350x250-c100 %}
+                            {% endfor %}
+                        </div>
+                        <div class="row justify-content-start mt-2 px-2">{{ page.intro }}</div>
+                        <div class="text-muted row justify-content-start mt-2 px-2 align-items-end">CLUB NEWS</div>
+                    {% endfor %}
                 </div>
+
 
                 <div class="bg-f8 border-thick-top  col-xl-3 mb-3">
                     {% for match in next_match_list|slice:"1" %}
-                        <div class="row row-cols-auto justify-content-between pt-4 px-2">
-                            <div class="col text-muted fw-bold">
+                        <div class="row row-cols-auto justify-content-between pt-3 px-2">
+                            <div class="col text-muted">
                                 NEXT FIXTURE
                             </div>
                             <div class="col small">
@@ -91,7 +96,7 @@ WAGTAIUL AND DJAGNO DONT WORK TOGETHER ATM
                             </div>
                         </div>
                         <div class="border text-primary p-3 mx-4 mb-3">
-                            <a class="result ls-2 fw-bold" href="{% url 'viewfixture' match.id %}">
+                            <a class="result fw-bold" href="{% url 'viewfixture' match.id %}">
                                 PREVIEW
                             </a>
                         </div>
@@ -521,4 +526,5 @@ Delete the line below if you're just getting started and want to remove the welc
 
 
     </main><!-- /.container -->
+    {% endfor %}
 {% endblock content %}

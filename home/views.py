@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Member, Match, Batting, \
-    Bowling, Extras, BattingOpponents, BowlingOpponents
+    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage
 from .forms import MemberForm
 from datetime import date
 from django.http import JsonResponse
@@ -67,12 +67,16 @@ def home_view(request):
         team__name__contains='firstXI',
         date__gte=date.today()
     ).order_by('date')
+    blog = BlogPage.objects.order_by('-date')
+    homepage = HomePage.objects.all()
 
     template = 'home/home_page.html'
 
     context = {
         'prev_match_list': prev_match_list,
-        'next_match_list': next_match_list
+        'next_match_list': next_match_list,
+        'blog': blog,
+        'homepage': homepage
     }
     return render(request, template, context)
 

@@ -19,8 +19,7 @@ urlpatterns = [
 
     path('search/', search_views.search, name='search'),
     path('club/', include('home.urls')),
-
-
+    path('', include('allauth.urls')),
 
 ]
 

@@ -21,6 +21,7 @@ urlpatterns = [
     path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
     path('view_fixture/<match_id>', views.view_selected_fixture, name='viewfixture'),
     path('api/data/', views.get_data, name='api-data'),
-    path('api/chart/data/', views.ChartData.as_view(), name='api-chart-data')
+    path('api/chart/data/', views.ChartData.as_view(), name='api-chart-data'),
+    path('api/user/home/data/<user_id>', views.UserHomeData.as_view(), name='api-chart-data')
 
 ]

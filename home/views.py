@@ -2,6 +2,7 @@ from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -47,8 +48,6 @@ class ChartData(APIView):
             dates_array.append(items['date'])
 
         context = {
-            'runs': runs,
-            'dates': dates,
             'default_items': default_items,
             'default_labels': default_labels,
             'runs_array': runs_array,
@@ -69,6 +68,17 @@ def home_view(request):
     ).order_by('date')
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
+    users = User.objects.all()
+    if request.user.is_authenticated:
+        member_list = Member.objects.filter(
+            player_link=request.user
+        )
+        batting_list = Batting.objects.filter(
+            member__player_link=request.user
+        ).order_by('-match__date')
+    else:
+        member_list = {}
+        batting_list = {}
 
     template = 'home/home_page.html'
 
@@ -76,9 +86,43 @@ def home_view(request):
         'prev_match_list': prev_match_list,
         'next_match_list': next_match_list,
         'blog': blog,
-        'homepage': homepage
+        'homepage': homepage,
+        'users': users,
+        'member_list': member_list,
+        'batting_list': batting_list
     }
     return render(request, template, context)
+
+
+class UserHomeData(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, user_id):
+        users = list(User.objects.all().values('username'))
+        dates = list(Batting.objects.all().values('match__date')
+                     .filter(member__player_link__id=user_id).order_by('match__date'))
+        runs_o = list(Batting.objects.all().values('runs')
+                      .filter(member__player_link__id=user_id).order_by('match__date'))
+        runs = list(User.objects.all().values('username').filter(id=user_id))
+        runs_array = []
+        dates_array = []
+
+        for items in runs_o.copy():
+            runs_array.append(items['runs'])
+
+        for items in dates.copy():
+            dates_array.append(items['match__date'])
+
+        context = {
+            'users': users,
+            'runs': runs,
+            'dates': dates,
+            'runs_o': runs_o,
+            'runs_array': runs_array,
+            'dates_array': dates_array
+        }
+        return Response(context)
 
 
 def member_view(request):

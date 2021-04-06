@@ -1,0 +1,52 @@
+{% extends "account/base.html" %}
+{% block page-css-class %}col-md-5{% endblock %}
+{% load i18n %}
+{% load account socialaccount %}
+
+
+
+{% block title %} {% trans "Delete account" %} | {{ site_name }}{% endblock %}
+{% block title_suffix %}
+    {% with self.get_site.site_name as site_name %}
+        {% if site_name %}| {{ site_name }}{% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+
+{% endblock %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+
+    {% if request.user.is_authenticated %}
+
+        <p>Do you want to delete the account "{{ request.user.username }}"?</p>
+        {% comment %}{{ request.user.first_name }}{% endcomment %}
+    {% endif %}
+
+
+    {% if perms.auth.delete_user %}
+        <button>Delete user!</button>
+    {% endif %}
+    <form action="deleted/" method="POST">
+        {% csrf_token %}
+
+        <div class="forgotten-password">
+            <div class="row">
+                <div class="col-45">
+                    <div class="new-body">
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?')">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                DELETE ACCOUNT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+{% endblock %}

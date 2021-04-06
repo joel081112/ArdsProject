@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -458,3 +459,25 @@ def member_form(request, member_id):
     context = {'form': form}
 
     return render(request, 'club/member_update.html', context)
+
+
+def delete_account(request):
+    """Delete an account."""
+
+    context = {
+               }
+    return render(request, 'account/delete_account.html', context)
+
+
+def delete_account_confirmed(request):
+    """Delete an account."""
+
+    context = {
+               }
+    return render(request, 'account/user_deleted.html', context)
+
+
+def delete_confirm(request):
+    request.user.delete()
+    logout(request)
+    return redirect('/user-deleted')

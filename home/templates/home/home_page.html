@@ -15,6 +15,112 @@ Delete the line below if you're just getting started and want to remove the welc
 
 {% endblock extra_css %}
 
+{% block extra_js %} {# Override this in templates to add extra javascript #}
+    <script>
+        {% for mem in member_list %}
+            var userid ={{ mem.player_link.id }}
+        {% endfor %}
+        var endpoint = '/club/api/user/home/data/' + userid
+        var defaultData1 = []
+        var defaultLabels2 = []
+
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function (context) {
+                defaultLabels = context.dates_array
+                defaultData = context.runs_array
+                console.log(context)
+                setChart()
+            },
+            error: function (error_data) {
+                console.log("error")
+                console.log(error_data)
+            },
+        })
+
+        function setChart() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var ctx2 = document.getElementById('myChart2').getContext('2d');
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: defaultLabels,
+                    datasets: [{
+                        label: '# of runs',
+                        data: defaultData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    }
+                }
+            })
+
+            var myChart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: defaultLabels,
+                    datasets: [{
+                        label: '# of runs',
+                        data: defaultData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            })
+        }
+
+    </script>
+{% endblock %}
+
 {% block content %}
     {% for home in homepage %}
         <div class="row justify-content-center mt-3 ms-3 me-3">
@@ -82,14 +188,39 @@ Delete the line below if you're just getting started and want to remove the welc
 
             {% comment %}style="background-image: url('{{ img.url }}'); background-size: contain;"{% endcomment %}
             <div class="text-center">
+
                 <hr>
+
+                {% if request.user.is_authenticated %}
+                    {% for mem in member_list %}
+                        {% for bt in batting_list|slice:"1" %}
+                            Your latest batting performance: {{ bt }}
+                            <br>
+                        {% endfor %}
+                        | user: {{ user.id }} | member: {{ mem.id }} | member player: {{ mem.player_link.id }}
+                    {% endfor %}
+
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <canvas id="myChart" width="400" height="400"></canvas>
+                        </div>
+                        <div class="col-md-3">
+                            <canvas id="myChart2" width="400" height="400"></canvas>
+                        </div>
+                    </div>
+                    <hr>
+                {% endif %}
+
+
                 <div class="row row-cols-1 row-cols-xl-3 g-4 mx-lg-5">
                     <div class="col">
                         <div class="card h-100 border-0">
                             <div class="d-flex justify-content-start">
-                            {% image home.store_image max-300x200 as main_photo %}
-                                    <img src="{{ main_photo.url }}" alt="club store"
-                                         class="d-block"/>
+                                {% image home.store_image max-300x200 as main_photo %}
+                                <img src="{{ main_photo.url }}" alt="club store"
+                                     class="d-block"/>
                             </div>
                             <div class="">
                                 <div class="row justify-content-start mt-2">
@@ -155,8 +286,11 @@ Delete the line below if you're just getting started and want to remove the welc
                                     <div>
                                         {{ match.date|date:"D d M" }}
                                     </div>
-                                    <div class="pb-3 text-muted small">
+                                    <div class="text-muted small">
                                         {{ match.match_format }}
+                                    </div>
+                                    <div class="pb-3 text-muted small">
+                                        {{ match.team.abr }}
                                     </div>
                                     <div class="pt-2 pb-2 row justify-content-between m-2">
                                         <div class="col-4">
@@ -197,6 +331,7 @@ Delete the line below if you're just getting started and want to remove the welc
                         </div>
                     </div>
                 </div>
+
                 <div class="starter-template text-center py-5 px-3">
                     <h1>Bootstrap starter template</h1>
                     <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this

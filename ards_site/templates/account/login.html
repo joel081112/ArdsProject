@@ -1,0 +1,47 @@
+{% extends "account/base.html" %}
+{% block page-css-class %}col-md-5{% endblock %}
+{% load i18n %}
+{% load account socialaccount %}
+
+
+
+{% block title %} {% trans "Sign In" %} | {{ site_name }}{% endblock %}
+{% block title_suffix %}
+    {% with self.get_site.site_name as site_name %}
+        {% if site_name %}| {{ site_name }}{% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{% url 'account_login' %}">
+        <h1>{% trans "Sign In" %}</h1>
+        <div class="row">
+            <p>{% blocktrans %}
+                If you have not created an account yet, then please
+                <a href="{{ signup_url }}">sign up</a> first.
+            {% endblocktrans %}</p>
+        </div>
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-8">
+
+                {{ form.as_p }}
+                {% if redirect_field_value %}
+                    <input type="hidden text-white" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+
+            </div>
+        </div>
+        <a class="btn btn-link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
+        <button type="submit" class="btn btn-success">{% trans "Sign In" %}</button>
+
+
+    </form>
+{% endblock %}

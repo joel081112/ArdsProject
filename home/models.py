@@ -1,5 +1,6 @@
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, \
@@ -342,6 +343,11 @@ class Member(models.Model):
     """Make a member of a team."""
 
     ards = models.BooleanField(null=True, blank=True)
+    player_link = models.ForeignKey(
+        User, on_delete=models.SET_NULL,
+        blank=True,
+        null=True, default=''
+    )
     name = models.CharField(max_length=40, default='')
     dateOfBirth = models.DateField(blank=True, null=True)
     role = models.ManyToManyField(Role)

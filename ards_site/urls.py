@@ -20,6 +20,9 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
     path('club/', include('home.urls')),
     path('', include('allauth.urls')),
+    path('delete-account/', home_views.delete_account, name='delete-user'),
+    path('delete-account/deleted/', home_views.delete_confirm, name='delete-user'),
+    path('user-deleted/', home_views.delete_account_confirmed, name='delete-user'),
 
 ]
 

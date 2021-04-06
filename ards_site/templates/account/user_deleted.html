@@ -1,0 +1,28 @@
+{% extends "account/base.html" %}
+{% block page-css-class %}col-md-5{% endblock %}
+{% load i18n %}
+{% load account socialaccount %}
+
+
+
+{% block title %} {% trans "User Deleted" %} | {{ site_name }}{% endblock %}
+{% block title_suffix %}
+    {% with self.get_site.site_name as site_name %}
+        {% if site_name %}| {{ site_name }}{% endif %}
+    {% endwith %}
+{% endblock %}
+
+
+{% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+
+{% endblock %}
+
+{% block content %}
+
+    <h5>You have deleted your account successfully and have been logged out</h5>
+
+
+
+
+{% endblock %}

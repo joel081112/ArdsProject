@@ -62,17 +62,16 @@
                             </a>
                             {% if request.user.is_authenticated %}
                                 <a class="px-4" href="/logout"><i class="fas fa-lock"></i></a>
+
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-success">{{ user.first_name }} {{ user.last_name }} {{ user.username }}</button>
-                                    <button type="button"
-                                            class="btn btn-success dropdown-toggle dropdown-toggle-split"
-                                            id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-bs-reference="parent">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    <button type="button" class="btn btn-success dropdown-toggle"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ user.first_name }} {{ user.last_name }} {{ user.username }}
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                    <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/overview-account">Account Details</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change password</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change
+                                            password</a></li>
                                         <li><a class="dropdown-item" href="/delete-account">Delete Account</a></li>
                                         <li>
                                             <hr class="dropdown-divider">
@@ -136,19 +135,18 @@
                             <a href="/admin">
                                 <i class="px-4 fas fa-dove" style="height: 50px; width:auto"></i>
                             </a>
+                            <br>
                             {% if request.user.is_authenticated %}
                                 <a class="px-4" href="/logout"><i class="fas fa-lock"></i></a>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-success">{{ user.first_name }} {{ user.last_name }} {{ user.username }}</button>
-                                    <button type="button"
-                                            class="btn btn-success dropdown-toggle dropdown-toggle-split"
-                                            id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-bs-reference="parent">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    <button type="button" class="btn btn-success dropdown-toggle"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ user.first_name }} {{ user.last_name }} {{ user.username }}
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                    <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/overview-account">Account Details</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change password</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change
+                                            password</a></li>
                                         <li><a class="dropdown-item" href="/delete-account">Delete Account</a></li>
                                         <li>
                                             <hr class="dropdown-divider">
@@ -156,6 +154,7 @@
                                         <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
                                     </ul>
                                 </div>
+
                             {% else %}
                                 <a href="/login"><i class="fas fa-lock-open"></i></a>
 
@@ -320,6 +319,7 @@
 <script src="{% static 'lottie/lottie-anims.js' %}"></script>
 
 <script type="text/javascript" src="{% static 'js/ards_site.js' %}"></script>
+
 
 <script>
     document.addEventListener("touchstart", function () {

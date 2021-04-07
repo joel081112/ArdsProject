@@ -188,11 +188,6 @@ Delete the line below if you're just getting started and want to remove the welc
 
             {% comment %}style="background-image: url('{{ img.url }}'); background-size: contain;"{% endcomment %}
             <div class="text-center">
-                <hr>
-                <div>
-                    list of all sponsors
-                </div>
-                <hr>
 
                 {% if request.user.is_authenticated %}
 
@@ -226,12 +221,17 @@ Delete the line below if you're just getting started and want to remove the welc
                                 <img src="{{ request.user.wagtail_userprofile.avatar.url }}" class=""
                                      alt="{{ request.user.get_full_name }}" style="max-height: 150px; width:auto;">
                             {% endif %}
+                        {% elif user_group.name == "Captain" %}
+                            <a class="btn btn-success" href="/club/match/add">
+                                add match
+                            </a>
                         {% endif %}
 
                     {% endfor %}
 
-                    <hr>
+
                 {% endif %}
+                <hr>
 
 
                 <div class="row row-cols-1 row-cols-xl-3 g-4 mx-lg-5">
@@ -351,6 +351,10 @@ Delete the line below if you're just getting started and want to remove the welc
                         </div>
                     </div>
                 </div>
+
+                <hr>
+                {% include 'sponsors.html' %}
+                <hr>
 
                 <div class="starter-template text-center py-5 px-3">
                     <h1>Bootstrap starter template</h1>

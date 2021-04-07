@@ -511,12 +511,20 @@
             <div class="border match-report py-5 col-md-8 order-4 my-3">
                 <div class="text-center">
                     Match Report
+                    <a class="btn btn-success" href="/club/match/batter/add">
+                        add batter
+                    </a>
                     <hr class="w-50 mx-auto">
                 </div>
                 {{ object.report|richtext }}
             </div>
 
+
+        </div>
+        <div class="pt-5">
+            {% include 'sponsors.html' %}
         </div>
 
     </div>
+
 {% endblock %}

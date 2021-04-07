@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage
-from .forms import MemberForm
+from .forms import MemberForm, MatchForm, BattingForm
 from datetime import date
 from django.http import JsonResponse
 from rest_framework import routers, serializers, viewsets
@@ -187,6 +187,7 @@ def averages_view_seconds(request):
 
 def averages_list_view(queryset, queryset1, queryset2, request):
     """Context creation for a list of averages."""
+
     batting_list__ = queryset1
     bowling_list__ = queryset2
     batting_list = queryset.annotate(
@@ -323,8 +324,6 @@ def match_list_view(queryset, request):
     date_list = queryset.order_by('date__year') \
         .values('date__year') \
         .distinct()
-    print(date_list)
-    print(queryset)
 
     if team_contains_queryo != '' and team_contains_queryo is not None:
         queryset = queryset.filter(opponent__name__icontains=team_contains_queryo)
@@ -370,6 +369,7 @@ def view_selected_member(request, member_id):
 def view_selected_match(request, match_id):
     """View a selected match."""
     obj = Match.objects.get(pk=match_id)
+    users = User.objects.all()
     extras_list_t = Extras.objects.order_by('match_id') \
         .filter(match_id=match_id, ards=True)
     extras_list_f = Extras.objects.order_by('match_id') \
@@ -390,7 +390,8 @@ def view_selected_match(request, match_id):
         'batting_list_bn_t': batting_list_bn_t,
         'bowling_list_bn_t': bowling_list_bn_t,
         'batting_list_bn_f': batting_list_bn_f,
-        'bowling_list_bn_f': bowling_list_bn_f
+        'bowling_list_bn_f': bowling_list_bn_f,
+        'users': users
     }
     return render(request, 'club/match_selected.html', context)
 
@@ -398,9 +399,11 @@ def view_selected_match(request, match_id):
 def view_selected_fixture(request, match_id):
     """View a selected fixture."""
     obj = Match.objects.get(pk=match_id)
+    users = User.objects.all()
 
     context = {
-        'object': obj
+        'object': obj,
+        'users': users
     }
     return render(request, 'club/match_preview.html', context)
 
@@ -428,6 +431,7 @@ def view_selected_member_team(request, team):
 def create_member(request):
     """Create a new member form."""
     form = MemberForm()
+    print(form)
 
     context = {'form': form}
     return render(request, 'club/member_create.html', context)
@@ -442,6 +446,8 @@ def add_new_member(request):
         if form.is_valid():
             print("Valid")
             form.save()
+        else:
+            print(form.errors)
 
     return redirect('members')
 
@@ -458,10 +464,62 @@ def member_form(request, member_id):
             print("Valid")
             form.save()
             return redirect('members')
+        else:
+            print(form.errors)
 
     context = {'form': form}
 
     return render(request, 'club/member_update.html', context)
+
+
+def add_match(request):
+    """Add a match."""
+    match_form = MatchForm()
+
+    context = {
+        'match_form': match_form
+    }
+    return render(request, 'club/add_match.html', context)
+
+
+@require_POST
+def add_new_match(request):
+
+    if request.method == 'POST':
+        print("Printing POST")
+        form = MatchForm(request.POST, request.FILES)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/fixtures/firstXI/')
+
+
+def add_batting(request):
+    """Add a batter."""
+    form = BattingForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'club/add_batting.html', context)
+
+
+@require_POST
+def add_new_batter(request):
+
+    if request.method == 'POST':
+        print("Printing POST")
+        form = BattingForm(request.POST, request.FILES)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/scorecard/secondXI/')
 
 
 def delete_account(request):

@@ -18,6 +18,13 @@ urlpatterns = [
     path('team/<team>', views.view_selected_member_team, name='viewmemberteam'),
     path('create/member', views.create_member, name='create'),
     path('member/add', views.add_new_member, name='createadd'),
+
+    path('match/add', views.add_match, name='add_match'),
+    path('match/add/new', views.add_new_match, name='add_new_match'),
+
+    path('match/batter/add', views.add_batting, name='add_batting'),
+    path('match/batter/add/new', views.add_new_batter, name='add_new_batter'),
+
     path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
     path('view_fixture/<match_id>', views.view_selected_fixture, name='viewfixture'),
     path('api/data/', views.get_data, name='api-data'),

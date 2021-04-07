@@ -1,0 +1,44 @@
+{% extends "../base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+<link rel="icon" type="image/png" href="media/ards cc filled.png"/>
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Add Batting{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}
+    <script>
+        $(document).ready(function () {
+            $('.copy').click(function () {
+                $('#batting-form').clone().appendTo('#batting-container');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block meta_descr %}
+    Add batting to match
+{% endblock %}
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="pb-5 container col-md-9">
+        <button class="copy">
+            <i class="fas fa-plus-square"></i>
+        </button>
+        <form action="{% url 'add_new_batter' %}" method="POST" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row" id="batting-container">
+                <div class="col-xl-4" id="batting-form">
+                    {% bootstrap_form form %}
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-success" id="add-btn">
+                ADD
+            </button>
+
+        </form>
+    </div>
+
+{% endblock %}

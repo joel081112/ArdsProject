@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+
 from .models import Member, Award, Wicket, Role, Club, \
     Batting, Bowling, Team, Type, Cup, MatchFormat, Match, Venue, \
-    CoinToss, Extras, OppositionNames, BattingOpponents, BowlingOpponents
-# Register your models here.
+    CoinToss, Extras, OppositionNames, BattingOpponents, BowlingOpponents,\
+    Profile
+
 
 admin.site.register(Member)
 admin.site.register(Award)
@@ -23,3 +27,4 @@ admin.site.register(Extras)
 admin.site.register(OppositionNames)
 admin.site.register(BattingOpponents)
 admin.site.register(BowlingOpponents)
+admin.site.register(Profile)

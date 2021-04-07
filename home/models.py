@@ -1,6 +1,6 @@
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, \
@@ -14,6 +14,7 @@ from wagtail.search import index
 from .blocks import InlineVideoBlock, ImageTextBlock, ImageTextArticleBlock
 
 
+# Start of Website page models
 class HomePage(Page):
     """Home page model."""
 
@@ -267,6 +268,17 @@ class BlogPageGalleryImage(Orderable):
 
 
 # Start of Club database
+class Profile(models.Model):
+    """Add new fields to user model"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    website_link = models.CharField(max_length=100)
+
+    class Meta:
+        """Meta class."""
+
+    def __str__(self):
+        return str(self.user)
+
 
 class Team(models.Model):
     """Range of age levels at standards of cricket clubs."""

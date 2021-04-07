@@ -2,7 +2,7 @@ from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import logout
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -34,9 +34,9 @@ class ChartData(APIView):
 
     def get(self, request):
         runs = list(Match.objects.order_by('date')
-                    .values('ards_runs').filter(ards_runs__gte=1))
+                    .values('ards_runs').filter(ards_runs__gte=1, date__lte=date.today()))
         dates = list(Match.objects.order_by('date')
-                     .values('date').filter(ards_runs__gte=1))
+                     .values('date').filter(ards_runs__gte=1, date__lte=date.today()))
         default_labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
         default_items = [10, 12, 13, 14, 9, 3]
         runs_array = []
@@ -70,6 +70,7 @@ def home_view(request):
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
     users = User.objects.all()
+
     if request.user.is_authenticated:
         member_list = Member.objects.filter(
             player_link=request.user
@@ -102,9 +103,11 @@ class UserHomeData(APIView):
     def get(self, request, user_id):
         users = list(User.objects.all().values('username'))
         dates = list(Batting.objects.all().values('match__date')
-                     .filter(member__player_link__id=user_id).order_by('match__date'))
+                     .filter(member__player_link__id=user_id, match__date__lte=date.today())
+                     .order_by('match__date'))
         runs_o = list(Batting.objects.all().values('runs')
-                      .filter(member__player_link__id=user_id).order_by('match__date'))
+                      .filter(member__player_link__id=user_id, match__date__lte=date.today())
+                      .order_by('match__date'))
         runs = list(User.objects.all().values('username').filter(id=user_id))
         runs_array = []
         dates_array = []

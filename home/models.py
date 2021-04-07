@@ -1,7 +1,11 @@
+import django
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
+from datetime import date, datetime
+
+from django.utils.timezone import now
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, \
     StreamFieldPanel, MultiFieldPanel, InlinePanel
@@ -481,8 +485,8 @@ class Match(models.Model):
     opponent = models.ForeignKey(
         Club, on_delete=models.SET_NULL, null=True, default=''
     )
-    date = models.DateField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True, default=django.utils.timezone.now)
+    time = models.TimeField(blank=True, null=True, default=django.utils.timezone.now)
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True, default='')
     decision = models.ForeignKey(
         CoinToss, on_delete=models.SET_NULL,
@@ -490,15 +494,17 @@ class Match(models.Model):
         null=True, default=''
     )
     ards_overs_batted = models.DecimalField(
-        blank=True, null=True, decimal_places=1, max_digits=4
+        blank=True, null=True, decimal_places=1, max_digits=4, default=0
     )
-    ards_runs = models.IntegerField(blank=True, null=True)
-    ards_wickets = models.IntegerField(blank=True, null=True)
+    ards_runs = models.IntegerField(blank=True, null=True, default=0)
+    ards_wickets = models.IntegerField(blank=True, null=True, default=0)
     opponent_overs_batted = models.DecimalField(
-        blank=True, null=True, decimal_places=1, max_digits=4
+        blank=True, null=True, decimal_places=1, max_digits=4, default=0
     )
-    opponent_runs = models.IntegerField(blank=True, null=True)
-    opponent_wickets = models.IntegerField(blank=True, null=True)
+    opponent_runs = models.IntegerField(blank=True, null=True, default=0)
+    opponent_wickets = models.IntegerField(
+        blank=True, null=True, default=0,
+    )
     report = models.TextField(
         max_length=600, default='', null=True, blank=True
     )
@@ -509,8 +515,7 @@ class Match(models.Model):
         unique_together = (("team", "date", "opponent"),)
 
     def __str__(self):
-        # skipcq: PYL-W0622
-        if self.ards_runs > self.opponent_runs:  # skipcq: PYL-W0622
+        if self.ards_runs > self.opponent_runs:
             runs_diff = self.ards_runs - self.opponent_runs
             result = "Ards won"
             return str('{0} on {1} {2} by {3} against {4}'.format(
@@ -615,7 +620,7 @@ class Batting(models.Model):
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     batter_number = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+        blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     fours = models.IntegerField(blank=True, null=True, default=0)
     sixes = models.IntegerField(blank=True, null=True, default=0)
@@ -643,7 +648,7 @@ class Bowling(models.Model):
     ards = models.BooleanField(blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     bowler_number = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+        blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     overs = models.IntegerField(blank=True, null=True, default=0)
     runs = models.IntegerField(blank=True, null=True, default=0)

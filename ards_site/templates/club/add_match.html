@@ -5,38 +5,26 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Member Create{% endblock %}
+{% block body_class %}Add Match{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
 
 {% block meta_descr %}
-    Scorecard page for the teams
+    Add match page
 {% endblock %}
 
-
-
 {% block content %} {#    html stuff sits in here#}
-
-    <h1>Add Member</h1>
-    <div class="container-fluid" id="wrapper">
-        <div class="row">
-            <div class="col-lg-4 col-lg-offset-4" id="content">
-                <form action="{% url 'createadd' %}" method="POST" role="form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="">
-                        <div class="">
-
-                            {% bootstrap_form form %}
-                            <span class="input-group-btn">
+    <div class="pb-5 container col-md-9">
+        <form action="{% url 'add_new_match' %}" method="POST" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-6">
+                {% bootstrap_form match_form %}
                 <button type="submit" class="btn btn-success" id="add-btn">
                     ADD
                 </button>
-            </span>
-                        </div>
-                    </div>
-
-                </form>
             </div>
-        </div>
+
+        </form>
     </div>
+
 {% endblock %}

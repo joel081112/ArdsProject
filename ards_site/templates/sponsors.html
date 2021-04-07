@@ -1,0 +1,20 @@
+<div class="col-lg-6 mx-auto">
+    List of all our sponsors
+    <div class="col-4 mx-auto">
+        <hr>
+    </div>
+    <br>
+    {% for user in users %}
+        {% for user_group in user.groups.all %}
+            {% if user_group.name == "Sponsor" %}
+                <a class="result" href="{{ user.profile.website_link }}" target="_blank">
+                    {% if user.wagtail_userprofile.avatar %}
+                        <img src="{{ user.wagtail_userprofile.avatar.url }}" class=""
+                             alt="{{ user.get_full_name }}"
+                             style="max-height: 100px; max-width:150px; width:auto;">
+                    {% endif %}
+                </a>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>

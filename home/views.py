@@ -5,13 +5,14 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import logout
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd
 from datetime import date
-from django.http import JsonResponse
+from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
 
 
@@ -525,15 +526,22 @@ def add_new_match(request):
     return redirect('/club/view_match/'+str(form_id))
 
 
-def add_batting(request, match_id):
+def add_batting(request, match_id, *args, **kwargs):
     """Add a batter."""
+
     obj = Match.objects.get(pk=match_id)
     form = BattingForm(instance=obj)
+    batting_list_bn = Batting.objects.order_by('batter_number') \
+        .filter(match_id=match_id)
+    print()
+    print(kwargs)
 
     context = {
         'form': form,
-        'obj': obj
+        'obj': obj,
+        'batting_list_bn': batting_list_bn
     }
+    print(context)
     return render(request, 'club/add_batting.html', context)
 
 
@@ -547,20 +555,24 @@ def add_new_batter(request, match_id):
         if form.is_valid():
             print("Valid")
             form.save()
+            return redirect('/club/match/batter/add/' + match_id)
         else:
-            print(form.errors)
-
-    return redirect('/club/view_match/'+match_id)
+            print(form.errors.as_data())
+            response.Header = form.errors
+            return redirect('/club/match/batter/add/' + match_id)
 
 
 def add_bowling(request, match_id):
     """Add a batter."""
     obj = Match.objects.get(pk=match_id)
     form = BowlingForm(instance=obj)
+    bowling_list_bn = Bowling.objects.order_by('bowler_number') \
+        .filter(match_id=match_id)
 
     context = {
         'form': form,
-        'obj': obj
+        'obj': obj,
+        'bowling_list_bn': bowling_list_bn
     }
     return render(request, 'club/add_bowler.html', context)
 
@@ -578,7 +590,7 @@ def add_new_bowler(request, match_id):
         else:
             print(form.errors)
 
-    return redirect('/club/view_match/'+match_id)
+    return redirect('/club/match/bowler/add/'+match_id)
 
 
 def delete_account(request):

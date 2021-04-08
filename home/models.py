@@ -687,7 +687,7 @@ class Batting(models.Model):
     class Meta:
         """Meta class."""
 
-        unique_together = (("batter_number", "match",),)
+        unique_together = (("batter_number", "match",), ("member", "match",),)
 
     def __str__(self):
         return str('{0} {1} scored {2} runs'
@@ -724,7 +724,7 @@ class Bowling(models.Model):
     class Meta:
         """Meta class."""
 
-        unique_together = (("bowler_number", "match",),)
+        unique_together = (("bowler_number", "match",), ("member", "match",),)
 
     def __str__(self):
         return str('{0} {1}, figures of {2}-{3}-{4}'

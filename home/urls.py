@@ -22,10 +22,15 @@ urlpatterns = [
     path('match/add', views.add_match, name='add_match'),
     path('match/add/new', views.add_new_match, name='add_new_match'),
 
-    path('match/batter/add', views.add_batting, name='add_batting'),
-    path('match/batter/add/new', views.add_new_batter, name='add_new_batter'),
+    path('match/batter/add/<match_id>', views.add_batting, name='add_batting'),
+    path('match/batter/add/<match_id>/new', views.add_new_batter, name='add_new_batter'),
+
+    path('match/bowler/add/<match_id>', views.add_bowling, name='add_bowling'),
+    path('match/bowler/add/<match_id>/new', views.add_new_bowler, name='add_new_bowler'),
 
     path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
+    path('match/<match_id>', views.update_match_form, name='matchform'),
+
     path('view_fixture/<match_id>', views.view_selected_fixture, name='viewfixture'),
     path('api/data/', views.get_data, name='api-data'),
     path('api/chart/data/', views.ChartData.as_view(), name='api-chart-data'),

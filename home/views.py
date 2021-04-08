@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage
-from .forms import MemberForm, MatchForm, BattingForm
+from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd
 from datetime import date
 from django.http import JsonResponse
 from rest_framework import routers, serializers, viewsets
@@ -472,6 +472,27 @@ def member_form(request, member_id):
     return render(request, 'club/member_update.html', context)
 
 
+def update_match_form(request, match_id):
+    """Edit existing match form view."""
+
+    obj = Match.objects.get(pk=match_id)
+    form = MatchForm(instance=obj)
+    if request.method == 'POST':
+        print("Printing POST")
+        form = MatchForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/')
+        else:
+            print(form.errors)
+
+    context = {'form': form}
+
+    return render(request, 'club/match_update.html', context)
+
+
 def add_match(request):
     """Add a match."""
     match_form = MatchForm()
@@ -484,7 +505,6 @@ def add_match(request):
 
 @require_POST
 def add_new_match(request):
-
     if request.method == 'POST':
         print("Printing POST")
         form = MatchForm(request.POST, request.FILES)
@@ -497,22 +517,53 @@ def add_new_match(request):
     return redirect('/club/fixtures/firstXI/')
 
 
-def add_batting(request):
+def add_batting(request, match_id):
     """Add a batter."""
-    form = BattingForm()
+    obj = Match.objects.get(pk=match_id)
+    form = BattingForm(instance=obj)
 
     context = {
-        'form': form
+        'form': form,
+        'obj': obj
     }
     return render(request, 'club/add_batting.html', context)
 
 
 @require_POST
-def add_new_batter(request):
-
+def add_new_batter(request, match_id):
+    post_values = request.POST.copy()
     if request.method == 'POST':
         print("Printing POST")
-        form = BattingForm(request.POST, request.FILES)
+        post_values['match'] = match_id
+        form = BattingFormAdd(post_values)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/scorecard/secondXI/')
+
+
+def add_bowling(request, match_id):
+    """Add a batter."""
+    obj = Match.objects.get(pk=match_id)
+    form = BowlingForm(instance=obj)
+
+    context = {
+        'form': form,
+        'obj': obj
+    }
+    return render(request, 'club/add_bowler.html', context)
+
+
+@require_POST
+def add_new_bowler(request, match_id):
+    post_values = request.POST.copy()
+    if request.method == 'POST':
+        print("Printing POST")
+        post_values['match'] = match_id
+        form = BowlingFormAdd(post_values)
         if form.is_valid():
             print("Valid")
             form.save()
@@ -526,7 +577,7 @@ def delete_account(request):
     """Delete an account."""
 
     context = {
-               }
+    }
     return render(request, 'account/delete_account.html', context)
 
 
@@ -534,7 +585,7 @@ def delete_account_confirmed(request):
     """Delete an account."""
 
     context = {
-               }
+    }
     return render(request, 'account/user_deleted.html', context)
 
 

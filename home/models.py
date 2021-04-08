@@ -280,6 +280,8 @@ class Profile(models.Model):
     class Meta:
         """Meta class."""
 
+        unique_together = (("user",),)
+
     def __str__(self):
         return str(self.user)
 
@@ -287,7 +289,7 @@ class Profile(models.Model):
 class Team(models.Model):
     """Range of age levels at standards of cricket clubs."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
     abr = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
@@ -302,7 +304,7 @@ class Team(models.Model):
 class Role(models.Model):
     """Roles available at the lub like player or captain."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -316,7 +318,7 @@ class Role(models.Model):
 class Venue(models.Model):
     """Home away or neutral grounds are possible."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -330,7 +332,7 @@ class Venue(models.Model):
 class OppositionNames(models.Model):
     """Opposition names Table."""
 
-    name = models.CharField(max_length=30, default='')
+    name = models.CharField(max_length=30, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -344,7 +346,7 @@ class OppositionNames(models.Model):
 class Type(models.Model):
     """Type of cricket players available."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -358,7 +360,6 @@ class Type(models.Model):
 class Member(models.Model):
     """Make a member of a team."""
 
-    ards = models.BooleanField(null=True, blank=True)
     player_link = models.ForeignKey(
         User, on_delete=models.SET_NULL,
         blank=True,
@@ -376,6 +377,11 @@ class Member(models.Model):
     )
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
+    class Meta:
+        """Meta class."""
+
+        unique_together = (("player_link",),)
+
     def __str__(self):
         return str(self.name)
 
@@ -383,7 +389,7 @@ class Member(models.Model):
 class Cup(models.Model):
     """Available types of cups."""
 
-    name = models.CharField(max_length=30, default='')
+    name = models.CharField(max_length=30, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -418,7 +424,7 @@ class Award(models.Model):
 class MatchFormat(models.Model):
     """Range from t20 to 35 over game."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -432,7 +438,7 @@ class MatchFormat(models.Model):
 class CoinToss(models.Model):
     """How did ards do in the toss."""
 
-    decision = models.CharField(blank=True, default='', max_length=40)
+    decision = models.CharField(blank=False, default='', max_length=40)
 
     class Meta:
         """Meta class."""
@@ -446,7 +452,7 @@ class CoinToss(models.Model):
 class Wicket(models.Model):
     """Types of wickets that can happen."""
 
-    name = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='', blank=False)
 
     class Meta:
         """Meta class."""
@@ -460,11 +466,11 @@ class Wicket(models.Model):
 class Club(models.Model):
     """Holds club information."""
 
-    name = models.CharField(max_length=30, default='')
+    name = models.CharField(max_length=30, default='', blank=False)
     badge = models.ImageField(
         default="original_images/default_logo.png", null=True, blank=True
     )
-    home_venue = models.CharField(max_length=40, default='', null=True, blank=True)
+    home_venue = models.CharField(max_length=50, default='', null=True, blank=False)
 
     class Meta:
         """Meta class."""
@@ -592,11 +598,19 @@ class Match(models.Model):
 class Extras(models.Model):
     """Extras that were bowled by each team in a match."""
 
-    ards = models.BooleanField(blank=True, null=True)
-    wides = models.IntegerField(blank=True, null=True)
-    no_balls = models.IntegerField(blank=True, null=True)
-    byes = models.IntegerField(blank=True, null=True)
-    leg_byes = models.IntegerField(blank=True, null=True)
+    ards = models.BooleanField(blank=False, null=True)
+    wides = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    no_balls = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    byes = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    leg_byes = models.IntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(0)]
+    )
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
@@ -622,9 +636,15 @@ class Batting(models.Model):
     batter_number = models.IntegerField(
         blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    fours = models.IntegerField(blank=True, null=True, default=0)
-    sixes = models.IntegerField(blank=True, null=True, default=0)
-    runs = models.IntegerField(blank=True, null=True, default=0)
+    fours = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(300), MinValueValidator(0)]
+    )
+    sixes = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(300), MinValueValidator(0)]
+    )
+    runs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(1000), MinValueValidator(0)]
+    )
     mode_of_dismissal = models.ForeignKey(Wicket, on_delete=models.CASCADE, default='')
     out_by = models.ForeignKey(
         OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True
@@ -644,24 +664,34 @@ class Batting(models.Model):
 
 class Bowling(models.Model):
     """Bowling performances within a match."""
-
-    ards = models.BooleanField(blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, default='')
     bowler_number = models.IntegerField(
         blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    overs = models.IntegerField(blank=True, null=True, default=0)
-    runs = models.IntegerField(blank=True, null=True, default=0)
-    maidens = models.IntegerField(blank=True, null=True, default=0)
-    wickets = models.IntegerField(blank=True, null=True, default=0)
-    wides = models.IntegerField(blank=True, null=True, default=0)
-    no_balls = models.IntegerField(blank=True, null=True, default=0)
+    overs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
+    runs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
+    maidens = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
+    wickets = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(10), MinValueValidator(0)]
+    )
+    wides = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    no_balls = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:
         """Meta class."""
 
-        unique_together = (("ards", "bowler_number", "match",),)
+        unique_together = (("bowler_number", "match",),)
 
     def __str__(self):
         return str('{0} {1}, figures of {2}-{3}-{4}'
@@ -683,12 +713,14 @@ class BattingOpponents(models.Model):
     """Batting performances within a match."""
 
     batter_name = models.ForeignKey(
-        OppositionNames, on_delete=models.CASCADE, default='', blank=True, null=True
+        OppositionNames, on_delete=models.CASCADE, default='', blank=False, null=True
     )
     batter_number = models.IntegerField(
         blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    runs = models.IntegerField(blank=True, null=True, default=0)
+    runs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
     mode_of_dismissal = models.ForeignKey(
         Wicket, on_delete=models.CASCADE, default=''
     )
@@ -713,13 +745,23 @@ class BowlingOpponents(models.Model):
         OppositionNames, on_delete=models.CASCADE, default=''
     )
     bowler_number = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+        blank=False, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    overs = models.IntegerField(blank=True, null=True, default=0)
-    runs = models.IntegerField(blank=True, null=True, default=0)
-    wickets = models.IntegerField(blank=True, null=True, default=0)
-    wides = models.IntegerField(blank=True, null=True, default=0)
-    no_balls = models.IntegerField(blank=True, null=True, default=0)
+    overs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
+    runs = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    wickets = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(10), MinValueValidator(0)]
+    )
+    wides = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    no_balls = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
     class Meta:

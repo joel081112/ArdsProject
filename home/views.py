@@ -484,7 +484,7 @@ def update_match_form(request, match_id):
         if form.is_valid():
             print("Valid")
             form.save()
-            return redirect('/')
+            return redirect('/club/view_match/' + match_id)
         else:
             print(form.errors)
 
@@ -505,16 +505,24 @@ def add_match(request):
 
 @require_POST
 def add_new_match(request):
+    form_id = ''
+
     if request.method == 'POST':
         print("Printing POST")
-        form = MatchForm(request.POST, request.FILES)
+        form = MatchForm(request.POST)
         if form.is_valid():
             print("Valid")
             form.save()
+            print(form.instance.date)
+            form_id = form.instance.id
+            if form.instance.date <= date.today():
+                return redirect('/club/view_match/' + str(form_id))
+            else:
+                return redirect('/club/view_fixture/' + str(form_id))
         else:
             print(form.errors)
 
-    return redirect('/club/fixtures/firstXI/')
+    return redirect('/club/view_match/'+str(form_id))
 
 
 def add_batting(request, match_id):
@@ -542,7 +550,7 @@ def add_new_batter(request, match_id):
         else:
             print(form.errors)
 
-    return redirect('/club/scorecard/secondXI/')
+    return redirect('/club/view_match/'+match_id)
 
 
 def add_bowling(request, match_id):
@@ -570,7 +578,7 @@ def add_new_bowler(request, match_id):
         else:
             print(form.errors)
 
-    return redirect('/club/scorecard/secondXI/')
+    return redirect('/club/view_match/'+match_id)
 
 
 def delete_account(request):

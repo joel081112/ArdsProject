@@ -119,6 +119,39 @@ class TheClub(Page):
         verbose_name_plural = "The Club Pages"
 
 
+class TheSport(Page):
+    """The sport page model."""
+
+    template = "club/the_sport.html"
+    max_count = 1
+
+    intro = StreamField(
+        [
+            ("intro", ImageTextArticleBlock()),
+        ],
+        null=True,
+        blank=True,
+    )
+    videos = StreamField(
+        [
+            ("video", InlineVideoBlock()),
+        ],
+        null=True,
+        blank=True,
+    )
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel("intro"),
+        StreamFieldPanel("videos"),
+    ]
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "The Sport Page"
+        verbose_name_plural = "The Sport Pages"
+
+
 class Scorecard(Page):
     """Scorecard page model."""
 

@@ -16,10 +16,15 @@ class MatchForm(forms.ModelForm):
 
 
 class BattingForm(forms.ModelForm):
+    match = forms.ModelChoiceField(
+        queryset=Match.objects.all(),
+        widget=forms.HiddenInput(),
+        disabled=True
+    )
 
     class Meta:
         model = Batting
-        exclude = ('match',)
+        fields = '__all__'
 
 
 class BattingFormAdd(forms.ModelForm):
@@ -30,10 +35,15 @@ class BattingFormAdd(forms.ModelForm):
 
 
 class BowlingForm(forms.ModelForm):
+    match = forms.ModelChoiceField(
+        queryset=Match.objects.all(),
+        widget=forms.HiddenInput(),
+        disabled=True
+    )
 
     class Meta:
         model = Bowling
-        exclude = ('match',)
+        fields = '__all__'
 
 
 class BowlingFormAdd(forms.ModelForm):

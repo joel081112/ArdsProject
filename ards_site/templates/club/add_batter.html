@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Add Batting{% endblock %}
+{% block body_class %}Add Batter{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}
 {% endblock %}
@@ -20,6 +20,9 @@
             {% csrf_token %}
             <div class="row" id="batting-container">
                 <div class="col-xl-4">
+                    <button type="submit" class="btn btn-success mb-5" id="add-btn">
+                        ADD Batsman
+                    </button>
                     {% bootstrap_form form %}
                 </div>
                 <div class="col">
@@ -61,7 +64,9 @@
                                 {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
                                     <tr class="batting-player">
                                         <td class="bat-name">
-                                            {{ batting.batter_number }} | {{ batting.member }}
+                                            <a class="result" href="{% url "batterform" obj.id batting.id %}">
+                                                {{ batting.batter_number }} | {{ batting.member }}
+                                            </a>
                                         </td>
                                         <td class="bat-out-by">
                                             {% if batting.mode_of_dismissal|stringformat:"s" != "Not Out" %}
@@ -91,18 +96,25 @@
                             <p>To Bat:</p>
                             {% for batting in batting_list_bn %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
-                                    <p class="text-primary">{{ batting.member }},</p>
+                                    <p class="text-primary"><a class="result"
+                                                               href="{% url "batterform" obj.id batting.id %}">
+                                        {{ batting.batter_number }} | {{ batting.member }}
+                                    </a>,</p>
                                 {% endif %}
                             {% endfor %}
                         </div>
 
 
                     </div>
+                    <div class="rtl">
+                        <a class="" href="{% url 'viewmatch' obj.id %}">
+                            Return to scorecard
+                        </a>
+                    </div>
                 </div>
+
             </div>
-            <button type="submit" class="btn btn-success" id="add-btn">
-                ADD
-            </button>
+
 
         </form>
     </div>

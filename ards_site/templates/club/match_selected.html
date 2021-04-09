@@ -124,7 +124,9 @@
                                 {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
                                     <tr class="batting-player">
                                         <td class="bat-name">
-                                            {{ batting.member }}
+                                            <a class="result" href="{% url "batterform" object.id batting.id %}">
+                                                {{ batting.member }}
+                                            </a>
                                         </td>
                                         <td class="bat-out-by">
                                             {% if batting.mode_of_dismissal|stringformat:"s" != "Not Out" %}
@@ -217,7 +219,11 @@
                             <p>To Bat:</p>
                             {% for batting in batting_list_bn_t %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
-                                    <p class="text-primary">{{ batting.member }},</p>
+                                    <p class="text-primary">
+                                        <a class="result" href="{% url "batterform" object.id batting.id %}">
+                                            {{ batting.member }}
+                                        </a>,
+                                    </p>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -462,7 +468,9 @@
                             {% for bowling in bowling_list_bn_t %}
                                 <tr class="bowling-player">
                                     <td class="bowl-name -text-left">
-                                        {{ bowling.member }}
+                                        <a class="result" href="{% url "bowlerform" object.id bowling.id %}">
+                                            {{ bowling.member }}
+                                        </a>
                                     </td>
                                     <td class="bowl-overs">
                                         {{ bowling.overs }}

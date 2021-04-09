@@ -7,11 +7,12 @@ from django.contrib.auth import logout
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
+from wagtail.users.models import UserProfile
 
 from .models import Member, Match, Batting, \
-    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile
+    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd, \
-    ProfileForm, ProfileFormAdd
+    ProfileForm, ProfileFormAdd, WagtailForm
 from datetime import date
 from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
@@ -60,7 +61,7 @@ class ChartData(APIView):
 
 
 def home_view(request):
-    """View all members."""
+    """View the homepage."""
     user_sponsor_list = User.objects.filter(groups__name='Sponsor')
     prev_match_list = Match.objects.filter(
         team__name__contains='firstXI',
@@ -131,6 +132,30 @@ class UserHomeData(APIView):
             'dates_array': dates_array
         }
         return Response(context)
+
+
+def club_view(request):
+    """View the club page."""
+    club_page = TheClub.objects.all()
+    captains = Member.objects.filter(
+        role__name__in=['Captain']
+    ).distinct()
+    coaches = Member.objects.filter(
+        role__name__in=['Coach']
+    ).distinct()
+    board_officers = Member.objects.filter(
+        role__name__in=['Board officer']
+    ).distinct()
+
+    template = 'club/the_club.html'
+
+    context = {
+        'club_page': club_page,
+        'captains': captains,
+        'coaches': coaches,
+        'board_officers': board_officers
+    }
+    return render(request, template, context)
 
 
 def member_view(request):
@@ -709,6 +734,33 @@ def view_sponsors_home(request, user_id):
         else:
             print(form.errors)
             return redirect('/club/sponsors/' + user_id)
+
+    context = {
+        'users': users,
+        'form': form,
+        'user_sponsor_list': user_sponsor_list
+    }
+    return render(request, 'club/sponsors_home.html', context)
+
+
+def view_sponsors_home_picture(request, user_id):
+    """View sponsors page."""
+    users = User.objects.all()
+    user_sponsor_list = User.objects.filter(groups__name='Sponsor')
+    obj = UserProfile.objects.get(user_id=user_id)
+    form = WagtailForm(instance=obj)
+    if request.method == 'POST':
+        print("Printing POST")
+        print(request.POST)
+        print(obj)
+        form = WagtailForm(request.POST, request.FILES, instance=obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/sponsors/' + user_id + '/picture')
+        else:
+            print(form.errors)
+            return redirect('/club/sponsors/' + user_id + '/picture')
 
     context = {
         'users': users,

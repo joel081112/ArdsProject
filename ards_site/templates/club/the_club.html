@@ -13,16 +13,58 @@
 
 
 {% block content %} {#    html stuff sits in here#}
-    <div class="container">
-        {% for block in page.about %}
-            {% include_block block %}
-            <hr>
-        {% endfor %}
+    <div class="pb-5 container col-md-9">
+        <div class="row justify-content-evenly">
+            <div class="col-md-3 text-center">
+                Captains
+                <hr class="col-3 mx-auto">
+                {% for member in captains %}
+                    {{ member }}
+                    <a href="tel:{{ member.mobile }}">
+                        {{ member.mobile }}
+                    </a>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="col-md-3  text-center">
+                Coaches
+                <hr class="col-3 mx-auto">
+                {% for member in coaches %}
+                    {{ member }}
+                    <a href="tel:{{ member.mobile }}">
+                        {{ member.mobile }}
+                    </a>
+                    <br>
+                {% endfor %}
+
+            </div>
+            <div class="col-md-3  text-center">
+                Board Officers
+                <hr class="col-3 mx-auto">
+                {% for member in board_officers %}
+                    {{ member }}
+                    <a href="tel:{{ member.mobile }}">
+                        {{ member.mobile }}
+                    </a>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="container my-5">
-        {% for block in page.videos %}
-            {% include_block block %}
+
+    {% for club in club_page %}
+        <div class="container">
             <hr>
-        {% endfor %}
-    </div>
+            {% for block in club.about %}
+                {% include_block block %}
+                <hr>
+            {% endfor %}
+        </div>
+        <div class="container my-5">
+            {% for block in club.videos %}
+                {% include_block block %}
+                <hr>
+            {% endfor %}
+        </div>
+    {% endfor %}
 {% endblock %}

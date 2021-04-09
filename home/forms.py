@@ -1,4 +1,6 @@
 from django import forms
+from wagtail.users.forms import User, UserProfile
+
 from .models import Member, Match, Batting, Bowling, Profile
 
 
@@ -32,6 +34,13 @@ class ProfileFormAdd(forms.ModelForm):
     class Meta:
         model = Profile
         exclude = ('user',)
+
+
+class WagtailForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ('avatar',)
 
 
 class BattingForm(forms.ModelForm):

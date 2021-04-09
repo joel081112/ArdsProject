@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.member_view, name='members'),
     path('sponsors', views.view_sponsors, name='sponsors'),
     path('sponsors/<user_id>', views.view_sponsors_home, name='sponsors_home'),
+    path('sponsors/<user_id>/picture', views.view_sponsors_home_picture, name='sponsors_home_picture'),
 
     path('scorecard/firstXI/', views.match_view_firsts, name='matches'),
     path('scorecard/secondXI/', views.match_view_seconds, name='matches'),

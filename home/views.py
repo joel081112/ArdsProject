@@ -485,9 +485,13 @@ def update_match_form(request, match_id):
         if form.is_valid():
             print("Valid")
             form.save()
-            return redirect('/club/view_match/' + match_id)
+            if form.instance.date <= date.today():
+                return redirect('/club/view_match/' + match_id)
+            else:
+                return redirect('/club/view_fixture/' + match_id)
         else:
             print(form.errors)
+            return redirect('/club/view_match/' + match_id)
 
     context = {'form': form}
 
@@ -526,6 +530,35 @@ def add_new_match(request):
     return redirect('/club/view_match/'+str(form_id))
 
 
+def update_batter_form(request, match_id, batting_id):
+    """Edit existing batter form view."""
+
+    obj = Batting.objects.get(pk=batting_id)
+    form = BattingForm(instance=obj)
+    batting_list_bn = Batting.objects.order_by('batter_number') \
+        .filter(match_id=match_id)
+    match = Match.objects.get(pk=match_id)
+    if request.method == 'POST':
+        print("Printing POST")
+        form = BattingForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/match/'+match_id+'/batter/'+batting_id)
+        else:
+            print(form.errors)
+            return redirect('/club/match/' + match_id + '/batter/' + batting_id)
+
+    context = {
+        'form': form,
+        'batting_list_bn': batting_list_bn,
+        'match': match
+    }
+
+    return render(request, 'club/batter_update.html', context)
+
+
 def add_batting(request, match_id, *args, **kwargs):
     """Add a batter."""
 
@@ -542,7 +575,7 @@ def add_batting(request, match_id, *args, **kwargs):
         'batting_list_bn': batting_list_bn
     }
     print(context)
-    return render(request, 'club/add_batting.html', context)
+    return render(request, 'club/add_batter.html', context)
 
 
 @require_POST
@@ -558,8 +591,36 @@ def add_new_batter(request, match_id):
             return redirect('/club/match/batter/add/' + match_id)
         else:
             print(form.errors.as_data())
-            response.Header = form.errors
             return redirect('/club/match/batter/add/' + match_id)
+
+
+def update_bowler_form(request, match_id, bowling_id):
+    """Edit existing bowler form view."""
+
+    obj = Bowling.objects.get(pk=bowling_id)
+    form = BowlingForm(instance=obj)
+    bowling_list_bn = Bowling.objects.order_by('bowler_number') \
+        .filter(match_id=match_id)
+    match = Match.objects.get(pk=match_id)
+    if request.method == 'POST':
+        print("Printing POST")
+        form = BowlingForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/match/'+match_id+'/bowler/'+bowling_id)
+        else:
+            print(form.errors)
+            return redirect('/club/match/'+match_id+'/bowler/'+bowling_id)
+
+    context = {
+        'form': form,
+        'bowling_list_bn': bowling_list_bn,
+        'match': match
+    }
+
+    return render(request, 'club/bowler_update.html', context)
 
 
 def add_bowling(request, match_id):

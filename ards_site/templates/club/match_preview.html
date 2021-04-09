@@ -67,6 +67,16 @@
                             <i class="fas fa-stopwatch pe-4" style="font-size: 40px"></i>
                             {{ object.time }}
                         </div>
+                        {% if request.user.is_authenticated %}
+
+                            {% for user_group in user.groups.all %}
+                                {% if user_group.name == "Captain" %}
+                                    <a class="btn btn-success" href="{% url 'matchform' object.id %}">
+                                        Update
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="d-md-none">
                         <hr>

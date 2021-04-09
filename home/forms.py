@@ -1,5 +1,5 @@
 from django import forms
-from .models import Member, Match, Batting, Bowling
+from .models import Member, Match, Batting, Bowling, Profile
 
 
 class MemberForm(forms.ModelForm):
@@ -13,6 +13,25 @@ class MatchForm(forms.ModelForm):
     class Meta:
         model = Match
         fields = '__all__'
+
+
+class ProfileForm(forms.ModelForm):
+    user = forms.ModelChoiceField(
+        queryset=Profile.objects.all(),
+        widget=forms.HiddenInput(),
+        disabled=True
+    )
+
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
+class ProfileFormAdd(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        exclude = ('user',)
 
 
 class BattingForm(forms.ModelForm):

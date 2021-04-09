@@ -28,9 +28,7 @@
     {% endif %}
 
 
-    {% if perms.auth.delete_user %}
-        <button>Delete user!</button>
-    {% endif %}
+
     <form action="deleted/" method="POST">
         {% csrf_token %}
 
@@ -38,10 +36,12 @@
             <div class="row">
                 <div class="col-45">
                     <div class="new-body">
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?')">
+                        {% if perms.auth.delete_user %}
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?')">
                                 <i class="fa fa-exclamation-triangle"></i>
                                 DELETE ACCOUNT
-                        </button>
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

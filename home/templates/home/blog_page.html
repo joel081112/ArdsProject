@@ -21,15 +21,15 @@
 
         {# We want to go back to page the viewer was on previously using django-mathfilters #}
 
-        <div class="box-1">
+        <div class="box-1 px-5">
             {% for page_parent in page.get_parent.get_children.reverse %}
                 {% if page.id == page_parent.id %}
                     {# Div number Needs to be the same as the amount per pagination #}
                     <a href="{{ page.get_parent.url }}?page={{ forloop.counter|div:5|add:1 }}">
-                        <div class="btn btn-one" style="padding-top: 0">
-                    <span>
-                        Return to blog »
-                    </span>
+                        <div class="btn btn-success" style="padding-top: 0">
+
+                            Return to blog »
+
                         </div>
                     </a>
                 {% endif %}

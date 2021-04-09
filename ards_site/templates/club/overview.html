@@ -126,7 +126,34 @@
                 <canvas id="myChart2" width="400" height="400"></canvas>
             </div>
         </div>
-
+        <div class="row">
+            <hr>
+            <div class="col py-4">
+                <button class="btn btn-primary">
+                    <a href="{% url 'viewmemberteam' 'firstXI' %}">
+                        FirstXI</a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'viewmemberteam' 'secondXI' %}">
+                    SecondXI</a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Player' %}">
+                    Player</a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Captain' %}">
+                    Captain</a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Board officer' %}">
+                    Board Officer</a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Coach' %}">
+                    Coach </a>
+                </button>
+                <button class="btn btn-primary"><a href="{% url 'create' %}">
+                    Add New Member</a>
+                </button>
+            </div>
+            <hr>
+        </div>
         <div class="">
             <nav class="">
                 <div class="nav nav-tabs custom-nav-tabs" id="nav-tab" role="tablist">
@@ -245,31 +272,6 @@
                                 </div>
                             {% endfor %}
 
-                        </div>
-
-                        <div class="col py-4">
-                            <button class="btn btn-primary">
-                                <a href="{% url 'viewmemberteam' 'firstXI' %}">
-                                    FirstXI</a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'viewmemberteam' 'secondXI' %}">
-                                SecondXI</a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Player' %}">
-                                Player</a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Captain' %}">
-                                Captain</a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Board officer' %}">
-                                Board Officer</a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'viewmemberrole' 'Coach' %}">
-                                Coach </a>
-                            </button>
-                            <button class="btn btn-primary"><a href="{% url 'create' %}">
-                                Add New Member</a>
-                            </button>
                         </div>
 
 

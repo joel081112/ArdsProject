@@ -214,13 +214,6 @@ Delete the line below if you're just getting started and want to remove the welc
                                     <canvas id="myChart2" width="400" height="400"></canvas>
                                 </div>
                             </div>
-                        {% elif user_group.name == "Sponsor" %}
-                            {{ user.profile.website_link }}
-                            <br>
-                            {% if request.user.wagtail_userprofile.avatar %}
-                                <img src="{{ request.user.wagtail_userprofile.avatar.url }}" class=""
-                                     alt="{{ request.user.get_full_name }}" style="max-height: 150px; width:auto;">
-                            {% endif %}
                         {% elif user_group.name == "Captain" %}
                             <a class="btn btn-success" href="/club/match/add">
                                 add match

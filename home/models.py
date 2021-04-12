@@ -701,8 +701,9 @@ class Bowling(models.Model):
     bowler_number = models.IntegerField(
         blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    overs = models.IntegerField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    overs = models.DecimalField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
+        decimal_places=1, max_digits=4
     )
     runs = models.IntegerField(
         blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
@@ -780,8 +781,9 @@ class BowlingOpponents(models.Model):
     bowler_number = models.IntegerField(
         blank=False, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
-    overs = models.IntegerField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    overs = models.DecimalField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
+        decimal_places=1, max_digits=4
     )
     runs = models.IntegerField(
         blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]

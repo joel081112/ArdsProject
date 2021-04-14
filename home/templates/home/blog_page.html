@@ -22,7 +22,7 @@
         {# We want to go back to page the viewer was on previously using django-mathfilters #}
 
         <div class="box-1 px-5">
-            {% for page_parent in page.get_parent.get_children.reverse %}
+            {% for page_parent in page.get_parent.get_children %}
                 {% if page.id == page_parent.id %}
                     {# Div number Needs to be the same as the amount per pagination #}
                     <a href="{{ page.get_parent.url }}?page={{ forloop.counter|div:5|add:1 }}">
@@ -52,74 +52,55 @@
 
             {# start carousel #}
             {# second attempt #}
-            {% if page.blogpage_images.all|length >= 1 %}
+            {% if page.blogpage_images.all|length > 1 %}
+                <div class="col">
+                    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for item in page.blogpage_images.all %}
+                                {% image item.image fill-650x450 as img %}
+                                <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+                                    <img src="{{ img.url }}" class="d-block w-100" alt="{{ img.alt }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev border-none" type="button" data-bs-target="#carouselExampleInterval"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next border-none" type="button" data-bs-target="#carouselExampleInterval"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    {# end carousel #}
+
+
+                </div>
+            {% elif page.blogpage_images.all|length == 1 %}
                 <div class="col">
 
                     <div id="carouselExampleIndicators" class="carousel" data-ride="carousel">
-                        <ul class="carousel-indicators">
-                            {% for item in page.blogpage_images.all %}
-                                <li data-target="#carouselExampleIndicators"
-                                    data-slide-to="{{ forloop.counter|add:"-1" }}"
-                                    class="{% if forloop.counter == 1 %}active{% endif %}">
-                                </li>
 
-                            {% endfor %}
-                        </ul>
                         <div class="blog">
                             <div class="carousel-inner">
                                 {% for item in page.blogpage_images.all %}
                                     {% image item.image fill-650x450 as img %}
                                     <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
                                         <img src="{{ img.url }}" class="d-block w-100" alt="{{ img.alt }}">
-                                        <div class="imageCounter">
-                                            <img src="/media/original_images/camera.png" id="display">
-                                            {{ forloop.counter }} of {{ page.blogpage_images.all.count }}
-                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
-
-                            {% for item in page.blogpage_images.all %}
-                                {% if forloop.counter >= 2 %}
-                                    <div class="arrow-sets">
-                                        <a class="left recommended-item-control" href="#carouselExampleIndicators"
-                                           data-slide="prev">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                        <a class="right recommended-item-control" href="#carouselExampleIndicators"
-                                           data-slide="next">
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
 
                         </div>
                     </div>
                     {# end carousel #}
 
-                    {% if page.blogpage_images.all|length >= 2 %}
-                        <div class="gallery thumbs">
-
-                            <div class="gallery">
-                                <div class="container">
-                                    {% for item in page.blogpage_images.all %}
-                                        <li data-target="#carouselExampleIndicators"
-                                            data-slide-to="{{ forloop.counter|add:"-1" }}"
-                                            class="{% if forloop.counter == 1 %}active{% endif %}">
-                                            {% image item.image fill-100x100-c100 %}
-                                            <img src="{{ img.url }}" class="item" alt="{{ img.alt }}">
-                                            <p>{{ item.caption }}</p></li>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-
 
                 </div>
-            {% else %}
             {% endif %}
+
         </div>
     </div>
 {% endblock %}

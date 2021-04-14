@@ -1846,6 +1846,14 @@ button.close {
 
 /* blog .css */
 
+.carousel-control-next.border-none, .carousel-control-prev.border-none{
+border: none;
+    height: 15%;
+    top: 42%;
+    width: 10%;
+    background: black;
+}
+
 /* ellipsis for multiline */
 .w3-container .rich-text p {
     overflow: hidden;

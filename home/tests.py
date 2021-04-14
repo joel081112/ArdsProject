@@ -1,7 +1,10 @@
 from django.test import TestCase
+from django.views import generic
+
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub, Type, Team, Venue, \
     MatchFormat, CoinToss, Club, Wicket, OppositionNames
+from django.contrib.auth.models import User, Group
 from django.db.models import Max, Min, Count, Sum, Avg, Q
 
 

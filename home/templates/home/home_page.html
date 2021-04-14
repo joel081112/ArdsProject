@@ -128,7 +128,9 @@ Delete the line below if you're just getting started and want to remove the welc
                 {% for match in prev_match_list|slice:"1" %}
                     <div class="row">
                         <h3 class="ls-2">
+                            <a class="result" href="{% url 'viewmatch' match.id %}">
                             LAST RESULT
+                            </a>
                         </h3>
                     </div>
                     <div class="row">

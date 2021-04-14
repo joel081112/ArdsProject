@@ -588,7 +588,7 @@ class Match(models.Model):
             result = "Ards lost"
             return str('{0} by {1} runs'.format(result, runs_diff))
 
-    def banter(self):
+    def dif_runs(self):
         """Difference in runs."""
         runs_diff = self.ards_runs - self.opponent_runs
         return str('{0}').format(runs_diff)
@@ -605,16 +605,16 @@ class Match(models.Model):
     def opponents_score(self):
         """Output the opponents score."""
         if self.opponent_wickets == 10:
-            var1 = " All Out"
+            var1 = "All Out"
             return str('{0} {1}').format(self.opponent_runs, var1)
         else:
-            var1 = self.ards_wickets
+            var1 = self.opponent_wickets
             return str('{0}-{1}').format(self.opponent_runs, var1)
 
     def location(self):
         var1 = ''
         if self.venue.name == "Home":
-            var1 = "Londonderry Park,  Newtownards"
+            var1 = "Londonderry Park, Newtownards"
         elif self.venue.name == 'Away':
             var1 = self.opponent.home_venue
         return str('{0}').format(var1)

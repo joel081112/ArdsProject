@@ -69,7 +69,8 @@
                                                 <i class="px-3 fas fa-edit"></i>
 
                                             </a>
-                                            <a class="result text-danger" href="{% url "deletebatter" obj.id batting.id %}"
+                                            <a class="result text-danger"
+                                               href="{% url "deletebatter" obj.id batting.id %}"
                                                onclick="return confirm('Are you sure?')">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
@@ -105,7 +106,14 @@
                                     <p class="text-primary"><a class="result"
                                                                href="{% url "batterform" obj.id batting.id %}">
                                         {{ batting.batter_number }} | {{ batting.member }}
-                                    </a>,</p>
+                                        <i class="px-3 fas fa-edit"></i>
+
+                                    </a>
+                                        <a class="result text-danger"
+                                           href="{% url "deletebatter" obj.id batting.id %}"
+                                           onclick="return confirm('Are you sure?')">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>,</p>
                                 {% endif %}
                             {% endfor %}
                         </div>

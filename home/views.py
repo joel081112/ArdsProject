@@ -12,7 +12,7 @@ from wagtail.users.models import UserProfile
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd, \
-    ProfileForm, ProfileFormAdd, WagtailForm
+    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd
 from datetime import date
 from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
@@ -512,11 +512,78 @@ def update_match_form(request, match_id):
                 return redirect('/club/view_fixture/' + match_id)
         else:
             print(form.errors)
-            return redirect('/club/view_match/' + match_id)
+            return redirect('/club/match/' + match_id)
 
     context = {'form': form}
 
     return render(request, 'club/match_update.html', context)
+
+
+def add_extras(request, match_id):
+    """Add a batter."""
+    obj = Match.objects.get(pk=match_id)
+    form = ExtrasForm()
+    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+
+    context = {
+        'obj': obj,
+        'form': form,
+        'extras_list_t': extras_list_t,
+        'extras_list_f': extras_list_f
+    }
+    return render(request, 'club/add_extras.html', context)
+
+
+@require_POST
+def adding_extras(request, match_id):
+    post_values = request.POST.copy()
+    if request.method == 'POST':
+        print("Printing POST")
+        post_values['match'] = match_id
+        form = ExtrasFormAdd(post_values)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/match/' + match_id+'/extras')
+
+
+def update_extras(request, match_id, extras_id):
+    """Edit existing batter form view."""
+
+    obj = Extras.objects.get(pk=extras_id)
+    form = ExtrasForm(instance=obj)
+    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+    match = Match.objects.get(pk=match_id)
+    if request.method == 'POST':
+        print("Printing POST")
+        form = ExtrasForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+        else:
+            print(form.errors)
+            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+
+    context = {
+        'form': form,
+        'extras_list_t': extras_list_t,
+        'extras_list_f': extras_list_f,
+        'match': match
+    }
+
+    return render(request, 'club/extras_update.html', context)
+
+
+def delete_extras(request, match_id, extras_id):
+    Extras.objects.get(id=extras_id).delete()
+    return redirect('/club/match/' + match_id+'/extras')
 
 
 def add_match(request):

@@ -524,25 +524,35 @@ class Match(models.Model):
     opponent = models.ForeignKey(
         Club, on_delete=models.SET_NULL, null=True, default=''
     )
-    date = models.DateField(blank=True, null=True, default=django.utils.timezone.now)
-    time = models.TimeField(blank=True, null=True, default=django.utils.timezone.now)
-    venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True, default='')
+    date = models.DateField(
+        blank=False, null=False, default=django.utils.timezone.now
+    )
+    time = models.TimeField(
+        blank=False, null=False, default=django.utils.timezone.now
+    )
+    venue = models.ForeignKey(
+        Venue, on_delete=models.SET_NULL, null=True, default=''
+    )
     decision = models.ForeignKey(
         CoinToss, on_delete=models.SET_NULL,
         blank=True,
         null=True, default=''
     )
     ards_overs_batted = models.DecimalField(
-        blank=True, null=True, decimal_places=1, max_digits=4, default=0
+        blank=False, null=False, decimal_places=1, max_digits=4, default=0
     )
-    ards_runs = models.IntegerField(blank=True, null=True, default=0)
-    ards_wickets = models.IntegerField(blank=True, null=True, default=0)
+    ards_runs = models.IntegerField(blank=False, null=False, default=0)
+    ards_wickets = models.IntegerField(
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(10), MinValueValidator(0)]
+    )
     opponent_overs_batted = models.DecimalField(
-        blank=True, null=True, decimal_places=1, max_digits=4, default=0
+        blank=False, null=False, decimal_places=1, max_digits=4, default=0
     )
-    opponent_runs = models.IntegerField(blank=True, null=True, default=0)
+    opponent_runs = models.IntegerField(blank=False, null=False, default=0)
     opponent_wickets = models.IntegerField(
-        blank=True, null=True, default=0,
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(10), MinValueValidator(0)]
     )
     report = models.TextField(
         max_length=600, default='', null=True, blank=True
@@ -631,18 +641,22 @@ class Match(models.Model):
 class Extras(models.Model):
     """Extras that were bowled by each team in a match."""
 
-    ards = models.BooleanField(blank=False, null=True)
+    ards = models.BooleanField(blank=False, null=False, default=True)
     wides = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     no_balls = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     byes = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(500), MinValueValidator(0)]
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     leg_byes = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(0)]
+        blank=False, null=False, default=0,
+        validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default='')
 
@@ -653,7 +667,7 @@ class Extras(models.Model):
 
     def __str__(self):
         return str('{0}w, {1}b, {2}lb, {3}nb'
-                   .format(self.wides, self.byes, self.leg_byes, self.leg_byes)
+                   .format(self.wides, self.byes, self.leg_byes, self.no_balls)
                    )
 
     def extras_total(self):
@@ -702,11 +716,11 @@ class Bowling(models.Model):
         blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     overs = models.DecimalField(
-        blank=False, null=False, default=0.1, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
+        blank=False, null=False, default=0.1, validators=[MaxValueValidator(100), MinValueValidator(0)],
         decimal_places=1, max_digits=4
     )
     runs = models.IntegerField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+        blank=False, null=False, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
     )
     maidens = models.IntegerField(
         blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
@@ -739,7 +753,11 @@ class Bowling(models.Model):
 
     def economy(self):
         """Workout the economy."""
-        econ = float(self.runs) / float(self.overs)
+        econ = 0
+        if self.overs > 0:
+            econ = float(self.runs) / float(self.overs)
+        else:
+            econ = float(self.runs)
         return format(econ, '.2f')
 
 
@@ -753,7 +771,7 @@ class BattingOpponents(models.Model):
         blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     runs = models.IntegerField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+        blank=False, null=False, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     mode_of_dismissal = models.ForeignKey(
         Wicket, on_delete=models.CASCADE, default=''
@@ -782,11 +800,11 @@ class BowlingOpponents(models.Model):
         blank=False, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     overs = models.DecimalField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
+        blank=False, null=False, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
         decimal_places=1, max_digits=4
     )
     runs = models.IntegerField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+        blank=False, null=False, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
     )
     wickets = models.IntegerField(
         blank=True, null=True, default=0, validators=[MaxValueValidator(10), MinValueValidator(0)]
@@ -817,7 +835,11 @@ class BowlingOpponents(models.Model):
     # got to add extras in with this
     def economy(self):
         """Workout the economy."""
-        econ = float(self.runs) / float(self.overs)
+        econ = 0
+        if self.overs > 0:
+            econ = float(self.runs) / float(self.overs)
+        else:
+            econ = float(self.runs)
         return format(econ, '.2f')
 
 # End of Club database

@@ -114,9 +114,6 @@
                                 <th class="bat-sixes">
                                     6s
                                 </th>
-                                <th class="bat-strike-rate">
-                                    SR
-                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -150,9 +147,6 @@
                                         <td class="bat-sixes">
                                             {{ batting.sixes }}
                                         </td>
-                                        <td class="bat-strike-rate">
-
-                                        </td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -165,7 +159,9 @@
                                 </td>
                                 <td class="bat-out">
                                     {% for extras in extras_list_t %}
-                                        {{ extras }}
+                                        <a class="result" href="{% url 'extrasupdate' object.id extras.id %}">
+                                            {{ extras }}
+                                        </a>
                                     {% endfor %}
                                 </td>
                                 <td class="bat-runs">
@@ -180,9 +176,6 @@
 
                                 </td>
                                 <td class="bat-sixes">
-
-                                </td>
-                                <td class="bat-strike-rate">
 
                                 </td>
                             </tr>
@@ -206,9 +199,6 @@
 
                                 </td>
                                 <td class="bat-sixes">
-
-                                </td>
-                                <td class="bat-strike-rate">
 
                                 </td>
                             </tr>
@@ -332,9 +322,6 @@
                                 <th class="bat-sixes">
                                     6s
                                 </th>
-                                <th class="bat-strike-rate">
-                                    SR
-                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -365,9 +352,6 @@
                                         <td class="bat-sixes">
 
                                         </td>
-                                        <td class="bat-strike-rate">
-
-                                        </td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -380,7 +364,9 @@
                                 </td>
                                 <td class="bat-out">
                                     {% for extras in extras_list_f %}
-                                        {{ extras }}
+                                        <a class="result" href="{% url 'extrasupdate' object.id extras.id %}">
+                                            {{ extras }}
+                                        </a>
                                     {% endfor %}
                                 </td>
                                 <td class="bat-runs">
@@ -395,9 +381,6 @@
 
                                 </td>
                                 <td class="bat-sixes">
-
-                                </td>
-                                <td class="bat-strike-rate">
 
                                 </td>
                             </tr>
@@ -421,9 +404,6 @@
 
                                 </td>
                                 <td class="bat-sixes">
-
-                                </td>
-                                <td class="bat-strike-rate">
 
                                 </td>
                             </tr>
@@ -523,6 +503,12 @@
             <div class="border match-report py-5 col-md-8 order-4 my-3">
                 <div class="text-center">
                     Match Report
+                    <hr class="w-50 mx-auto">
+                </div>
+                {{ object.report|richtext }}
+            </div>
+            <div class="border match-report py-5 col-md-8 order-4 my-3">
+                <div class="text-center">
                     {% if request.user.is_authenticated %}
 
                         {% for user_group in user.groups.all %}
@@ -537,12 +523,13 @@
                                 <a class="btn btn-success" href="{% url 'matchform' object.id %}">
                                     Update Match
                                 </a>
+                                <a class="btn btn-success" href="{% url 'extrasform' object.id %}">
+                                    Add Extras
+                                </a>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
-                    <hr class="w-50 mx-auto">
                 </div>
-                {{ object.report|richtext }}
             </div>
 
 

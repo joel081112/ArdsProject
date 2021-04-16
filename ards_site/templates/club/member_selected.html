@@ -15,29 +15,34 @@
 
 
 {% block content %} {#    html stuff sits in here#}
-<div class="container-fluid" id="wrapper">
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-4" id="content">
-            <h2>PLAYER DETAILS</h2>
+    <div class="container-fluid" id="wrapper">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4" id="content">
+                <h2>PLAYER DETAILS
+                    <a class="result" href="{% url 'memberform' object.id %}">
+                        <i class="px-3 py-4 fas fa-edit"></i>
+                    </a>
+                </h2>
 
-            <p>{{ object.name }}</p>
-            <p>{{ object.dateOfBirth }}</p>
-            {% for team in object.type.all %}
-                 <p>{{ team.name }}</p>
-            {% endfor %}
-            <p>{{ object.dateJoined }}</p>
-            <p>{{ object.mobile }}</p>
-            {% for team in object.role.all %}
-                 <p>{{ team.name }}</p>
-            {% endfor %}
+                <p>{{ object.name }}</p>
+                <p>{{ object.dateOfBirth }}</p>
+                {% for team in object.type.all %}
+                    <p>{{ team.name }}</p>
+                {% endfor %}
+                <p>{{ object.dateJoined }}</p>
+                <p>{{ object.mobile }}</p>
+                {% for team in object.role.all %}
+                    <p>{{ team.name }}</p>
+                {% endfor %}
 
-            {% for team in object.teamsPlayedFor.all %}
-                 <p>{{ team.name }}</p>
-            {% endfor %}
+                {% for team in object.teamsPlayedFor.all %}
+                    <p>{{ team.name }}</p>
+                {% endfor %}
+                {% if object.profile_pic.url %}
+                    <img src="{{ object.profile_pic.url }}" class="" alt="">
+                {% endif %}
 
-            <img src="{{ object.profile_pic.url }}" class="" alt="">
-
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

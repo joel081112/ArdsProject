@@ -88,7 +88,10 @@
 
                             </div>
                             <div class="col">
-                                <img src="{{ member.profile_pic.url }}" class="profile-main" alt="">
+
+                                    <img src="{{ member.profile_pic.url|default_if_none:'#' }}"
+                                         class="profile-main" alt="">
+
                             </div>
                         </div>
 

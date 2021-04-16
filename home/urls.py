@@ -35,7 +35,10 @@ urlpatterns = [
     path('view_match/<match_id>', views.view_selected_match, name='viewmatch'),
     path('match/<match_id>', views.update_match_form, name='matchform'),
     path('match/<match_id>/batter/<batting_id>', views.update_batter_form, name='batterform'),
+    path('match/<match_id>/batter/<batter_id>/delete', views.delete_batter, name='deletebatter'),
+
     path('match/<match_id>/bowler/<bowling_id>', views.update_bowler_form, name='bowlerform'),
+    path('match/<match_id>/bowler/<bowler_id>/delete', views.delete_bowler, name='deletebowler'),
 
     path('view_fixture/<match_id>', views.view_selected_fixture, name='viewfixture'),
     path('api/data/', views.get_data, name='api-data'),

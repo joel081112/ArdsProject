@@ -406,7 +406,7 @@ class Member(models.Model):
     dateJoined = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=15, default='')
     profile_pic = models.ImageField(
-        default="default profile pic1.png", null=True, blank=True
+        default="default profile pic1.png", null=False, blank=False
     )
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -702,7 +702,7 @@ class Bowling(models.Model):
         blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     overs = models.DecimalField(
-        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
+        blank=False, null=False, default=0.1, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
         decimal_places=1, max_digits=4
     )
     runs = models.IntegerField(

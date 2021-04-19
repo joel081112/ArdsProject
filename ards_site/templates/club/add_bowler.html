@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Add Bowling{% endblock %}
+{% block body_class %}Add Bowler{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}
 
@@ -63,8 +63,14 @@
                                 <tr class="bowling-player">
                                     <td class="bowl-name -text-left">
                                         <a class="result" href="{% url "bowlerform" obj.id bowling.id %}">
-                                                {{ bowling.bowler_number }} | {{ bowling.member }}
-                                            </a>
+                                            {{ bowling.bowler_number }} | {{ bowling.member }}
+                                            <i class="px-3 fas fa-edit"></i>
+
+                                        </a>
+                                        <a class="result text-danger" href="{% url "deletebowler" obj.id bowling.id %}"
+                                           onclick="return confirm('Are you sure?')">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>
                                     </td>
                                     <td class="bowl-overs">
                                         {{ bowling.overs }}

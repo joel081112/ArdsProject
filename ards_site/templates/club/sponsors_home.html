@@ -21,7 +21,7 @@
 
             {% if user not in  user_sponsor_list %}
                 <div class="text-center">
-                    <a href="/uh-oh">
+                    <a href="">
                         Want to be one of our sponsors?
                     </a>
                 </div>
@@ -67,12 +67,12 @@
                                         </a>
                                         <br>
                                         {% if request.user.wagtail_userprofile.avatar %}
-                                            <a class="" href="{% url 'sponsors_home_picture' request.user.id %}"
+                                            <a class="result" href="{% url 'sponsors_home_picture' request.user.id %}"
                                                data-bs-toggle="tooltip" title="Click me to Edit!"
                                                >
                                                 <img src="{{ request.user.wagtail_userprofile.avatar.url }}" class=""
                                                      alt="{{ request.user.get_full_name }}"
-                                                     style="max-height: 150px; width:auto;">
+                                                     style="max-height: 150px; width:auto;"> <i class="px-3 py-4 fas fa-edit"></i>
                                             </a>
                                         {% endif %}
                                     {% endfor %}

@@ -18,7 +18,7 @@
 
 {% block content %} {#    html stuff sits in here#}
 
-    <div class="blog-index-page responsive">
+    <div class="blog-index-page responsive px-3">
         <h1><b>{{ page.title }} </b></h1>
         <div class="row">
 
@@ -31,7 +31,7 @@
                 {# Start blog cards #}
                 {% for post in posts %}
 
-                    <div class="w3-card-4 w3-margin w3-white" data-aos="fade-down">
+                    <div class="w3-card-4 w3-margin w3-white">
 
                         <div class="blogIndexImg">
                             {% for item in post.specific.blogpage_images.all|slice:"1" %}
@@ -55,13 +55,9 @@
                                 <div class="w3-col m8 s12">
                                     <div id="container">
                                         <div class="new-body">
-                                            <button class="learn-more">
-                                                <a href="{% pageurl post %}">
-                                                    <div class="circle">
-                                                        <span class="icon arrow"></span>
-                                                    </div>
-                                                    <p class="button-text">See More</p></a>
-                                            </button>
+                                            <a class="btn-success btn result mb-4" href="{% pageurl post %}">
+                                                See more
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

@@ -15,7 +15,7 @@
 {% block content %} {#    html stuff sits in here#}
     <div class="pb-5 container col-md-9">
         <div class="row justify-content-evenly">
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center mt-3">
                 Captains
                 <hr class="col-3 mx-auto">
                 {% for member in captains %}
@@ -26,6 +26,10 @@
                     <br>
                 {% endfor %}
             </div>
+
+                    <div class="d-md-none">
+                        <hr>
+                    </div>
             <div class="col-md-3  text-center">
                 Coaches
                 <hr class="col-3 mx-auto">
@@ -38,6 +42,10 @@
                 {% endfor %}
 
             </div>
+
+                    <div class="d-md-none">
+                        <hr>
+                    </div>
             <div class="col-md-3  text-center">
                 Board Officers
                 <hr class="col-3 mx-auto">

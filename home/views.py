@@ -12,7 +12,7 @@ from wagtail.users.models import UserProfile
 from .models import Member, Match, Batting, \
     Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd, \
-    ProfileForm, ProfileFormAdd, WagtailForm
+    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd
 from datetime import date
 from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
@@ -71,6 +71,10 @@ def home_view(request):
         team__name__contains='firstXI',
         date__gte=date.today()
     ).order_by('date')
+    next_match_seconds = Match.objects.filter(
+        team__name__contains='secondXI',
+        date__gte=date.today()
+    ).order_by('date')
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
     users = User.objects.all()
@@ -91,6 +95,7 @@ def home_view(request):
     context = {
         'prev_match_list': prev_match_list,
         'next_match_list': next_match_list,
+        'next_match_seconds': next_match_seconds,
         'blog': blog,
         'homepage': homepage,
         'users': users,
@@ -346,24 +351,14 @@ def match_view_seconds(request):
 def match_list_view(queryset, request):
     match_list = Match.objects.order_by('-date')
     team_contains_queryo = request.GET.get('team_contains')
-    team_exact_query = request.GET.get('team_exact')
-    team_or_year_query = request.GET.get('team_or_year')
     date_search_picker = request.GET.get('date_picker')
     year_query = request.GET.get('year_choice')
-    date_list = queryset.order_by('date__year') \
+    date_list = queryset.order_by('-date__year') \
         .values('date__year') \
         .distinct()
 
     if team_contains_queryo != '' and team_contains_queryo is not None:
         queryset = queryset.filter(opponent__name__icontains=team_contains_queryo)
-
-    elif team_exact_query != '' and team_exact_query is not None:
-        queryset = queryset.filter(id=team_exact_query)
-
-    elif team_or_year_query != '' and team_or_year_query is not None:
-        queryset = queryset.filter(Q(date__year__icontains=team_or_year_query)
-                                   | Q(ards_runs__icontains=team_or_year_query)) \
-            .distinct()
 
     elif year_query != '' and year_query is not None:
         queryset = queryset.filter(date__year__iexact=year_query)
@@ -492,11 +487,14 @@ def member_form(request, member_id):
         if form.is_valid():
             print("Valid")
             form.save()
-            return redirect('members')
+            return redirect('/club/member/' + member_id)
         else:
             print(form.errors)
 
-    context = {'form': form}
+    context = {
+        'form': form,
+        'object': obj
+    }
 
     return render(request, 'club/member_update.html', context)
 
@@ -519,11 +517,78 @@ def update_match_form(request, match_id):
                 return redirect('/club/view_fixture/' + match_id)
         else:
             print(form.errors)
-            return redirect('/club/view_match/' + match_id)
+            return redirect('/club/match/' + match_id)
 
     context = {'form': form}
 
     return render(request, 'club/match_update.html', context)
+
+
+def add_extras(request, match_id):
+    """Add a batter."""
+    obj = Match.objects.get(pk=match_id)
+    form = ExtrasForm()
+    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+
+    context = {
+        'obj': obj,
+        'form': form,
+        'extras_list_t': extras_list_t,
+        'extras_list_f': extras_list_f
+    }
+    return render(request, 'club/add_extras.html', context)
+
+
+@require_POST
+def adding_extras(request, match_id):
+    post_values = request.POST.copy()
+    if request.method == 'POST':
+        print("Printing POST")
+        post_values['match'] = match_id
+        form = ExtrasFormAdd(post_values)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/match/' + match_id+'/extras')
+
+
+def update_extras(request, match_id, extras_id):
+    """Edit existing batter form view."""
+
+    obj = Extras.objects.get(pk=extras_id)
+    form = ExtrasForm(instance=obj)
+    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+    match = Match.objects.get(pk=match_id)
+    if request.method == 'POST':
+        print("Printing POST")
+        form = ExtrasForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+        else:
+            print(form.errors)
+            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+
+    context = {
+        'form': form,
+        'extras_list_t': extras_list_t,
+        'extras_list_f': extras_list_f,
+        'match': match
+    }
+
+    return render(request, 'club/extras_update.html', context)
+
+
+def delete_extras(request, match_id, extras_id):
+    Extras.objects.get(id=extras_id).delete()
+    return redirect('/club/match/' + match_id+'/extras')
 
 
 def add_match(request):
@@ -622,6 +687,11 @@ def add_new_batter(request, match_id):
             return redirect('/club/match/batter/add/' + match_id)
 
 
+def delete_batter(request, match_id, batter_id):
+    Batting.objects.get(id=batter_id).delete()
+    return redirect('/club/match/batter/add/' + match_id)
+
+
 def update_bowler_form(request, match_id, bowling_id):
     """Edit existing bowler form view."""
 
@@ -679,6 +749,11 @@ def add_new_bowler(request, match_id):
         else:
             print(form.errors)
 
+    return redirect('/club/match/bowler/add/' + match_id)
+
+
+def delete_bowler(request, match_id, bowler_id):
+    Bowling.objects.get(id=bowler_id).delete()
     return redirect('/club/match/bowler/add/' + match_id)
 
 

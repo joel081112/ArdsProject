@@ -17,26 +17,21 @@
 
 {% block content %} {#    html stuff sits in here#}
 
-    <h1>Add Member</h1>
-    <div class="container-fluid" id="wrapper">
+
+    <div class="pb-5 container col-md-9" id="wrapper">
         <div class="row">
-            <div class="col-lg-4 col-lg-offset-4" id="content">
-                <form action="{% url 'createadd' %}" method="POST" role="form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="">
-                        <div class="">
+            <form action="{% url 'createadd' %}" method="POST" role="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-6">
+                    <h1>Add Member</h1>
 
-                            {% bootstrap_form form %}
-                            <span class="input-group-btn">
-                <button type="submit" class="btn btn-success" id="add-btn">
-                    ADD
-                </button>
-            </span>
-                        </div>
-                    </div>
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-success" id="add-btn">
+                        ADD
+                    </button>
+                </div>
 
-                </form>
-            </div>
+            </form>
         </div>
     </div>
 {% endblock %}

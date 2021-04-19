@@ -36,12 +36,10 @@
             <div class="row">
                 <div class="col-45">
                     <div class="new-body">
-                        {% if perms.auth.delete_user %}
                             <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?')">
                                 <i class="fa fa-exclamation-triangle"></i>
                                 DELETE ACCOUNT
                             </button>
-                        {% endif %}
                     </div>
                 </div>
             </div>

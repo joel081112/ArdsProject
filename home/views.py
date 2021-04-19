@@ -71,6 +71,10 @@ def home_view(request):
         team__name__contains='firstXI',
         date__gte=date.today()
     ).order_by('date')
+    next_match_seconds = Match.objects.filter(
+        team__name__contains='secondXI',
+        date__gte=date.today()
+    ).order_by('date')
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
     users = User.objects.all()
@@ -91,6 +95,7 @@ def home_view(request):
     context = {
         'prev_match_list': prev_match_list,
         'next_match_list': next_match_list,
+        'next_match_seconds': next_match_seconds,
         'blog': blog,
         'homepage': homepage,
         'users': users,

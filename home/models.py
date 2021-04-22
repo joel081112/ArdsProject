@@ -335,7 +335,7 @@ class Team(models.Model):
 
 
 class Role(models.Model):
-    """Roles available at the lub like player or captain."""
+    """Roles available at the club like player or captain."""
 
     name = models.CharField(max_length=20, default='', blank=False)
 

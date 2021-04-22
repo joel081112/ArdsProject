@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% block body_class %}{% endblock %}
+
+{% block content %}
+    <div class="mx-auto">
+        <div class="card text-center py-4 mb-3 mx-auto shadow bg-body rounded" style="width: 18rem;">
+        <h4>Profile does not have permission</h4>
+            <i class="p-5 text-danger fs-1 fas fa-exclamation-triangle"></i>
+
+            <p>Oops, something went wrong! Nothing to show</p>
+
+        </div>
+    </div>
+{% endblock %}

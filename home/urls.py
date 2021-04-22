@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import include, path
 from . import views
 

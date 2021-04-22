@@ -10,9 +10,9 @@ from rest_framework.views import APIView
 from wagtail.users.models import UserProfile
 
 from .models import Member, Match, Batting, \
-    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub
+    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub, OppositionNames
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd, \
-    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd
+    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd, OppositionNamesForm
 from datetime import date
 from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
@@ -757,6 +757,64 @@ def delete_bowler(request, match_id, bowler_id):
     return redirect('/club/match/bowler/add/' + match_id)
 
 
+def add_opposition(request):
+    """Add a new opponent name."""
+    form = OppositionNamesForm()
+    opposition_names = OppositionNames.objects.all()
+
+    context = {
+        'form': form,
+        'opposition_names': opposition_names
+    }
+    return render(request, 'club/add_opp_names.html', context)
+
+
+@require_POST
+def add_new_name(request):
+    form_id = ''
+    if request.method == 'POST':
+        print("Printing POST")
+        form = OppositionNamesForm(request.POST)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/opposition-name/add')
+        else:
+            print(form.errors)
+            return redirect('/club/opposition-name/add')
+
+
+def delete_opponent(request, opponent_id):
+    OppositionNames.objects.get(id=opponent_id).delete()
+    return redirect('/club/opposition-name/add')
+
+
+def update_opponent(request, opponent_id):
+    """Edit existing batter form view."""
+
+    obj = OppositionNames.objects.get(pk=opponent_id)
+    form = OppositionNamesForm(instance=obj)
+    opposition_names = OppositionNames.objects.all()
+    if request.method == 'POST':
+        print("Printing POST")
+        form = OppositionNamesForm(request.POST, instance=obj)
+        print(obj)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/opposition-name/'+opponent_id+'/update')
+        else:
+            print(form.errors)
+            return redirect('/club/opposition-name/'+opponent_id+'/update')
+
+    context = {
+        'form': form,
+        'opposition_names': opposition_names
+    }
+
+    return render(request, 'club/opp_names_update.html', context)
+
+
 def delete_account(request):
     """Delete an account."""
 
@@ -843,3 +901,4 @@ def view_sponsors_home_picture(request, user_id):
         'user_sponsor_list': user_sponsor_list
     }
     return render(request, 'club/sponsors_home.html', context)
+

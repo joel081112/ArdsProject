@@ -109,7 +109,12 @@
                     </li>
                     <hr>
                 {% empty %}
-                    Nothing to display
+                    <div class="card text-center py-4 mb-3 mx-5 shadow bg-body rounded" style="width: 18rem;">
+                        <i class="p-5 text-danger fs-1 fas fa-exclamation-circle"></i>
+
+                        <p>Oops, something went wrong! Nothing to show</p>
+                        <p>Please try another filter</p>
+                    </div>
                 {% endfor %}
             </ul>
         </div>

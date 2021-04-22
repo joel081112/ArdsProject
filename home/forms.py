@@ -1,7 +1,7 @@
 from django import forms
 from wagtail.users.forms import User, UserProfile
 
-from .models import Member, Match, Batting, Bowling, Profile, Extras
+from .models import Member, Match, Batting, Bowling, Profile, Extras, OppositionNames
 
 
 class MemberForm(forms.ModelForm):
@@ -97,5 +97,12 @@ class ExtrasFormAdd(forms.ModelForm):
 
     class Meta:
         model = Extras
+        fields = '__all__'
+
+
+class OppositionNamesForm(forms.ModelForm):
+
+    class Meta:
+        model = OppositionNames
         fields = '__all__'
 

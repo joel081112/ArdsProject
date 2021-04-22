@@ -50,7 +50,7 @@
                         <form action="" method="POST" role="form" enctype="multipart/form-data">
                             <div class="row">
                                 {% csrf_token %}
-                                <div class="col-xl-4 border bottom-thin p-2">
+                                <div class="col-xl-4 card text-center py-4 mb-3 shadow bg-body rounded me-4">
                                     <button type="submit" class="btn btn-success mb-5" id="add-btn">
                                         Update
                                     </button>
@@ -58,21 +58,24 @@
                                 </div>
 
 
-                                <div class="col">
+                                <div class="col card text-center py-4 mb-3 shadow bg-body rounded">
                                     <h3>Current</h3>
 
                                     {% for user_group in user.groups.all %}
-                                        <a class="result" href="{% url 'sponsors_home' request.user.id %}">
-                                            {{ user.profile.website_link }} <i class="px-3 py-4 fas fa-edit"></i>
+                                        <a class="result" href="{% url 'sponsors_home' request.user.id %}"
+                                           data-bs-toggle="tooltip" title="Click to Edit!">
+                                            {{ user.profile.website_link }} <i
+                                                class="fs-2 text-info px-3 py-4 fas fa-edit"></i>
                                         </a>
                                         <br>
                                         {% if request.user.wagtail_userprofile.avatar %}
                                             <a class="result" href="{% url 'sponsors_home_picture' request.user.id %}"
-                                               data-bs-toggle="tooltip" title="Click me to Edit!"
-                                               >
+                                               data-bs-toggle="tooltip" title="Click to Edit!"
+                                            >
                                                 <img src="{{ request.user.wagtail_userprofile.avatar.url }}" class=""
                                                      alt="{{ request.user.get_full_name }}"
-                                                     style="max-height: 150px; width:auto;"> <i class="px-3 py-4 fas fa-edit"></i>
+                                                     style="max-height: 150px; width:auto;"> <i
+                                                    class="fs-2 text-info px-3 py-4 fas fa-edit"></i>
                                             </a>
                                         {% endif %}
                                     {% endfor %}

@@ -8,7 +8,19 @@
 {% load mathfilters %}
 {% block body_class %}template-blogindexpage{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
-{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}
+    <script>
+        $(document).ready(function () {
+            $(".zoom").hover(
+                function () {
+                    $(this).addClass('shadow-lg').css('cursor', 'pointer');
+                }, function () {
+                    $(this).removeClass('shadow-lg');
+                }
+            );
+        });
+    </script>
+{% endblock %}
 
 {% block meta_descr %}
     Ards Cricket - welcome to our blog page. Find all up to date recent news on this page.
@@ -31,7 +43,7 @@
                 {# Start blog cards #}
                 {% for post in posts %}
 
-                    <div class="w3-card-4 w3-margin w3-white">
+                    <div class="w3-card-4 w3-margin w3-white rounded">
 
                         <div class="blogIndexImg">
                             {% for item in post.specific.blogpage_images.all|slice:"1" %}

@@ -246,20 +246,24 @@
                             <img src="/media/phone.png" alt="phone icon" id="phoneIcon" height="40px"
                                  width="40px">
                         </a>
+
+                        <a href="tel:+44 (0)28 9034 2655" class="result">
                         +44 (0)28 8181 0614
+                        </a>
                     </div>
                     <br><br>
                     <div class="contactsection">
                         <a class="" href="mailto:roy.keenan@btopenworld.com">
                             <i class="h1 far fa-envelope"></i>
                         </a>
+                        <a class="result" href="mailto:roy.keenan@btopenworld.com">
                         roy.keenan@btopenworld.com
-
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="column right">
-                <p class="copyright">Registered in Northern Ireland with Company No:NC000941 </p>
+                <p class="copyright">Registered in Northern Ireland as a NCU club </p>
                 <br>
                 <div class="hover10">
                     <div class="row justify-content-center align-items-center">
@@ -290,7 +294,9 @@
 
             </div>
 
-            <a href="#" class="bodyarrowUpload scrollup circle-border" id="backToTop"></a>
+            <a href="#" class="bodyarrowUpload fs-2 scrollup circle-border child bounce" id="backToTop">
+                <i class="fas fa-arrow-up"></i>
+            </a>
 
         </div>
 
@@ -326,6 +332,16 @@
 <script>
     document.addEventListener("touchstart", function () {
     }, true);
+
+    $(document).ready(function () {
+        $(".sponsors").hover(
+            function () {
+                $(this).addClass('shadow-lg').css('cursor', 'pointer');
+            }, function () {
+                $(this).removeClass('shadow-lg');
+            }
+        );
+    });
 </script>
 
 {% block extra_js %}

@@ -129,7 +129,7 @@
                                 <td class="bat-out">
                                     {% for extras in extras_list_f %}
                                         <a class="result" href="{% url 'extrasupdate' obj.id extras.id %}">
-                                            {{ extras }} <i class="px-3 fas fa-edit"></i>
+                                            {{ extras }} <i class="text-info px-3 fas fa-edit"></i>
                                         </a>
                                         <a class="result text-danger"
                                            href="{% url "deleteextras" obj.id extras.id %}"

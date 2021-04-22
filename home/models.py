@@ -365,7 +365,7 @@ class Venue(models.Model):
 class OppositionNames(models.Model):
     """Opposition names Table."""
 
-    name = models.CharField(max_length=30, default='', blank=False)
+    name = models.CharField(max_length=40, default='', blank=False, null=False)
 
     class Meta:
         """Meta class."""

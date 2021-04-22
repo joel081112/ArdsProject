@@ -23,6 +23,11 @@ urlpatterns = [
     path('create/member', views.create_member, name='create'),
     path('member/add', views.add_new_member, name='createadd'),
 
+    path('opposition-name/add', views.add_opposition, name='add_opposition'),
+    path('opposition-name/add/new', views.add_new_name, name='add_new_name'),
+    path('opposition-name/<opponent_id>/delete', views.delete_opponent, name='delete_opponent'),
+    path('opposition-name/<opponent_id>/update', views.update_opponent, name='update_opponent'),
+
     path('match/add', views.add_match, name='add_match'),
     path('match/add/new', views.add_new_match, name='add_new_match'),
 

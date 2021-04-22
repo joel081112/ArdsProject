@@ -479,7 +479,6 @@
             <div class="col-md-4 order-md-1">
                 <div class="border match-details p-3">
                     <dl class="row">
-
                         <dt class="col-sm-3">Date</dt>
                         <dd class="col-sm-9">{{ object.date }}</dd>
                         <dt class="col-sm-3">Time</dt>
@@ -493,8 +492,6 @@
                                 {{ object.location }}
                             </a>
                         </dd>
-
-
                     </dl>
                 </div>
             </div>
@@ -506,31 +503,35 @@
                     <hr class="w-50 mx-auto">
                 </div>
                 {{ object.report|richtext }}
-            </div>
-            <div class="border match-report py-5 col-md-8 order-4 my-3">
-                <div class="text-center">
-                    {% if request.user.is_authenticated %}
+            </div>{% if request.user.is_authenticated %}
 
-                        {% for user_group in user.groups.all %}
-                            {% if user_group.name == "Captain" %}
+            {% for user_group in user.groups.all %}
+                {% if user_group.name == "Captain" %}
+                    <div class="border match-report py-5 col-md-8 order-4 my-3">
+                        <div class="text-center">
 
-                                <a class="btn btn-success" href="{% url 'add_batting' object.id %}">
-                                    add batter
-                                </a>
-                                <a class="btn btn-success" href="{% url 'add_bowling' object.id %}">
-                                    add bowler
-                                </a>
-                                <a class="btn btn-success" href="{% url 'matchform' object.id %}">
-                                    Update Match
-                                </a>
-                                <a class="btn btn-success" href="{% url 'extrasform' object.id %}">
-                                    Add Extras
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
+
+                            <a class="btn btn-success" href="{% url 'add_batting' object.id %}">
+                                add batter
+                            </a>
+                            <a class="btn btn-success" href="{% url 'add_bowling' object.id %}">
+                                add bowler
+                            </a>
+                            <a class="btn btn-success" href="{% url 'matchform' object.id %}">
+                                Update Match
+                            </a>
+                            <a class="btn btn-success" href="{% url 'extrasform' object.id %}">
+                                Add Extras
+                            </a>
+                            <a class="btn btn-success" href="{% url 'add_opposition' %}">
+                                Add opposition names
+                            </a>
+
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
 
         </div>

@@ -64,7 +64,7 @@
                                     <td class="bowl-name -text-left">
                                         <a class="result" href="{% url "bowlerform" obj.id bowling.id %}">
                                             {{ bowling.bowler_number }} | {{ bowling.member }}
-                                            <i class="px-3 fas fa-edit"></i>
+                                            <i class="text-info px-3 fas fa-edit"></i>
 
                                         </a>
                                         <a class="result text-danger" href="{% url "deletebowler" obj.id bowling.id %}"

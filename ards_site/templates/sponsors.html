@@ -9,7 +9,7 @@
             {% if user_group.name == "Sponsor" %}
                 <a class="result" href="{{ user.profile.website_link }}" target="_blank">
                     {% if user.wagtail_userprofile.avatar %}
-                        <img src="{{ user.wagtail_userprofile.avatar.url }}" class=""
+                        <img src="{{ user.wagtail_userprofile.avatar.url }}" class="sponsors px-3 py-2"
                              alt="{{ user.get_full_name }}"
                              style="max-height: 100px; max-width:150px; width:auto;">
                     {% endif %}

@@ -21,7 +21,7 @@
 
             {% if user not in  user_sponsor_list %}
                 <div class="text-center">
-                    <a href="">
+                    <a href="mailto:roy.keenan@btopenworld.com">
                         Want to be one of our sponsors?
                     </a>
                 </div>
@@ -56,11 +56,8 @@
                                     </button>
                                     {% bootstrap_form form %}
                                 </div>
-
-
                                 <div class="col card text-center py-4 mb-3 shadow bg-body rounded">
                                     <h3>Current</h3>
-
                                     {% for user_group in user.groups.all %}
                                         <a class="result" href="{% url 'sponsors_home' request.user.id %}"
                                            data-bs-toggle="tooltip" title="Click to Edit!">

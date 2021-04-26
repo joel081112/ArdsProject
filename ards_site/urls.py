@@ -13,7 +13,6 @@ from home import views as home_views
 urlpatterns = [
     path('', home_views.home_view, name='home'),
     path('django-admin/', admin.site.urls),
-
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
 

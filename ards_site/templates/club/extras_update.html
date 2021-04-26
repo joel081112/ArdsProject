@@ -29,6 +29,10 @@
 
                 </div>
                 <div class="col">
+                    <div class="p-3 text-center">
+                        {{ match }}
+                        <hr class="col-4 mx-auto">
+                    </div>
                     <div class="pb-5">
 
                         <div class="team-heading bg-gradient-mini-alt">
@@ -163,16 +167,16 @@
 
                     </div>
 
-                    <div class="rtl">
+                    <div class="rtl"><a class="" href="{% url 'extrasform' match.id %}">
+                        Add New Extras
+                    </a>
+
+                    </div>
+                    <div class="rtl pb-5">
                         <a class="" href="{% url 'viewmatch' match.id %}">
                             Return to scorecard
                         </a>
-                    </div>
-                    <div class="rtl pb-5">
 
-                        <a class="" href="{% url 'extrasform' match.id %}">
-                            Add Extras
-                        </a>
                     </div>
 
                 </div>

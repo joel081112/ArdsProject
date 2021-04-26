@@ -9,7 +9,8 @@ SECRET_KEY = 'r$m8_w8m#&cf6cw(#%lx=#fn3^(m2ndtiusfz&05ft9a&1dqv*'
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*']
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# THIS WAS CONSOLE FOR DEVELOPMENT PURPOSES FOR SIGN UP VERIFICATION
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 INSTALLED_APPS = INSTALLED_APPS + [
     'debug_toolbar',

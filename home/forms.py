@@ -1,7 +1,8 @@
 from django import forms
 from wagtail.users.forms import User, UserProfile
 
-from .models import Member, Match, Batting, Bowling, Profile, Extras, OppositionNames
+from .models import Member, Match, Batting, Bowling, Profile, Extras, OppositionNames, BattingOpponents, \
+    BowlingOpponents
 
 
 class MemberForm(forms.ModelForm):
@@ -78,6 +79,44 @@ class BowlingFormAdd(forms.ModelForm):
 
     class Meta:
         model = Bowling
+        fields = '__all__'
+
+
+class BattingOppForm(forms.ModelForm):
+    match = forms.ModelChoiceField(
+        queryset=Match.objects.all(),
+        widget=forms.HiddenInput(),
+        disabled=True
+    )
+
+    class Meta:
+        model = BattingOpponents
+        fields = '__all__'
+
+
+class BattingOppFormAdd(forms.ModelForm):
+
+    class Meta:
+        model = BattingOpponents
+        fields = '__all__'
+
+
+class BowlingOppForm(forms.ModelForm):
+    match = forms.ModelChoiceField(
+        queryset=Match.objects.all(),
+        widget=forms.HiddenInput(),
+        disabled=True
+    )
+
+    class Meta:
+        model = BowlingOpponents
+        fields = '__all__'
+
+
+class BowlingOppFormAdd(forms.ModelForm):
+
+    class Meta:
+        model = BowlingOpponents
         fields = '__all__'
 
 

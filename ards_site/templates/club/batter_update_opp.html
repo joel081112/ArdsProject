@@ -5,13 +5,13 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Update Batter{% endblock %}
+{% block body_class %}Update Batter Opponent{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}
 {% endblock %}
 
 {% block meta_descr %}
-    Edit batter
+    Edit Opponent batter
 {% endblock %}
 
 {% block content %} {#    html stuff sits in here#}
@@ -36,7 +36,7 @@
                     </div>
                     <div>
                         <div class="team-heading bg-gradient-mini-alt">
-                            ARDS BATTING
+                            {{ match.opponent }} BATTING
                         </div>
                         <table class="table table-striped table-hover">
                             <thead class="thead-dark">
@@ -66,12 +66,12 @@
                                 {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
                                     <tr class="batting-player">
                                         <td class="bat-name">
-                                            <a class="result" href="{% url "batterform" match.id batting.id %}">
-                                                {{ batting.batter_number }} | {{ batting.member }}
+                                            <a class="result" href="{% url "batterform_opp" match.id batting.id %}">
+                                                {{ batting.batter_number }} | {{ batting.batter_name }}
                                             <i class="text-info px-3 fas fa-edit"></i>
 
                                             </a>
-                                            <a class="result text-danger" href="{% url "deletebatter" match.id batting.id %}"
+                                            <a class="result text-danger" href="{% url "deletebatter_opp" match.id batting.id %}"
                                                onclick="return confirm('Are you sure?')">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
@@ -105,12 +105,12 @@
                             {% for batting in batting_list_bn %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
                                     <p class="text-primary">
-                                        <a class="result" href="{% url "batterform" match.id batting.id %}">
-                                                {{ batting.batter_number }} | {{ batting.member }}
+                                        <a class="result" href="{% url "batterform_opp" match.id batting.id %}">
+                                                {{ batting.batter_number }} | {{ batting.batter_name }}
                                             <i class="px-3 fas fa-edit"></i>
 
                                             </a>
-                                            <a class="result text-danger" href="{% url "deletebatter" match.id batting.id %}"
+                                            <a class="result text-danger" href="{% url "deletebatter_opp" match.id batting.id %}"
                                                onclick="return confirm('Are you sure?')">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>,</p>
@@ -118,7 +118,7 @@
                             {% endfor %}
                         </div>
                         <div class="rtl">
-                            <a class="" href="{% url 'add_batting' match.id %}">
+                            <a class="" href="{% url 'add_batting_opp' match.id %}">
                                 Add a new batter
                             </a>
                         </div>

@@ -249,7 +249,9 @@
                             {% for bowling in bowling_list_bn_f %}
                                 <tr class="bowling-player">
                                     <td class="bowl-name -text-left">
-                                        {{ bowling.bowler_name }}
+                                        <a class="result" href="{% url "bowlerform_opp" object.id bowling.id %}">
+                                            {{ bowling.bowler_name }}
+                                        </a>
                                     </td>
                                     <td class="bowl-overs">
                                         {{ bowling.overs }}
@@ -329,7 +331,9 @@
                                 {% if batting.mode_of_dismissal|stringformat:"s" != "Did not bat" %}
                                     <tr class="batting-player">
                                         <td class="bat-name">
-                                            {{ batting.batter_name }}
+                                            <a class="result" href="{% url "batterform_opp" object.id batting.id %}">
+                                                {{ batting.batter_name }}
+                                            </a>
                                         </td>
                                         <td class="bat-out-by">
                                             {% if batting.mode_of_dismissal|stringformat:"s" != "Not Out" %}
@@ -413,7 +417,12 @@
                             <p>To Bat:</p>
                             {% for batting in batting_list_bn_f %}
                                 {% if batting.mode_of_dismissal|stringformat:"s" == "Did not bat" %}
-                                    <p class="text-primary">{{ batting.batter_name }},</p>
+                                    <p class="text-primary">
+                                        <a class="result" href="{% url "batterform_opp" object.id batting.id %}">
+                                            {{ batting.batter_name }}
+                                        </a>,
+                                    </p>
+
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -511,20 +520,26 @@
                         <div class="text-center">
 
 
-                            <a class="btn btn-success" href="{% url 'add_batting' object.id %}">
+                            <a class="btn btn-success my-2" href="{% url 'add_batting' object.id %}">
                                 add batter
                             </a>
-                            <a class="btn btn-success" href="{% url 'add_bowling' object.id %}">
+                            <a class="btn btn-success my-2" href="{% url 'add_bowling' object.id %}">
                                 add bowler
                             </a>
-                            <a class="btn btn-success" href="{% url 'matchform' object.id %}">
+                            <a class="btn btn-success my-2" href="{% url 'matchform' object.id %}">
                                 Update Match
                             </a>
-                            <a class="btn btn-success" href="{% url 'extrasform' object.id %}">
+                            <a class="btn btn-success my-2" href="{% url 'extrasform' object.id %}">
                                 Add Extras
                             </a>
-                            <a class="btn btn-success" href="{% url 'add_opposition' %}">
+                            <a class="btn btn-success my-2" href="{% url 'add_opposition' %}">
                                 Add opposition names
+                            </a>
+                             <a class="btn btn-success my-2" href="{% url 'add_batting_opp' object.id %}">
+                                add opposition batter
+                            </a>
+                            <a class="btn btn-success my-2" href="{% url 'add_bowling_opp' object.id %}">
+                                add opposition bowler
                             </a>
 
                         </div>

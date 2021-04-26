@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 from django.db.models import Max, Min, Count, Sum, Avg, Q
 from django.shortcuts import render, redirect
 from django.core import serializers
@@ -7,15 +8,18 @@ from django.contrib.auth import logout
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
+from wagtail.admin.auth import any_permission_required, require_admin_access
 from wagtail.users.models import UserProfile
 
 from .models import Member, Match, Batting, \
-    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub, OppositionNames
+    Bowling, Extras, BattingOpponents, BowlingOpponents, BlogPage, HomePage, Profile, TheClub, OppositionNames, Role
 from .forms import MemberForm, MatchForm, BattingForm, BowlingForm, BattingFormAdd, BowlingFormAdd, \
-    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd, OppositionNamesForm
+    ProfileForm, ProfileFormAdd, WagtailForm, ExtrasForm, ExtrasFormAdd, OppositionNamesForm, BattingOppForm, \
+    BattingOppFormAdd, BowlingOppForm, BowlingOppFormAdd
 from datetime import date
 from django.http import JsonResponse, response
 from rest_framework import routers, serializers, viewsets
+from .decorators import allowed_users
 
 
 def get_data(request, *args, **kwargs):
@@ -68,13 +72,9 @@ def home_view(request):
         date__lte=date.today()
     ).order_by('-date')
     next_match_list = Match.objects.filter(
-        team__name__contains='firstXI',
-        date__gte=date.today()
-    ).order_by('date')
+        team__name__contains='firstXI',date__gte=date.today()).order_by('date')
     next_match_seconds = Match.objects.filter(
-        team__name__contains='secondXI',
-        date__gte=date.today()
-    ).order_by('date')
+        team__name__contains='secondXI',date__gte=date.today()).order_by('date')
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
     users = User.objects.all()
@@ -452,6 +452,8 @@ def view_selected_member_team(request, team):
     return render(request, 'club/member_team.html', context)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def create_member(request):
     """Create a new member form."""
     form = MemberForm()
@@ -462,6 +464,8 @@ def create_member(request):
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_new_member(request):
     """Add a new member post."""
     if request.method == 'POST':
@@ -476,6 +480,8 @@ def add_new_member(request):
     return redirect('members')
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain', 'Player', 'Coach'])
 def member_form(request, member_id):
     """Edit existing member form view."""
     obj = Member.objects.get(pk=member_id)
@@ -499,6 +505,8 @@ def member_form(request, member_id):
     return render(request, 'club/member_update.html', context)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def update_match_form(request, match_id):
     """Edit existing match form view."""
 
@@ -524,23 +532,30 @@ def update_match_form(request, match_id):
     return render(request, 'club/match_update.html', context)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_extras(request, match_id):
     """Add a batter."""
     obj = Match.objects.get(pk=match_id)
-    form = ExtrasForm()
-    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
-    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+    if int(obj.id) == int(match_id):
+        form = ExtrasForm()
+        extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+        extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
 
-    context = {
-        'obj': obj,
-        'form': form,
-        'extras_list_t': extras_list_t,
-        'extras_list_f': extras_list_f
-    }
-    return render(request, 'club/add_extras.html', context)
+        context = {
+            'obj': obj,
+            'form': form,
+            'extras_list_t': extras_list_t,
+            'extras_list_f': extras_list_f
+        }
+        return render(request, 'club/add_extras.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def adding_extras(request, match_id):
     post_values = request.POST.copy()
     if request.method == 'POST':
@@ -556,41 +571,50 @@ def adding_extras(request, match_id):
     return redirect('/club/match/' + match_id+'/extras')
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def update_extras(request, match_id, extras_id):
     """Edit existing batter form view."""
 
     obj = Extras.objects.get(pk=extras_id)
-    form = ExtrasForm(instance=obj)
-    extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
-    extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
-    match = Match.objects.get(pk=match_id)
-    if request.method == 'POST':
-        print("Printing POST")
-        form = ExtrasForm(request.POST, instance=obj)
-        print(obj)
-        if form.is_valid():
-            print("Valid")
-            form.save()
-            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
-        else:
-            print(form.errors)
-            return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+    if int(obj.match.id) == int(match_id):
+        form = ExtrasForm(instance=obj)
+        extras_list_t = Extras.objects.filter(match_id=match_id, ards=True).order_by()
+        extras_list_f = Extras.objects.filter(match_id=match_id, ards=False).order_by()
+        match = Match.objects.get(pk=match_id)
+        if request.method == 'POST':
+            print("Printing POST")
+            form = ExtrasForm(request.POST, instance=obj)
+            print(obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/match/' + match_id + '/extras/' + extras_id)
+            else:
+                print(form.errors)
+                return redirect('/club/match/' + match_id + '/extras/' + extras_id)
 
-    context = {
-        'form': form,
-        'extras_list_t': extras_list_t,
-        'extras_list_f': extras_list_f,
-        'match': match
-    }
+        context = {
+            'form': form,
+            'extras_list_t': extras_list_t,
+            'extras_list_f': extras_list_f,
+            'match': match
+        }
 
-    return render(request, 'club/extras_update.html', context)
+        return render(request, 'club/extras_update.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def delete_extras(request, match_id, extras_id):
     Extras.objects.get(id=extras_id).delete()
     return redirect('/club/match/' + match_id+'/extras')
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_match(request):
     """Add a match."""
     match_form = MatchForm()
@@ -602,6 +626,8 @@ def add_match(request):
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_new_match(request):
     form_id = ''
 
@@ -623,35 +649,42 @@ def add_new_match(request):
     return redirect('/club/view_match/' + str(form_id))
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def update_batter_form(request, match_id, batting_id):
     """Edit existing batter form view."""
 
     obj = Batting.objects.get(pk=batting_id)
-    form = BattingForm(instance=obj)
-    batting_list_bn = Batting.objects.order_by('batter_number') \
-        .filter(match_id=match_id)
-    match = Match.objects.get(pk=match_id)
-    if request.method == 'POST':
-        print("Printing POST")
-        form = BattingForm(request.POST, instance=obj)
-        print(obj)
-        if form.is_valid():
-            print("Valid")
-            form.save()
-            return redirect('/club/match/' + match_id + '/batter/' + batting_id)
-        else:
-            print(form.errors)
-            return redirect('/club/match/' + match_id + '/batter/' + batting_id)
+    if int(obj.match.id) == int(match_id):
+        form = BattingForm(instance=obj)
+        batting_list_bn = Batting.objects.order_by('batter_number') \
+            .filter(match_id=match_id)
+        match = Match.objects.get(pk=match_id)
+        if request.method == 'POST':
+            print("Printing POST")
+            form = BattingForm(request.POST, instance=obj)
+            print(obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/match/' + match_id + '/batter/' + batting_id)
+            else:
+                print(form.errors)
+                return redirect('/club/match/' + match_id + '/batter/' + batting_id)
 
-    context = {
-        'form': form,
-        'batting_list_bn': batting_list_bn,
-        'match': match
-    }
+        context = {
+            'form': form,
+            'batting_list_bn': batting_list_bn,
+            'match': match
+        }
 
-    return render(request, 'club/batter_update.html', context)
+        return render(request, 'club/batter_update.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_batting(request, match_id, *args, **kwargs):
     """Add a batter."""
 
@@ -672,6 +705,8 @@ def add_batting(request, match_id, *args, **kwargs):
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_new_batter(request, match_id):
     post_values = request.POST.copy()
     if request.method == 'POST':
@@ -687,40 +722,49 @@ def add_new_batter(request, match_id):
             return redirect('/club/match/batter/add/' + match_id)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def delete_batter(request, match_id, batter_id):
     Batting.objects.get(id=batter_id).delete()
     return redirect('/club/match/batter/add/' + match_id)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def update_bowler_form(request, match_id, bowling_id):
     """Edit existing bowler form view."""
 
     obj = Bowling.objects.get(pk=bowling_id)
-    form = BowlingForm(instance=obj)
-    bowling_list_bn = Bowling.objects.order_by('bowler_number') \
-        .filter(match_id=match_id)
-    match = Match.objects.get(pk=match_id)
-    if request.method == 'POST':
-        print("Printing POST")
-        form = BowlingForm(request.POST, instance=obj)
-        print(obj)
-        if form.is_valid():
-            print("Valid")
-            form.save()
-            return redirect('/club/match/' + match_id + '/bowler/' + bowling_id)
-        else:
-            print(form.errors)
-            return redirect('/club/match/' + match_id + '/bowler/' + bowling_id)
+    if int(obj.match.id) == int(match_id):
+        form = BowlingForm(instance=obj)
+        bowling_list_bn = Bowling.objects.order_by('bowler_number') \
+            .filter(match_id=match_id)
+        match = Match.objects.get(pk=match_id)
+        if request.method == 'POST':
+            print("Printing POST")
+            form = BowlingForm(request.POST, instance=obj)
+            print(obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/match/' + match_id + '/bowler/' + bowling_id)
+            else:
+                print(form.errors)
+                return redirect('/club/match/' + match_id + '/bowler/' + bowling_id)
 
-    context = {
-        'form': form,
-        'bowling_list_bn': bowling_list_bn,
-        'match': match
-    }
+        context = {
+            'form': form,
+            'bowling_list_bn': bowling_list_bn,
+            'match': match
+        }
 
-    return render(request, 'club/bowler_update.html', context)
+        return render(request, 'club/bowler_update.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_bowling(request, match_id):
     """Add a batter."""
     obj = Match.objects.get(pk=match_id)
@@ -737,6 +781,8 @@ def add_bowling(request, match_id):
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_new_bowler(request, match_id):
     post_values = request.POST.copy()
     if request.method == 'POST':
@@ -752,11 +798,181 @@ def add_new_bowler(request, match_id):
     return redirect('/club/match/bowler/add/' + match_id)
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def delete_bowler(request, match_id, bowler_id):
     Bowling.objects.get(id=bowler_id).delete()
     return redirect('/club/match/bowler/add/' + match_id)
+# end ards batting/bowling
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def update_batter_form_opp(request, match_id, batting_id):
+    """Edit existing batter form view for opponents."""
+
+    obj = BattingOpponents.objects.get(pk=batting_id)
+    if int(obj.match.id) == int(match_id):
+        form = BattingOppForm(instance=obj)
+        batting_list_bn = BattingOpponents.objects.order_by('batter_number') \
+            .filter(match_id=match_id)
+        match = Match.objects.get(pk=match_id)
+        if request.method == 'POST':
+            print("Printing POST")
+            form = BattingOppForm(request.POST, instance=obj)
+            print(obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/match/' + match_id + '/batter/opponent/' + batting_id)
+            else:
+                print(form.errors)
+                return redirect('/club/match/' + match_id + '/batter/opponent/' + batting_id)
+
+        context = {
+            'form': form,
+            'batting_list_bn': batting_list_bn,
+            'match': match
+        }
+
+        return render(request, 'club/batter_update_opp.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def add_batting_opp(request, match_id, *args, **kwargs):
+    """Add a batter for opposition."""
+
+    obj = Match.objects.get(pk=match_id)
+    form = BattingOppForm(instance=obj)
+    batting_list_bn = BattingOpponents.objects.order_by('batter_number') \
+        .filter(match_id=match_id)
+    print()
+    print(kwargs)
+
+    context = {
+        'form': form,
+        'obj': obj,
+        'batting_list_bn': batting_list_bn
+    }
+    print(context)
+    return render(request, 'club/add_batter_opp.html', context)
+
+
+@require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def add_new_batter_opp(request, match_id):
+    """Add a new opposition batter."""
+
+    post_values = request.POST.copy()
+    if request.method == 'POST':
+        print("Printing POST")
+        post_values['match'] = match_id
+        form = BattingOppFormAdd(post_values)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            return redirect('/club/match/batter/opponent/add/' + match_id)
+        else:
+            print(form.errors.as_data())
+            return redirect('/club/match/batter/opponent/add/' + match_id)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def delete_batter_opp(request, match_id, batter_id):
+    """Delete batting opposition."""
+
+    BattingOpponents.objects.get(id=batter_id).delete()
+    return redirect('/club/match/batter/opponent/add/' + match_id)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def update_bowler_form_opp(request, match_id, bowling_id):
+    """Edit existing bowler form view for opposition."""
+
+    obj = BowlingOpponents.objects.get(pk=bowling_id)
+    if int(obj.match.id) == int(match_id):
+        form = BowlingOppForm(instance=obj)
+        bowling_list_bn = BowlingOpponents.objects.order_by('bowler_number') \
+            .filter(match_id=match_id)
+        match = Match.objects.get(pk=match_id)
+        if request.method == 'POST':
+            print("Printing POST")
+            form = BowlingOppForm(request.POST, instance=obj)
+            print(obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/match/' + match_id + '/bowler/opponent/' + bowling_id)
+            else:
+                print(form.errors)
+                return redirect('/club/match/' + match_id + '/bowler/opponent/' + bowling_id)
+
+        context = {
+            'form': form,
+            'bowling_list_bn': bowling_list_bn,
+            'match': match
+        }
+
+        return render(request, 'club/bowler_update_opp.html', context)
+    else:
+        return render(request, 'wrong_form.html', status=403)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def add_bowling_opp(request, match_id):
+    """Add a batter in opposition."""
+
+    obj = Match.objects.get(pk=match_id)
+    form = BowlingOppForm(instance=obj)
+    bowling_list_bn = BowlingOpponents.objects.order_by('bowler_number') \
+        .filter(match_id=match_id)
+
+    context = {
+        'form': form,
+        'obj': obj,
+        'bowling_list_bn': bowling_list_bn
+    }
+    return render(request, 'club/add_bowler_opp.html', context)
+
+
+@require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def add_new_bowler_opp(request, match_id):
+    """Add new bowling opposition. """
+
+    post_values = request.POST.copy()
+    if request.method == 'POST':
+        print("Printing POST")
+        post_values['match'] = match_id
+        form = BowlingOppFormAdd(post_values)
+        if form.is_valid():
+            print("Valid")
+            form.save()
+        else:
+            print(form.errors)
+
+    return redirect('/club/match/bowler/opponent/add/' + match_id)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
+def delete_bowler_opp(request, match_id, bowler_id):
+    """Delete opposition bowler"""
+
+    BowlingOpponents.objects.get(id=bowler_id).delete()
+    return redirect('/club/match/bowler/opponent/add/' + match_id)
+
+
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_opposition(request):
     """Add a new opponent name."""
     form = OppositionNamesForm()
@@ -770,6 +986,8 @@ def add_opposition(request):
 
 
 @require_POST
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def add_new_name(request):
     form_id = ''
     if request.method == 'POST':
@@ -784,11 +1002,15 @@ def add_new_name(request):
             return redirect('/club/opposition-name/add')
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def delete_opponent(request, opponent_id):
     OppositionNames.objects.get(id=opponent_id).delete()
     return redirect('/club/opposition-name/add')
 
 
+@login_required
+@allowed_users(allowed_roles=['Captain'])
 def update_opponent(request, opponent_id):
     """Edit existing batter form view."""
 
@@ -851,22 +1073,25 @@ def view_sponsors(request):
 
 def view_sponsors_home(request, user_id):
     """View sponsors page."""
-    users = User.objects.all()
-    user_sponsor_list = User.objects.filter(groups__name='Sponsor')
-    obj = Profile.objects.get(user_id=user_id)
-    form = ProfileForm(instance=obj)
-    if request.method == 'POST':
-        print("Printing POST")
-        print(request.POST)
-        print(obj)
-        form = ProfileFormAdd(request.POST, instance=obj)
-        if form.is_valid():
-            print("Valid")
-            form.save()
-            return redirect('/club/sponsors/' + user_id)
-        else:
-            print(form.errors)
-            return redirect('/club/sponsors/' + user_id)
+    if int(request.user.id) == int(user_id):
+        users = User.objects.all()
+        user_sponsor_list = User.objects.filter(groups__name='Sponsor')
+        obj = Profile.objects.get(user_id=user_id)
+        form = ProfileForm(instance=obj)
+        if request.method == 'POST':
+            print("Printing POST")
+            print(request.POST)
+            print(obj)
+            form = ProfileFormAdd(request.POST, instance=obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/sponsors/' + user_id)
+            else:
+                print(form.errors)
+                return redirect('/club/sponsors/' + user_id)
+    else:
+        return render(request, '200.html', status=403)
 
     context = {
         'users': users,
@@ -878,22 +1103,26 @@ def view_sponsors_home(request, user_id):
 
 def view_sponsors_home_picture(request, user_id):
     """View sponsors page."""
-    users = User.objects.all()
-    user_sponsor_list = User.objects.filter(groups__name='Sponsor')
-    obj = UserProfile.objects.get(user_id=user_id)
-    form = WagtailForm(instance=obj)
-    if request.method == 'POST':
-        print("Printing POST")
-        print(request.POST)
-        print(obj)
-        form = WagtailForm(request.POST, request.FILES, instance=obj)
-        if form.is_valid():
-            print("Valid")
-            form.save()
-            return redirect('/club/sponsors/' + user_id + '/picture')
-        else:
-            print(form.errors)
-            return redirect('/club/sponsors/' + user_id + '/picture')
+
+    if int(request.user.id) == int(user_id):
+        users = User.objects.all()
+        user_sponsor_list = User.objects.filter(groups__name='Sponsor')
+        obj = UserProfile.objects.get(user_id=user_id)
+        form = WagtailForm(instance=obj)
+        if request.method == 'POST':
+            print("Printing POST")
+            print(request.POST)
+            print(obj)
+            form = WagtailForm(request.POST, request.FILES, instance=obj)
+            if form.is_valid():
+                print("Valid")
+                form.save()
+                return redirect('/club/sponsors/' + user_id + '/picture')
+            else:
+                print(form.errors)
+                return redirect('/club/sponsors/' + user_id + '/picture')
+    else:
+        return render(request, '200.html', status=403)
 
     context = {
         'users': users,
@@ -901,4 +1130,5 @@ def view_sponsors_home_picture(request, user_id):
         'user_sponsor_list': user_sponsor_list
     }
     return render(request, 'club/sponsors_home.html', context)
+
 

@@ -3,6 +3,7 @@
 {% load static %}
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-5 flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
+{% block title %} Home | {{ site_name }}{% endblock %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -246,8 +247,6 @@ Delete the line below if you're just getting started and want to remove the welc
                                     <a>CLUB STORE</a>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                     <div class="d-xl-none">
@@ -295,7 +294,6 @@ Delete the line below if you're just getting started and want to remove the welc
                                         </div>
                                     </div>
                                     <br>
-
                                     <div>
                                         {{ match.date|date:"D d M" }}
                                     </div>

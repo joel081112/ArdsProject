@@ -72,13 +72,9 @@ def home_view(request):
         date__lte=date.today()
     ).order_by('-date')
     next_match_list = Match.objects.filter(
-        team__name__contains='firstXI',
-        date__gte=date.today()
-    ).order_by('date')
+        team__name__contains='firstXI',date__gte=date.today()).order_by('date')
     next_match_seconds = Match.objects.filter(
-        team__name__contains='secondXI',
-        date__gte=date.today()
-    ).order_by('date')
+        team__name__contains='secondXI',date__gte=date.today()).order_by('date')
     blog = BlogPage.objects.order_by('-date')
     homepage = HomePage.objects.all()
     users = User.objects.all()
@@ -1041,7 +1037,6 @@ def update_opponent(request, opponent_id):
     return render(request, 'club/opp_names_update.html', context)
 
 
-@login_required
 def delete_account(request):
     """Delete an account."""
 
@@ -1050,7 +1045,6 @@ def delete_account(request):
     return render(request, 'account/delete_account.html', context)
 
 
-@login_required
 def delete_account_confirmed(request):
     """Delete an account."""
 
@@ -1059,7 +1053,6 @@ def delete_account_confirmed(request):
     return render(request, 'account/user_deleted.html', context)
 
 
-@login_required
 def delete_confirm(request):
     request.user.delete()
     logout(request)

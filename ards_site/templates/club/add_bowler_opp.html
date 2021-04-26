@@ -5,36 +5,35 @@
 <link rel="icon" type="image/png" href="media/ards cc filled.png"/>
 {% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
 {% load wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}Update Bowler{% endblock %}
+{% block body_class %}Add Bowler Opponent{% endblock %}
 {% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
 {% block extra_js %} {# Override this in templates to add extra javascript #}
+
 {% endblock %}
 
 {% block meta_descr %}
-    Edit bowler
+    Add opposition bowler to match
 {% endblock %}
 
 {% block content %} {#    html stuff sits in here#}
     <div class="pb-5 container col-md-9">
-
-        <form action="" method="POST" role="form" enctype="multipart/form-data">
+        <form action="{% url 'add_new_bowler_opp' obj.id %}" method="POST" role="form" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
                 <div class="col-xl-4">
-                    <button type="submit" class="btn btn-success mb-5" id="add-btn">
-                        Update bowler
+                    <button type="submit" class="btn btn-success" id="add-btn">
+                        ADD
                     </button>
                     {% bootstrap_form form %}
                 </div>
-
                 <div class="col">
                     <div>
                         <div class="p-3 text-center">
-                            {{ match }}
+                            {{ obj }}
                             <hr class="col-4 mx-auto">
                         </div>
                         <div class="team-heading bg-gradient-mini-alt">
-                            ARDS BOWLING
+                            {{ obj.opponent }} BOWLING
                         </div>
                         <table class="table table-striped table-hover">
                             <thead class="thead-dark">
@@ -63,12 +62,12 @@
                             {% for bowling in bowling_list_bn %}
                                 <tr class="bowling-player">
                                     <td class="bowl-name -text-left">
-                                        <a class="result" href="{% url "bowlerform" match.id bowling.id %}">
-                                            {{ bowling.bowler_number }} | {{ bowling.member }}
-                                        <i class="text-info px-3 fas fa-edit"></i>
+                                        <a class="result" href="{% url "bowlerform_opp" obj.id bowling.id %}">
+                                            {{ bowling.bowler_number }} | {{ bowling.bowler_name }}
+                                            <i class="text-info px-3 fas fa-edit"></i>
 
                                         </a>
-                                        <a class="result text-danger" href="{% url "deletebowler" match.id bowling.id %}"
+                                        <a class="result text-danger" href="{% url "deletebowler_opp" obj.id bowling.id %}"
                                            onclick="return confirm('Are you sure?')">
                                             <i class="far fa-trash-alt"></i>
                                         </a>
@@ -94,23 +93,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="rtl">
-                        <a class="" href="{% url 'add_bowling' match.id %}">
-                            Add a new bowler
-                        </a>
-                    </div>
 
                     <div class="rtl">
-
-                        <a class="" href="{% url 'viewmatch' match.id %}">
+                        <a class="" href="{% url 'viewmatch' obj.id %}">
                             Return to scorecard
                         </a>
                     </div>
                 </div>
 
             </div>
+
+
         </form>
-
-
     </div>
+
 {% endblock %}

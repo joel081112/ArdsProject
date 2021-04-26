@@ -768,7 +768,7 @@ class BattingOpponents(models.Model):
         OppositionNames, on_delete=models.CASCADE, default='', blank=False, null=True
     )
     batter_number = models.IntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+        blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     runs = models.IntegerField(
         blank=False, null=False, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
@@ -797,7 +797,7 @@ class BowlingOpponents(models.Model):
         OppositionNames, on_delete=models.CASCADE, default=''
     )
     bowler_number = models.IntegerField(
-        blank=False, null=True, validators=[MaxValueValidator(11), MinValueValidator(1)]
+        blank=False, default=1, validators=[MaxValueValidator(11), MinValueValidator(1)]
     )
     overs = models.DecimalField(
         blank=False, null=False, default=0, validators=[MaxValueValidator(100), MinValueValidator(0.05)],
@@ -805,6 +805,9 @@ class BowlingOpponents(models.Model):
     )
     runs = models.IntegerField(
         blank=False, null=False, default=0, validators=[MaxValueValidator(500), MinValueValidator(0)]
+    )
+    maidens = models.IntegerField(
+        blank=True, null=True, default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
     )
     wickets = models.IntegerField(
         blank=True, null=True, default=0, validators=[MaxValueValidator(10), MinValueValidator(0)]

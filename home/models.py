@@ -8,7 +8,7 @@ from datetime import date, datetime
 from django.utils.timezone import now
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, \
-    StreamFieldPanel, MultiFieldPanel, InlinePanel
+    StreamFieldPanel, MultiFieldPanel, InlinePanel, TabbedInterface, ObjectList
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
@@ -150,6 +150,58 @@ class TheSport(Page):
 
         verbose_name = "The Sport Page"
         verbose_name_plural = "The Sport Pages"
+
+
+class Cookies(Page):
+    # content tab panels
+    intro = RichTextField(
+        blank=True,  # required field or not
+        verbose_name="Intro"  # called on wagtail site
+    )
+
+    content_panels = Page.content_panels + [
+
+        FieldPanel(
+            'intro',
+            classname="full"
+        ),
+
+    ]
+
+    # what to call the panels on wagtail
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList(Page.promote_panels, heading='SEO'),
+        ObjectList(Page.settings_panels, heading='Settings', classname='settings'),
+        # classname settings adds the cog
+    ]
+
+    )
+
+
+class Privacy(Page):
+    intro = RichTextField(
+        blank=True,  # required field or not
+        verbose_name="Intro"  # called on wagtail site
+    )
+
+    content_panels = Page.content_panels + [
+
+        FieldPanel(
+            'intro',
+            classname="full"
+        ),
+    ]
+
+    # what to call the panels on wagtail
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList(Page.promote_panels, heading='SEO'),
+        ObjectList(Page.settings_panels, heading='Settings', classname='settings'),
+        # classname settings adds the cog
+    ]
+
+    )
 
 
 class Scorecard(Page):

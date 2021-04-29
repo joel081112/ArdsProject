@@ -1069,8 +1069,8 @@ ol > .column a {
     .menu > ol > li:nth-child(3),
     .menu > ol > li:nth-child(4),
     .menu > ol > li:nth-child(5) {
-        --accent-color: #285469;
-        --gradient-color: #285469;
+        --accent-color: darkslategrey;
+        --gradient-color: #008000;
     }
 }
 
@@ -1100,7 +1100,7 @@ Primary style .css
 
     .cd-main-content h1 {
         font-size: 2rem;
-        color: #64788c;
+        color: darkslategrey;
         padding: 4em 0;
     }
 
@@ -1309,7 +1309,7 @@ Primary style .css
         width: 90%;
         height: 100%;
         top: 0;
-        background: #3d6578;
+        background: darkslategrey;
         z-index: 1;
         -webkit-transition: -webkit-transform 0.3s 0.3s;
         transition: -webkit-transform 0.3s 0.3s;

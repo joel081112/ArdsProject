@@ -1,0 +1,23 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block page-css-class %}cover-container d-flex h-25 px-3 mx-auto flex-column {% endblock %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}Privacy{% endblock %}
+{% block extra_css %}{# Override this in templates to add extra css        #}{% endblock %}
+{% block extra_js %} {# Override this in templates to add extra javascript #}{% endblock %}
+
+{% block meta_descr %}
+   Ards Cricket club privacy page. Find information on our privacy policies.
+{% endblock %}
+
+
+
+{% block content %} {#    html stuff sits in here#}
+    <div class="mx-5">
+        <h1>{{ page.title }}</h1>
+        <div class="homeInfo1">
+            {{ page.intro|richtext }}
+        </div>
+    </div>
+
+{% endblock %}

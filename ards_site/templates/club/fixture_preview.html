@@ -16,8 +16,18 @@
 
 {% block content %} {#    html stuff sits in here#}
     <div class="pb-5 container col-md-9">
+        {% for user_group in user.groups.all %}
+            {% if user_group.name == "Captain" %}
 
+
+                <a class="btn btn-success mx-3" href="/club/match/add">
+                    add new match
+                </a>
+            {% endif %}
+        {% endfor %}
         <div class="row  py-4">
+
+
             <ul class="list-unstyled">
                 {% for match in queryset %}
                     <li class="pb-2">

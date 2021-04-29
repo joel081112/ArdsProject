@@ -21,8 +21,8 @@
 
             {% if user not in  user_sponsor_list %}
                 <div class="text-center">
-                    <a href="mailto:roy.keenan@btopenworld.com">
-                        Want to be one of our sponsors?
+                    <a href="mailto:joelferguson98@gmail.com">
+                        Want to be one of our sponsors? Send us an email
                     </a>
                 </div>
             {% endif %}
@@ -59,22 +59,34 @@
                                 <div class="col card text-center py-4 mb-3 shadow bg-body rounded">
                                     <h3>Current</h3>
                                     {% for user_group in user.groups.all %}
-                                        <a class="result" href="{% url 'sponsors_home' request.user.id %}"
-                                           data-bs-toggle="tooltip" title="Click to Edit!">
-                                            {{ user.profile.website_link }} <i
-                                                class="fs-2 text-info px-3 py-4 fas fa-edit"></i>
-                                        </a>
-                                        <br>
-                                        {% if request.user.wagtail_userprofile.avatar %}
-                                            <a class="result" href="{% url 'sponsors_home_picture' request.user.id %}"
-                                               data-bs-toggle="tooltip" title="Click to Edit!"
-                                            >
-                                                <img src="{{ request.user.wagtail_userprofile.avatar.url }}" class=""
-                                                     alt="{{ request.user.get_full_name }}"
-                                                     style="max-height: 150px; width:auto;"> <i
+                                        {% if user_group.name == "Sponsor" %}
+                                            <a class="result" href="{% url 'sponsors_home' request.user.id %}"
+                                               data-bs-toggle="tooltip" title="Click to Edit!">
+                                                {{ user.profile.website_link }} <i
                                                     class="fs-2 text-info px-3 py-4 fas fa-edit"></i>
                                             </a>
+                                            <br>
+                                            {% if request.user.wagtail_userprofile.avatar %}
+                                                <a class="result"
+                                                   href="{% url 'sponsors_home_picture' request.user.id %}"
+                                                   data-bs-toggle="tooltip" title="Click to Edit!"
+                                                >
+                                                    <img src="{{ request.user.wagtail_userprofile.avatar.url }}"
+                                                         class=""
+                                                         alt="{{ request.user.get_full_name }}"
+                                                         style="max-height: 150px; width:auto;"> <i
+                                                        class="fs-2 text-info px-3 py-4 fas fa-edit"></i>
+                                                </a>
+                                            {% else %}
+                                                <a class="result"
+                                                   href="{% url 'sponsors_home_picture' request.user.id %}"
+                                                   data-bs-toggle="tooltip" title="Click to ADD!"
+                                                >
+                                                    Add an image <i class="px-3 fas fa-plus-square fs-3 text-info"></i>
+                                                </a>
+                                            {% endif %}
                                         {% endif %}
+
                                     {% endfor %}
                                 </div>
                             </div>

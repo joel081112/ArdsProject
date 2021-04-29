@@ -118,9 +118,21 @@ class UserHomeData(APIView):
         runs_o = list(Batting.objects.all().values('runs')
                       .filter(member__player_link__id=user_id, match__date__lte=date.today())
                       .order_by('match__date'))
+        dates_bowl = list(Bowling.objects.all().values('match__date')
+                          .filter(member__player_link__id=user_id, match__date__lte=date.today())
+                          .order_by('match__date'))
+        wickets = list(Bowling.objects.all().values('wickets')
+                       .filter(member__player_link__id=user_id, match__date__lte=date.today())
+                       .order_by('match__date'))
+        runs_bowl = list(Bowling.objects.all().values('runs')
+                       .filter(member__player_link__id=user_id, match__date__lte=date.today())
+                       .order_by('match__date'))
         runs = list(User.objects.all().values('username').filter(id=user_id))
         runs_array = []
         dates_array = []
+        wickets_array = []
+        dates_bowl_array = []
+        runs_bowl_array = []
 
         for items in runs_o.copy():
             runs_array.append(items['runs'])
@@ -128,13 +140,25 @@ class UserHomeData(APIView):
         for items in dates.copy():
             dates_array.append(items['match__date'])
 
+        for items in wickets.copy():
+            wickets_array.append(items['wickets'])
+
+        for items in runs_bowl.copy():
+            runs_bowl_array.append(items['runs'])
+
+        for items in dates_bowl.copy():
+            dates_bowl_array.append(items['match__date'])
+
         context = {
             'users': users,
             'runs': runs,
             'dates': dates,
             'runs_o': runs_o,
             'runs_array': runs_array,
-            'dates_array': dates_array
+            'dates_array': dates_array,
+            'wickets_array': wickets_array,
+            'dates_bowl_array': dates_bowl_array,
+            'runs_bowl_array': runs_bowl_array
         }
         return Response(context)
 
@@ -481,7 +505,7 @@ def add_new_member(request):
 
 
 @login_required
-@allowed_users(allowed_roles=['Captain', 'Player', 'Coach'])
+@allowed_users(allowed_roles=['Captain', 'Player', 'Coach', 'Moderators', 'Editors'])
 def member_form(request, member_id):
     """Edit existing member form view."""
     obj = Member.objects.get(pk=member_id)
@@ -1076,7 +1100,10 @@ def view_sponsors_home(request, user_id):
     if int(request.user.id) == int(user_id):
         users = User.objects.all()
         user_sponsor_list = User.objects.filter(groups__name='Sponsor')
-        obj = Profile.objects.get(user_id=user_id)
+        if Profile.objects.filter(user_id=user_id).exists():
+            obj = Profile.objects.get(user_id=user_id)
+        else:
+            obj = Profile(user_id=user_id, website_link='')
         form = ProfileForm(instance=obj)
         if request.method == 'POST':
             print("Printing POST")

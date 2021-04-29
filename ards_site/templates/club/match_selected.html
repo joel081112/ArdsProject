@@ -105,9 +105,6 @@
                                 <th class="bat-runs">
                                     RUNS
                                 </th>
-                                <th class="bat-faced">
-                                    B
-                                </th>
                                 <th class="bat-fours">
                                     4s
                                 </th>
@@ -138,9 +135,6 @@
                                         <td class="bat-runs">
                                             {{ batting.runs }}
                                         </td>
-                                        <td class="bat-faced">
-
-                                        </td>
                                         <td class="bat-fours">
                                             {{ batting.fours }}
                                         </td>
@@ -169,9 +163,6 @@
                                         {{ extras.extras_total }}
                                     {% endfor %}
                                 </td>
-                                <td class="bat-faced">
-
-                                </td>
                                 <td class="bat-fours">
 
                                 </td>
@@ -191,9 +182,6 @@
                                 </td>
                                 <td class="bat-runs">
                                     <span>{{ object.ards_runs }}</span>
-                                </td>
-                                <td class="bat-faced">
-
                                 </td>
                                 <td class="bat-fours">
 
@@ -257,7 +245,7 @@
                                         {{ bowling.overs }}
                                     </td>
                                     <td class="bowl-maidens">
-
+                                        {{ bowling.maidens }}
                                     </td>
                                     <td class="bowl-runs">
                                         {{ bowling.runs }}
@@ -315,9 +303,6 @@
                                 <th class="bat-runs">
                                     RUNS
                                 </th>
-                                <th class="bat-faced">
-                                    B
-                                </th>
                                 <th class="bat-fours">
                                     4s
                                 </th>
@@ -347,9 +332,6 @@
                                         <td class="bat-runs">
                                             {{ batting.runs }}
                                         </td>
-                                        <td class="bat-faced">
-
-                                        </td>
                                         <td class="bat-fours">
 
                                         </td>
@@ -378,9 +360,6 @@
                                         {{ extras.extras_total }}
                                     {% endfor %}
                                 </td>
-                                <td class="bat-faced">
-
-                                </td>
                                 <td class="bat-fours">
 
                                 </td>
@@ -400,9 +379,6 @@
                                 </td>
                                 <td class="bat-runs">
                                     <span>{{ object.opponent_runs }}</span>
-                                </td>
-                                <td class="bat-faced">
-
                                 </td>
                                 <td class="bat-fours">
 
@@ -535,7 +511,7 @@
                             <a class="btn btn-success my-2" href="{% url 'add_opposition' %}">
                                 Add opposition names
                             </a>
-                             <a class="btn btn-success my-2" href="{% url 'add_batting_opp' object.id %}">
+                            <a class="btn btn-success my-2" href="{% url 'add_batting_opp' object.id %}">
                                 add opposition batter
                             </a>
                             <a class="btn btn-success my-2" href="{% url 'add_bowling_opp' object.id %}">

@@ -59,6 +59,15 @@
                                     class="fa fa-filter"></i>
                                 <strong>Filter</strong></a>
                         </button>
+                        {% for user_group in user.groups.all %}
+                            {% if user_group.name == "Captain" %}
+
+
+                                <a class="btn btn-success mx-3" href="/club/match/add">
+                                add new match
+                            </a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </form>
             </div>

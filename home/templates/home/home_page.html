@@ -31,6 +31,9 @@ Delete the line below if you're just getting started and want to remove the welc
             success: function (context) {
                 defaultLabels = context.dates_array
                 defaultData = context.runs_array
+                defaultLabels1 = context.dates_bowl_array
+                defaultData1 = context.wickets_array
+                defaultData2 = context.runs_bowl_array
                 console.log(context)
                 setChart()
             },
@@ -47,34 +50,59 @@ Delete the line below if you're just getting started and want to remove the welc
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: defaultLabels,
-                    datasets: [{
-                        label: '# of runs',
-                        data: defaultData,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
+                    labels: defaultLabels1,
+                    datasets: [
+                        {
+                            label: '# of wickets',
+                            data: defaultData1,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            scaleIntegersOnly: true
+                        },
+                        {
+                            label: '# of runs',
+                            data: defaultData2,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            scaleIntegersOnly: true
+                        }
+                    ]
                 },
                 options: {
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero: false
+                                beginAtZero: true
                             }
                         }]
                     }
@@ -124,8 +152,8 @@ Delete the line below if you're just getting started and want to remove the welc
 
 {% block content %}
     {% for home in homepage %}
-        <div class="row justify-content-center mt-3 ms-3 me-3">
-            <div class="col-xl-3 bg-racing-green text-white order-xl-1 relative-container ">
+        <div class="row justify-content-center mt-4 ms-3 me-3">
+            <div class="col-xl-3 bg-racing-green text-white order-xl-1 relative-container">
                 {% for match in prev_match_list|slice:"1" %}
                     <div class="row">
                         <h3 class="ls-2">
@@ -196,22 +224,14 @@ Delete the line below if you're just getting started and want to remove the welc
                         {{ user_group.name }}
                         <br>
                         {% if user_group.name == "Player" %}
-                            {% for mem in member_list %}
-                                {% for bt in batting_list|slice:"1" %}
-                                    Your latest batting performance: {{ bt }}
-                                    <br>
-                                {% endfor %}
-                                | user: {{ user.id }} | member: {{ mem.id }} | member player: {{ mem.player_link.id }}
-
-                            {% endfor %}
-
-
                             <hr>
-                            <div class="row">
-                                <div class="col-md-3">
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-md-4">
+                                    <h3>Bowling Performances</h3>
                                     <canvas id="myChart" width="400" height="400"></canvas>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
+                                    <h3>Batting Performances</h3>
                                     <canvas id="myChart2" width="400" height="400"></canvas>
                                 </div>
                             </div>

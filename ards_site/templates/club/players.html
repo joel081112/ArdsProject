@@ -22,7 +22,7 @@
             </div>
 
 
-            <div class="row justify-content-md-center">
+            <div class="row justify-content-md-center mx-4 mx-xl-none">
                 {% for member in member_list %}
                     <div class="col-lg-3  card text-center py-4 m-3 shadow bg-body rounded">
                         <div class="row">
@@ -39,58 +39,82 @@
                                 {% endfor %}
 
                                 <hr>
-                                Batting Figures<br>
-                                Max: {{ member.max_runs }}<br>
-                                Min: {{ member.min_runs }}<br>
-                                Count: {{ member.count_runs }}<br>
-                                Count past 2019: {{ member.count_runs_past_2019 }}<br>
-                                Average: {{ member.average_runs }}<br>
-                                Sum: {{ member.sum_runs }}
-                                Second average: {{ member.average_runs_pt2 }}
-                                <hr>
+                                <div class="accordion-flush batting-card">
+                                    <div class="game-stats accordion-item bg-gradient-mini-two">
+                                        <div class="team-batting-overview border mb-4">
+                                            <h2 class="accordion-header" id="flush-headingOne">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#member-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                                                        aria-expanded="false"
+                                                        aria-controls="collapseExample">
+                                                    See More
+                                                </button>
+                                            </h2>
+                                        </div>
 
 
-                                {% for batting in batting_list %}
-                                    {% if member.id == batting.member.id %}
+                                        <div class="accordion-collapse collapse"
+                                             id="member-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
 
-                                        {# test #}
-                                        {% if member.id == batting.member.id and batting.match.date.year == 2018 %}
-                                            test
-                                        {% endif %}
-                                        {# endtest #}
+                                            Batting Figures<br>
+                                            Max: {{ member.max_runs }}<br>
+                                            Min: {{ member.min_runs }}<br>
+                                            Count: {{ member.count_runs }}<br>
+                                            Count past 2019: {{ member.count_runs_past_2019 }}<br>
+                                            Average: {{ member.average_runs }}<br>
+                                            Sum: {{ member.sum_runs }}
+                                            Second average: {{ member.average_runs_pt2 }}
+                                            <hr>
 
-                                        {{ batting }}
-                                        <br>
-                                        {{ batting.match.id }}
-                                        <br>
-                                        {{ batting.runs }}
-                                        <br>
-                                        {{ batting.match.date.year }}
-                                        <br>
-                                        {% if batting.mode_of_dismissal|stringformat:"s" == "Not Out" %}
-                                            {{ batting.mode_of_dismissal }}
-                                        {% endif %}
-                                        <br>
-                                        <hr>
-                                    {% endif %}
-                                {% endfor %}
 
-                                Bowling Figures
-                                <hr>
-                                {% for bowling in bowling_list %}
-                                    {% if member.id == bowling.member.id %}
-                                        {{ bowling }}
-                                        <br>
-                                        {{ bowling.match.id }}
-                                        <hr>
-                                    {% endif %}
-                                {% endfor %}
+                                            {% for batting in batting_list %}
+                                                {% if member.id == batting.member.id %}
+
+                                                    {# test #}
+                                                    {% if member.id == batting.member.id and batting.match.date.year == 2018 %}
+                                                        2018 test
+                                                    {% endif %}
+                                                    {# endtest #}
+
+                                                    {{ batting }}
+                                                    <br>
+                                                    {{ batting.match.id }}
+                                                    <br>
+                                                    {{ batting.runs }}
+                                                    <br>
+                                                    {{ batting.match.date.year }}
+                                                    <br>
+                                                    {% if batting.mode_of_dismissal|stringformat:"s" == "Not Out" %}
+                                                        {{ batting.mode_of_dismissal }}
+                                                    {% endif %}
+                                                    <br>
+                                                    <hr>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            Bowling Figures
+                                            <hr>
+                                            {% for bowling in bowling_list %}
+                                                {% if member.id == bowling.member.id %}
+                                                    {{ bowling }}
+                                                    <br>
+                                                    {{ bowling.match.id }}
+                                                    <hr>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                             </div>
                             <div class="col">
 
-                                    <img src="{{ member.profile_pic.url|default_if_none:'#' }}"
-                                         class="profile-main" alt="">
+                                <img src="{{ member.profile_pic.url|default_if_none:'#' }}"
+                                     class="profile-main" alt="">
 
                             </div>
                         </div>
